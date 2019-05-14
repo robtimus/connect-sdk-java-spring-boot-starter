@@ -1,0 +1,3 @@
+com.github.robtimus.connect.sdk.java.springboot.actuator
+com.github.robtimus.connect.sdk.java.springboot.autoconfigure
+com.github.robtimus.connect.sdk.java.springboot.logging
