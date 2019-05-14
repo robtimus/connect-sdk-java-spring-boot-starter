@@ -1,0 +1,55 @@
+<html>
+<head>
+  <title>Properties</title>
+  <link rel="stylesheet" href="css/highlight.css" />
+</head>
+<body>
+<div class="section">
+  <h2>Properties</h2>
+  <p>The following properties can be defined in your <tt>application.properties</tt> file, in your <tt>application.yml</tt> file, or as command line switches.</p>
+  <pre class="source">
+<span class="hl-comment"># GENERAL</span>
+<span class="hl-attribute">connect.api.merchant-id</span>= <span class="hl-comment"># Your merchant id</span>
+
+<span class="hl-comment"># API ENDPOINT</span>
+<span class="hl-attribute">connect.api.endpoint.host</span>= <span class="hl-comment"># Hostname of the API endpoint to use</span>
+<span class="hl-attribute">connect.api.endpoint.scheme</span>=https <span class="hl-comment"># Scheme of the API endpoint to use</span>
+<span class="hl-attribute">connect.api.endpoint.port</span>=-1 <span class="hl-comment"># Port of the API endpoint to use</span>
+
+<span class="hl-comment"># AUTHENTICATION</span>
+<span class="hl-attribute">connect.api.api-key-id</span>= <span class="hl-comment"># Your API key id</span>
+<span class="hl-attribute">connect.api.authorization-type</span>=V1HMAC <span class="hl-comment"># Authorization type, should only be V1HMAC</span>
+<span class="hl-attribute">connect.api.secret-api-key</span>= <span class="hl-comment"># Your secret API key</span>
+
+<span class="hl-comment"># CONNECTION</span>
+<span class="hl-attribute">connect.api.connect-timeout</span>=5000 <span class="hl-comment"># Connect timeout for HTTP requests</span>
+<span class="hl-attribute">connect.api.https.protocols</span>= <span class="hl-comment"># Supported HTTPS protocols. If not specified the SDK will specify defaults</span>
+<span class="hl-attribute">connect.api.max-connections</span>=10 <span class="hl-comment"># Maximum number of concurrent HTTP connections</span>
+<span class="hl-attribute">connect.api.proxy.password</span>= <span class="hl-comment"># Password for the HTTP proxy to use, if any</span>
+<span class="hl-attribute">connect.api.proxy.uri</span>= <span class="hl-comment"># URI for the HTTP proxy to use, if any</span>
+<span class="hl-attribute">connect.api.proxy.username</span>= <span class="hl-comment"># Username for the HTTP proxy to use, if any</span>
+<span class="hl-attribute">connect.api.socket-timeout</span>=300000 <span class="hl-comment"># Socket/read timeout for HTTP requests</span>
+
+<span class="hl-comment"># CONNECTION MANAGEMENT</span>
+<span class="hl-attribute">connect.api.close-idle-connections.enabled</span>=true <span class="hl-comment"># Enable closing idle connections automatically</span>
+<span class="hl-attribute">connect.api.close-idle-connections.idle-time</span>=20000 <span class="hl-comment"># Maximum idle time in ms before connections are closed</span>
+<span class="hl-attribute">connect.api.close-idle-connections.interval</span>=10000 <span class="hl-comment"># Interval in ms for closing idle connections</span>
+
+<span class="hl-comment"># META DATA</span>
+<span class="hl-attribute">connect.api.integrator</span>= <span class="hl-comment"># Your company name</span>
+<span class="hl-attribute">connect.api.shopping-cart-extension.creator</span>= <span class="hl-comment"># For shopping cart extensions, the creator</span>
+<span class="hl-attribute">connect.api.shopping-cart-extension.extension-id</span>= <span class="hl-comment"># For shopping cart extensions, the extension id</span>
+<span class="hl-attribute">connect.api.shopping-cart-extension.name</span>= <span class="hl-comment"># For shopping cart extensions, the name</span>
+<span class="hl-attribute">connect.api.shopping-cart-extension.version</span>= <span class="hl-comment"># For shopping cart extensions, the version</span>
+
+<span class="hl-comment"># LOGGING</span>
+<span class="hl-attribute">connect.api.logger.errorLevel</span>=ERROR <span class="hl-comment"># Error log level for the default communicator logger</span>
+<span class="hl-attribute">connect.api.logger.level</span>=INFO <span class="hl-comment"># Log level for the default communicator logger</span>
+<span class="hl-attribute">connect.api.logger.name</span>=com.ingenico.connect.gateway.sdk.java.Communicator <span class="hl-comment"># Name for the default communicator logger</span>
+
+<span class="hl-comment"># HEALTH</span>
+<span class="hl-attribute">connect.api.health.min-interval</span>=60 <span class="hl-comment"># For health checks, the minimum interval in seconds between calls</span>
+</pre>
+</div>
+</body>
+</html>

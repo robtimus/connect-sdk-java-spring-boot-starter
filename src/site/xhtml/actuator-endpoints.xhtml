@@ -1,0 +1,105 @@
+<html>
+<head>
+  <title>Actuator endpoints</title>
+</head>
+<body>
+<div class="section">
+  <h2>Actuator endpoints</h2>
+  <p>The following custom actuator endpoints are provided. These are disabled by default for both JMX and web.
+     To enable these you need to set property <tt>management.endpoint.&lt;id&gt;.enabled</tt> to <tt>true</tt>.</p>
+  <p>By default all endpoints are exposed over JMX, but only the <tt>info</tt> and <tt>health</tt> endpoints are exposed over HTTP.
+     To expose these custom endpoints over HTTP as well you need to set property <tt>management.endpoints.web.exposure.include</tt> with all endpoints you want enabled.
+     See <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-endpoints-exposing-endpoints">Exposing Endpoints</a> for more information.</p>
+
+  <h3>Logging</h3>
+  <p>ID: <tt>connectSdkLogging</tt></p>
+  <p>This actuator endpoint allows you to <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/logging/LoggingCapable.html">enable and disable logging</a> during runtime.
+     It defines the following operations:</p>
+
+  <h4>listLoggingCapableAndLoggerBeans</h4>
+  <p>Lists all available <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/logging/LoggingCapable.html">LoggingCapable</a>
+     and <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/logging/CommunicatorLogger.html">CommunicatorLogger</a> beans.</p>
+  <p>HTTP endpoint example:</p>
+  <pre>curl -X GET http://&lt;host&gt;/actuator/connectSdkLogging</pre>
+
+  <h4>enableLogging</h4>
+  <p>Enables logging on all <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/logging/LoggingCapable.html">LoggingCapable</a> beans.</p>
+  <p>By default all available <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/logging/CommunicatorLogger.html">CommunicatorLogger</a> beans will be used in a compound logger.
+     By providing argument <tt>logger</tt> you can specify a single <tt>CommunicatorLogger</tt> instead.</p>
+  <p>HTTP endpoint examples:</p>
+  <pre>curl -X POST http://&lt;host&gt;/actuator/connectSdkLogging -H Content-Type:application/json
+curl -X POST http://&lt;host&gt;/actuator/connectSdkLogging?logger=myLogger -H Content-Type:application/json
+curl -X POST http://&lt;host&gt;/actuator/connectSdkLogging -H Content-Type:application/json -d '{"logger": "myLogger"}'</pre>
+
+  <h4>enableLoggingOnBean</h4>
+  <p>Enables logging on a specific <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/logging/LoggingCapable.html">LoggingCapable</a> bean.</p>
+  <p>By default all available <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/logging/CommunicatorLogger.html">CommunicatorLogger</a> beans will be used in a compound logger.
+     By providing argument <tt>logger</tt> you can specify a single <tt>CommunicatorLogger</tt> instead.</p>
+  <p>HTTP endpoint examples:</p>
+  <pre>curl -X POST http://&lt;host&gt;/actuator/connectSdkLogging/myBean -H Content-Type:application/json
+curl -X POST http://&lt;host&gt;/actuator/connectSdkLogging/myBean?logger=myLogger -H Content-Type:application/json
+curl -X POST http://&lt;host&gt;/actuator/connectSdkLogging/myBean -H Content-Type:application/json -d '{"logger": "myLogger"}'</pre>
+
+  <h4>disableLogging</h4>
+  <p>Disables logging on all <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/logging/LoggingCapable.html">LoggingCapable</a> beans.</p>
+  <p>HTTP endpoint example:</p>
+  <pre>curl -X DELETE http://&lt;host&gt;/actuator/connectSdkLogging</pre>
+
+  <h4>disableLoggingOnBean</h4>
+  <p>Disables logging on a specific <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/logging/LoggingCapable.html">LoggingCapable</a> bean.</p>
+  <p>HTTP endpoint example:</p>
+  <pre>curl -X DELETE http://&lt;host&gt;/actuator/connectSdkLogging/myBean</pre>
+
+  <hr />
+
+  <h3>Connections</h3>
+  <p>ID: <tt>connectSdkConnections</tt></p>
+  <p>This actuator endpoint that allows you to call <tt>closeIdleConnections</tt> and <tt>closeExpiredConnections</tt> on beans of types
+     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/PooledConnection.html">PooledConnection</a>,
+     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Communicator.html">Communicator</a> and
+     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a>.
+     It defines the following operations:</p>
+
+  <h4>listCloseableBeans</h4>
+  <p>Lists all available <tt>PooledConnection</tt>, <tt>Communicator</tt> and <tt>Client</tt> beans.</p>
+  <p>HTTP endpoint example:</p>
+  <pre>curl -X GET http://&lt;host&gt;/actuator/connectSdkConnections</pre>
+
+  <h4>closeIdleConnections</h4>
+  <p>Closes idle connections for all available
+     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/PooledConnection.html">PooledConnection</a>,
+     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Communicator.html">Communicator</a> and
+     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a> beans.</p>
+  <p>Arguments <tt>idleTime</tt> and <tt>timeUnit</tt> must be given.</p>
+  <p>HTTP endpoint examples:</p>
+  <pre>curl -X POST &quot;http://&lt;host&gt;/actuator/connectSdkConnections?idleTime=20&amp;timeUnit=SECONDS&quot; -H Content-Type:application/json
+curl -X POST http://&lt;host&gt;/actuator/connectSdkConnections -H Content-Type:application/json -d '{"idleTime": 20, "timeUnit": "SECONDS"}'</pre>
+
+  <h4>closeIdleConnectionsForBean</h4>
+  <p>Closes idle connections for a specific
+     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/PooledConnection.html">PooledConnection</a>,
+     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Communicator.html">Communicator</a> and
+     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a> bean.</p>
+  <p>Arguments <tt>idleTime</tt> and <tt>timeUnit</tt> must be given.</p>
+  <p>HTTP endpoint examples:</p>
+  <pre>curl -X POST &quot;http://&lt;host&gt;/actuator/connectSdkConnections/myBean?idleTime=20&amp;timeUnit=SECONDS&quot; -H Content-Type:application/json
+curl -X POST http://&lt;host&gt;/actuator/connectSdkConnections/myBean -H Content-Type:application/json -d '{"idleTime": 20, "timeUnit": "SECONDS"}'</pre>
+
+  <h4>closeExpiredConnections</h4>
+  <p>Closes expired connections for all available
+     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/PooledConnection.html">PooledConnection</a>,
+     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Communicator.html">Communicator</a> and
+     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a> beans.</p>
+  <p>HTTP endpoint example:</p>
+  <pre>curl -X POST http://&lt;host&gt;/actuator/connectSdkConnections</pre>
+
+  <h4>closeExpiredConnectionsForBean</h4>
+  <p>Closes expired connections for a specific
+     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/PooledConnection.html">PooledConnection</a>,
+     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Communicator.html">Communicator</a> and
+     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a> bean.</p>
+  <p>HTTP endpoint example:</p>
+  <pre>curl -X POST http://&lt;host&gt;/actuator/connectSdkConnections/myBean</pre>
+</div>
+</body>
+</html>
