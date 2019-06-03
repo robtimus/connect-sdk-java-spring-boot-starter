@@ -70,14 +70,14 @@
 
     <version.java>1.8</version.java>
 
-    <version.connect-sdk-java>5.35.0</version.connect-sdk-java>
+    <version.connect-sdk-java>5.36.0</version.connect-sdk-java>
     <version.gson>2.8.5</version.gson>
     <version.hamcrest>2.1</version.hamcrest>
     <version.httpclient>4.5.8</version.httpclient>
     <version.junit>4.12</version.junit>
-    <version.mockito>2.27.0</version.mockito>
+    <version.mockito>2.28.2</version.mockito>
     <version.powermock>2.0.2</version.powermock>
-    <version.spring-boot>2.1.4.RELEASE</version.spring-boot>
+    <version.spring-boot>2.1.5.RELEASE</version.spring-boot>
 
     <version.plugin.antrun>1.8</version.plugin.antrun>
     <version.plugin.clean>3.1.0</version.plugin.clean>
@@ -93,7 +93,7 @@
     <version.plugin.release>2.5.3</version.plugin.release>
     <version.plugin.resources>3.1.0</version.plugin.resources>
     <version.plugin.site>3.7.1</version.plugin.site>
-    <version.plugin.source>3.0.1</version.plugin.source>
+    <version.plugin.source>3.1.0</version.plugin.source>
     <version.plugin.surefire>2.22.2</version.plugin.surefire>
   </properties>
 
