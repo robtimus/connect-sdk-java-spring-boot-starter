@@ -70,7 +70,7 @@
 
     <version.java>1.8</version.java>
 
-    <version.connect-sdk-java>5.36.0</version.connect-sdk-java>
+    <version.connect-sdk-java>5.37.0</version.connect-sdk-java>
     <version.gson>2.8.5</version.gson>
     <version.hamcrest>2.1</version.hamcrest>
     <version.httpclient>4.5.8</version.httpclient>
