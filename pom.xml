@@ -70,14 +70,14 @@
 
     <version.java>1.8</version.java>
 
-    <version.connect-sdk-java>5.37.0</version.connect-sdk-java>
+    <version.connect-sdk-java>6.0.0</version.connect-sdk-java>
     <version.gson>2.8.5</version.gson>
     <version.hamcrest>2.1</version.hamcrest>
-    <version.httpclient>4.5.8</version.httpclient>
+    <version.httpclient>4.5.9</version.httpclient>
     <version.junit>4.12</version.junit>
     <version.mockito>2.28.2</version.mockito>
     <version.powermock>2.0.2</version.powermock>
-    <version.spring-boot>2.1.5.RELEASE</version.spring-boot>
+    <version.spring-boot>2.1.6.RELEASE</version.spring-boot>
 
     <version.plugin.antrun>1.8</version.plugin.antrun>
     <version.plugin.clean>3.1.0</version.plugin.clean>
