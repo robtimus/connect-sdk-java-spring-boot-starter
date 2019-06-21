@@ -20,6 +20,7 @@ package com.github.robtimus.connect.sdk.java.springboot.autoconfigure;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -36,7 +37,6 @@ import com.ingenico.connect.gateway.sdk.java.Communicator;
 import com.ingenico.connect.gateway.sdk.java.Connection;
 import com.ingenico.connect.gateway.sdk.java.Marshaller;
 import com.ingenico.connect.gateway.sdk.java.MetaDataProvider;
-import com.ingenico.connect.gateway.sdk.java.Response;
 import com.ingenico.connect.gateway.sdk.java.Session;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultAuthenticator;
@@ -114,9 +114,9 @@ public class ConnectSdkCommunicatorAutoConfigurationTest {
                     // verify that the session's connection is used
                     @SuppressWarnings("resource")
                     Connection connection = context.getBean(SessionProvider.class).connection();
-                    when(connection.post(any(URI.class), anyList(), eq(null))).thenReturn(new Response(204, null, null));
+                    when(connection.post(any(URI.class), anyList(), anyString(), any())).thenReturn(null);
                     context.getBean(Communicator.class).post("/path", null, null, null, Void.class, null);
-                    verify(connection).post(any(URI.class), anyList(), eq(null));
+                    verify(connection).post(any(URI.class), anyList(), eq((String) null), any());
                     verifyNoMoreInteractions(connection);
                 });
     }

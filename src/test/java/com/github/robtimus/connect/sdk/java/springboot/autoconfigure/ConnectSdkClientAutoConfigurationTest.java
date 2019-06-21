@@ -87,7 +87,7 @@ public class ConnectSdkClientAutoConfigurationTest {
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
                     // no need to setup a null return value
                     context.getBean(Client.class).merchant("merchantId").payouts().cancel("payoutId", null);
-                    verify(communicator).post(anyString(), eq(null), eq(null), eq(null), eq(Void.class), eq(null));
+                    verify(communicator).post(anyString(), eq(null), eq(null), eq(null), eq(void.class), eq(null));
                     verifyNoMoreInteractions(communicator);
                 });
     }
