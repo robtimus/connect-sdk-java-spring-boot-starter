@@ -17,7 +17,5 @@
 
 /**
  * Spring Boot actuator support for <a href="https://github.com/Ingenico-ePayments/connect-sdk-java/">connect-sdk-java</a>.
- *
- * @author Rob Spoor
  */
 package com.github.robtimus.connect.sdk.java.springboot.actuator;
