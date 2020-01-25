@@ -18,15 +18,14 @@
 package com.github.robtimus.connect.sdk.java.springboot.actuator;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.Status;
 import com.ingenico.connect.gateway.sdk.java.ApiException;
@@ -37,18 +36,12 @@ import com.ingenico.connect.gateway.sdk.java.merchant.services.ServicesClient;
 
 public class ConnectSdkHealthIndicatorTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Test
-    @SuppressWarnings("unused")
     public void testNonPositiveMinInterval() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("minInterval must be > 0, is 0");
-
         MerchantClient merchantClient = mock(MerchantClient.class);
 
-        new ConnectSdkHealthIndicator(merchantClient, 0);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new ConnectSdkHealthIndicator(merchantClient, 0));
+        assertThat(exception.getMessage()).isEqualTo("minInterval must be > 0, is 0");
     }
 
     @Test
