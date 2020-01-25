@@ -73,8 +73,8 @@
     <version.connect-sdk-java>6.5.0</version.connect-sdk-java>
     <version.gson>2.8.6</version.gson>
     <version.hamcrest>2.2</version.hamcrest>
-    <version.httpclient>4.5.10</version.httpclient>
-    <version.junit>4.12</version.junit>
+    <version.httpclient>4.5.11</version.httpclient>
+    <version.junit>4.13</version.junit>
     <version.mockito>3.2.4</version.mockito>
     <version.powermock>2.0.4</version.powermock>
     <version.spring-boot>2.1.11.RELEASE</version.spring-boot>
