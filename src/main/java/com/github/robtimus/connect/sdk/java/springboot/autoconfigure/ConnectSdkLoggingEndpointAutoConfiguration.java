@@ -17,7 +17,7 @@
 
 package com.github.robtimus.connect.sdk.java.springboot.autoconfigure;
 
-import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnEnabledEndpoint;
+import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -36,7 +36,7 @@ import com.github.robtimus.connect.sdk.java.springboot.actuator.LoggingEndpoint;
 @Configuration
 @AutoConfigureAfter(ConnectSdkClientAutoConfiguration.class)
 @ConditionalOnClass(Endpoint.class)
-@ConditionalOnEnabledEndpoint(endpoint = LoggingEndpoint.class)
+@ConditionalOnAvailableEndpoint(endpoint = LoggingEndpoint.class)
 public class ConnectSdkLoggingEndpointAutoConfiguration {
 
     @Bean

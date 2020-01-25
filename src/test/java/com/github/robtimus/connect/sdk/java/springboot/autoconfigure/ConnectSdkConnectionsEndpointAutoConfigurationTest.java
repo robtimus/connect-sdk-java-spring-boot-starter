@@ -40,7 +40,7 @@ public class ConnectSdkConnectionsEndpointAutoConfigurationTest {
         try (FilteredClassLoader classLoader = new FilteredClassLoader(Endpoint.class)) {
             contextRunner
                     .withClassLoader(classLoader)
-                    .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true")
+                    .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true", "spring.jmx.enabled=true")
                     .run(context -> {
                         assertThat(context).doesNotHaveBean(ConnectionsEndpoint.class);
                     });
@@ -51,6 +51,7 @@ public class ConnectSdkConnectionsEndpointAutoConfigurationTest {
     public void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class)
+                .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true", "spring.jmx.enabled=true")
                 .run(context -> {
                     assertThat(context).doesNotHaveBean("connectSdkConnectionsEndpoint");
                     assertThat(context).hasSingleBean(ConnectionsEndpoint.class);
@@ -71,6 +72,22 @@ public class ConnectSdkConnectionsEndpointAutoConfigurationTest {
     public void testAutoConfigurationWithEnabledEndpoint() {
         contextRunner
                 .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true")
+                .run(context -> {
+                    assertThat(context).doesNotHaveBean(ConnectionsEndpoint.class);
+                });
+    }
+
+    @Test
+    public void testAutoConfigurationWithAvailableEndpoint() {
+        contextRunner
+                .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true", "spring.jmx.enabled=true")
+                .run(context -> {
+                    assertThat(context).hasBean("connectSdkConnectionsEndpoint");
+                    assertThat(context).hasSingleBean(ConnectionsEndpoint.class);
+                });
+        contextRunner
+                .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true",
+                        "management.endpoints.web.exposure.include=connectSdkConnections")
                 .run(context -> {
                     assertThat(context).hasBean("connectSdkConnectionsEndpoint");
                     assertThat(context).hasSingleBean(ConnectionsEndpoint.class);

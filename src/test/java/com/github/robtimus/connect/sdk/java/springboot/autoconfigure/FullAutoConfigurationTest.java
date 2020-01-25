@@ -121,7 +121,7 @@ public class FullAutoConfigurationTest {
     public void testWithMinimalPropertiesForEndpoints() {
         contextRunner
                 .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true",
-                        "management.endpoint.connectSdkLogging.enabled=true")
+                        "management.endpoint.connectSdkLogging.enabled=true", "spring.jmx.enabled=true")
                 .run(context -> {
                     assertThat(context).doesNotHaveBean(Authenticator.class);
                     assertThat(context).doesNotHaveBean(Client.class);
@@ -148,7 +148,8 @@ public class FullAutoConfigurationTest {
                         "connect.api.proxy.username=user", "connect.api.proxy.password=pass", "connect.api.https.protocols=TLSv1.2",
                         "connect.api.integrator=Integrator", "connect.api.shopping-cart-extension.creator=Creator",
                         "connect.api.shopping-cart-extension.name=name", "connect.api.shopping-cart-extension.version=version",
-                        "management.endpoint.connectSdkConnections.enabled=true", "management.endpoint.connectSdkLogging.enabled=true")
+                        "management.endpoint.connectSdkConnections.enabled=true", "management.endpoint.connectSdkLogging.enabled=true",
+                        "spring.jmx.enabled=true")
                 .run(context -> {
                     assertThat(context).hasSingleBean(Authenticator.class);
                     assertThat(context).hasSingleBean(Client.class);
@@ -176,7 +177,8 @@ public class FullAutoConfigurationTest {
                         "connect.api.integrator=Integrator", "connect.api.shopping-cart-extension.creator=Creator",
                         "connect.api.shopping-cart-extension.name=name", "connect.api.shopping-cart-extension.version=version",
                         "connect.api.shopping-cart-extension.extension-id=extensionId",
-                        "management.endpoint.connectSdkConnections.enabled=true", "management.endpoint.connectSdkLogging.enabled=true")
+                        "management.endpoint.connectSdkConnections.enabled=true", "management.endpoint.connectSdkLogging.enabled=true",
+                        "spring.jmx.enabled=true")
                 .run(context -> {
                     assertThat(context).hasSingleBean(Authenticator.class);
                     assertThat(context).hasSingleBean(Client.class);
@@ -205,7 +207,8 @@ public class FullAutoConfigurationTest {
                         "connect.api.integrator=Integrator", "connect.api.shopping-cart-extension.creator=Creator",
                         "connect.api.shopping-cart-extension.name=name", "connect.api.shopping-cart-extension.version=version",
                         "connect.api.shopping-cart-extension.extension-id=extensionId",
-                        "management.endpoint.connectSdkConnections.enabled=true", "management.endpoint.connectSdkLogging.enabled=true")
+                        "management.endpoint.connectSdkConnections.enabled=true", "management.endpoint.connectSdkLogging.enabled=true",
+                        "spring.jmx.enabled=true")
                 .run(context -> {
                     assertThat(context).hasSingleBean(Authenticator.class);
                     assertThat(context).hasSingleBean(Client.class);
