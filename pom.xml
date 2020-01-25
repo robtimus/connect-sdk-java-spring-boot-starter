@@ -77,7 +77,7 @@
     <version.junit>4.13</version.junit>
     <version.mockito>3.2.4</version.mockito>
     <version.powermock>2.0.4</version.powermock>
-    <version.spring-boot>2.1.11.RELEASE</version.spring-boot>
+    <version.spring-boot>2.2.4.RELEASE</version.spring-boot>
 
     <version.plugin.antrun>1.8</version.plugin.antrun>
     <version.plugin.clean>3.1.0</version.plugin.clean>

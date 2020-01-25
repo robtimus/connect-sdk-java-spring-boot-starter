@@ -19,7 +19,7 @@ package com.github.robtimus.connect.sdk.java.springboot.autoconfigure;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.health.ConditionalOnEnabledHealthIndicator;
-import org.springframework.boot.actuate.autoconfigure.health.HealthIndicatorAutoConfiguration;
+import org.springframework.boot.actuate.autoconfigure.health.HealthContributorAutoConfiguration;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -38,7 +38,7 @@ import com.ingenico.connect.gateway.sdk.java.merchant.MerchantClient;
  * @author Rob Spoor
  */
 @Configuration
-@AutoConfigureBefore(HealthIndicatorAutoConfiguration.class)
+@AutoConfigureBefore(HealthContributorAutoConfiguration.class)
 @AutoConfigureAfter(ConnectSdkMerchantClientAutoConfiguration.class)
 @ConditionalOnClass(HealthIndicator.class)
 @ConditionalOnMissingBean(ConnectSdkHealthIndicator.class)
