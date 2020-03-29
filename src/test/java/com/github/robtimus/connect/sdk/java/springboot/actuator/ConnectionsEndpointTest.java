@@ -96,6 +96,7 @@ public class ConnectionsEndpointTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testCloseIdleConnections() {
         contextRunner
                 .run(context -> {
@@ -120,7 +121,6 @@ public class ConnectionsEndpointTest {
 
                     endpoint.closeIdleConnections(20L, TimeUnit.SECONDS);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
 
                     verifyNoMoreInteractions(connection);
@@ -138,7 +138,6 @@ public class ConnectionsEndpointTest {
 
                     endpoint.closeIdleConnections(20L, TimeUnit.SECONDS);
 
-                    @SuppressWarnings("resource")
                     PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
 
                     verify(pooledConnection).closeIdleConnections(20L, TimeUnit.SECONDS);
@@ -156,7 +155,6 @@ public class ConnectionsEndpointTest {
 
                     endpoint.closeIdleConnections(20L, TimeUnit.SECONDS);
 
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
                     verify(communicator).closeIdleConnections(20L, TimeUnit.SECONDS);
@@ -174,7 +172,6 @@ public class ConnectionsEndpointTest {
 
                     endpoint.closeIdleConnections(20L, TimeUnit.SECONDS);
 
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
 
                     verify(client).closeIdleConnections(20L, TimeUnit.SECONDS);
@@ -193,13 +190,9 @@ public class ConnectionsEndpointTest {
 
                     endpoint.closeIdleConnections(20L, TimeUnit.SECONDS);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    @SuppressWarnings("resource")
                     PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
 
                     verify(pooledConnection).closeIdleConnections(20L, TimeUnit.SECONDS);
@@ -210,6 +203,7 @@ public class ConnectionsEndpointTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testCloseIdleConnectionsForBean() {
         contextRunner
                 .run(context -> {
@@ -234,7 +228,6 @@ public class ConnectionsEndpointTest {
                     assertThat(context).doesNotHaveBean(Communicator.class);
                     assertThat(context).doesNotHaveBean(Client.class);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
 
                     assertThatThrownBy(() -> endpoint.closeIdleConnectionsForBean("connection", 20L, TimeUnit.SECONDS))
@@ -254,7 +247,6 @@ public class ConnectionsEndpointTest {
 
                     endpoint.closeIdleConnectionsForBean("pooledConnection", 20L, TimeUnit.SECONDS);
 
-                    @SuppressWarnings("resource")
                     PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
 
                     verify(pooledConnection).closeIdleConnections(20L, TimeUnit.SECONDS);
@@ -272,7 +264,6 @@ public class ConnectionsEndpointTest {
 
                     endpoint.closeIdleConnectionsForBean("communicator", 20L, TimeUnit.SECONDS);
 
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
                     verify(communicator).closeIdleConnections(20L, TimeUnit.SECONDS);
@@ -290,7 +281,6 @@ public class ConnectionsEndpointTest {
 
                     endpoint.closeIdleConnectionsForBean("client", 20L, TimeUnit.SECONDS);
 
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
 
                     verify(client).closeIdleConnections(20L, TimeUnit.SECONDS);
@@ -309,13 +299,9 @@ public class ConnectionsEndpointTest {
 
                     endpoint.closeIdleConnectionsForBean("client", 20L, TimeUnit.SECONDS);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    @SuppressWarnings("resource")
                     PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
 
                     verify(client).closeIdleConnections(20L, TimeUnit.SECONDS);
@@ -324,6 +310,7 @@ public class ConnectionsEndpointTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testCloseExpiredConnections() {
         contextRunner
                 .run(context -> {
@@ -348,7 +335,6 @@ public class ConnectionsEndpointTest {
 
                     endpoint.closeExpiredConnections();
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
 
                     verifyNoMoreInteractions(connection);
@@ -366,7 +352,6 @@ public class ConnectionsEndpointTest {
 
                     endpoint.closeExpiredConnections();
 
-                    @SuppressWarnings("resource")
                     PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
 
                     verify(pooledConnection).closeExpiredConnections();
@@ -384,7 +369,6 @@ public class ConnectionsEndpointTest {
 
                     endpoint.closeExpiredConnections();
 
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
                     verify(communicator).closeExpiredConnections();
@@ -402,7 +386,6 @@ public class ConnectionsEndpointTest {
 
                     endpoint.closeExpiredConnections();
 
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
 
                     verify(client).closeExpiredConnections();
@@ -421,13 +404,9 @@ public class ConnectionsEndpointTest {
 
                     endpoint.closeExpiredConnections();
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    @SuppressWarnings("resource")
                     PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
 
                     verify(pooledConnection).closeExpiredConnections();
@@ -438,6 +417,7 @@ public class ConnectionsEndpointTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testCloseExpiredConnectionsForBean() {
         contextRunner
                 .run(context -> {
@@ -462,7 +442,6 @@ public class ConnectionsEndpointTest {
                     assertThat(context).doesNotHaveBean(Communicator.class);
                     assertThat(context).doesNotHaveBean(Client.class);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
 
                     assertThatThrownBy(() -> endpoint.closeExpiredConnectionsForBean("connection"))
@@ -482,7 +461,6 @@ public class ConnectionsEndpointTest {
 
                     endpoint.closeExpiredConnectionsForBean("pooledConnection");
 
-                    @SuppressWarnings("resource")
                     PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
 
                     verify(pooledConnection).closeExpiredConnections();
@@ -500,7 +478,6 @@ public class ConnectionsEndpointTest {
 
                     endpoint.closeExpiredConnectionsForBean("communicator");
 
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
                     verify(communicator).closeExpiredConnections();
@@ -518,7 +495,6 @@ public class ConnectionsEndpointTest {
 
                     endpoint.closeExpiredConnectionsForBean("client");
 
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
 
                     verify(client).closeExpiredConnections();
@@ -537,13 +513,9 @@ public class ConnectionsEndpointTest {
 
                     endpoint.closeExpiredConnectionsForBean("client");
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    @SuppressWarnings("resource")
                     PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
 
                     verify(client).closeExpiredConnections();

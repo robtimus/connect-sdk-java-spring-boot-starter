@@ -80,6 +80,7 @@ public class ConnectSdkMerchantClientAutoConfigurationTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testAutoConfiguration() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
@@ -101,7 +102,6 @@ public class ConnectSdkMerchantClientAutoConfigurationTest {
                     assertThat(context).hasSingleBean(MerchantClient.class);
 
                     // verify that the client is used
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
                     verify(client).merchant("merchantId");
                     verifyNoMoreInteractions(client);

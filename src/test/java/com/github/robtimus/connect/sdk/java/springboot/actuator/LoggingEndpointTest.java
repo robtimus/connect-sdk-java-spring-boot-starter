@@ -115,6 +115,7 @@ public class LoggingEndpointTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testEnableLoggingWithNoLoggers() {
         contextRunner
                 .run(context -> {
@@ -136,7 +137,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLogging(null);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
 
                     verifyNoMoreInteractions(connection);
@@ -152,7 +152,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLogging(null);
 
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
                     verifyNoMoreInteractions(communicator);
@@ -168,7 +167,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLogging(null);
 
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
 
                     verifyNoMoreInteractions(client);
@@ -187,11 +185,8 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLogging(null);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
 
                     verifyNoMoreInteractions(connection, communicator, client);
@@ -199,6 +194,7 @@ public class LoggingEndpointTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testEnableLoggingWithOneLogger() {
         contextRunner
                 .withUserConfiguration(LoggerProvider.class)
@@ -221,7 +217,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLogging(null);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
 
@@ -239,7 +234,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLogging(null);
 
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
 
@@ -257,7 +251,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLogging(null);
 
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
 
@@ -278,11 +271,8 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLogging(null);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
 
@@ -294,6 +284,7 @@ public class LoggingEndpointTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testEnableLoggingWithMultipleLoggers() {
         contextRunner
                 .withUserConfiguration(LoggerProvider.class, AdditionalLoggerProvider.class)
@@ -316,7 +307,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLogging(null);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
                     CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
@@ -335,7 +325,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLogging(null);
 
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
                     CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
@@ -354,7 +343,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLogging(null);
 
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
                     CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
@@ -377,11 +365,8 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLogging(null);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
                     CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
@@ -394,6 +379,7 @@ public class LoggingEndpointTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testEnableLoggingWithSpecificLogger() {
         contextRunner
                 .run(context -> {
@@ -415,7 +401,6 @@ public class LoggingEndpointTest {
                     assertThat(context).hasSingleBean(Connection.class);
                     assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
 
                     assertThatThrownBy(() -> endpoint.enableLogging("connection"))
@@ -436,7 +421,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLogging("logger");
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
 
@@ -454,7 +438,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLogging("logger");
 
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
 
@@ -472,7 +455,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLogging("logger");
 
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
 
@@ -494,11 +476,8 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLogging("logger");
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
 
@@ -510,6 +489,7 @@ public class LoggingEndpointTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testEnableLoggingOnBeanWithNoLoggers() {
         contextRunner
                 .run(context -> {
@@ -548,7 +528,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLoggingOnBean("connection", null);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
 
                     verifyNoMoreInteractions(connection);
@@ -564,7 +543,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLoggingOnBean("communicator", null);
 
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
                     verifyNoMoreInteractions(communicator);
@@ -580,7 +558,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLoggingOnBean("client", null);
 
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
 
                     verifyNoMoreInteractions(client);
@@ -599,11 +576,8 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLoggingOnBean("connection", null);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
 
                     verifyNoMoreInteractions(connection, communicator, client);
@@ -611,6 +585,7 @@ public class LoggingEndpointTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testEnableLoggingOnBeanWithOneLogger() {
         contextRunner
                 .withUserConfiguration(LoggerProvider.class)
@@ -651,7 +626,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLoggingOnBean("connection", null);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
 
@@ -669,7 +643,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLoggingOnBean("communicator", null);
 
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
 
@@ -687,7 +660,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLoggingOnBean("client", null);
 
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
 
@@ -708,11 +680,8 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLoggingOnBean("connection", null);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
 
@@ -722,6 +691,7 @@ public class LoggingEndpointTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testEnableLoggingOnBeanWithMultipleLoggers() {
         contextRunner
                 .withUserConfiguration(LoggerProvider.class, AdditionalLoggerProvider.class)
@@ -762,7 +732,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLoggingOnBean("connection", null);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
                     CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
@@ -781,7 +750,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLoggingOnBean("communicator", null);
 
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
                     CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
@@ -800,7 +768,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLoggingOnBean("client", null);
 
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
                     CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
@@ -823,11 +790,8 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLoggingOnBean("connection", null);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
                     CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
@@ -838,6 +802,7 @@ public class LoggingEndpointTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testEnableLoggingOnBeanWithSpecificLogger() {
         contextRunner
                 .run(context -> {
@@ -887,7 +852,6 @@ public class LoggingEndpointTest {
                     assertThat(context).hasSingleBean(Connection.class);
                     assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
 
                     assertThatThrownBy(() -> endpoint.enableLoggingOnBean("connection", "connection"))
@@ -908,7 +872,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLoggingOnBean("connection", "logger");
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
 
@@ -926,7 +889,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLoggingOnBean("communicator", "logger");
 
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
 
@@ -944,7 +906,6 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLoggingOnBean("client", "logger");
 
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
 
@@ -966,11 +927,8 @@ public class LoggingEndpointTest {
 
                     endpoint.enableLoggingOnBean("connection", "logger");
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
                     CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
 
@@ -980,6 +938,7 @@ public class LoggingEndpointTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testDisableLogging() {
         contextRunner
                 .run(context -> {
@@ -999,7 +958,6 @@ public class LoggingEndpointTest {
 
                     endpoint.disableLogging();
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
 
                     verify(connection).disableLogging();
@@ -1015,7 +973,6 @@ public class LoggingEndpointTest {
 
                     endpoint.disableLogging();
 
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
                     verify(communicator).disableLogging();
@@ -1031,7 +988,6 @@ public class LoggingEndpointTest {
 
                     endpoint.disableLogging();
 
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
 
                     verify(client).disableLogging();
@@ -1050,11 +1006,8 @@ public class LoggingEndpointTest {
 
                     endpoint.disableLogging();
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
 
                     verify(connection).disableLogging();
@@ -1065,6 +1018,7 @@ public class LoggingEndpointTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testEnableLoggingOnBean() {
         contextRunner
                 .run(context -> {
@@ -1100,7 +1054,6 @@ public class LoggingEndpointTest {
 
                     endpoint.disableLoggingOnBean("connection");
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
 
                     verify(connection).disableLogging();
@@ -1116,7 +1069,6 @@ public class LoggingEndpointTest {
 
                     endpoint.disableLoggingOnBean("communicator");
 
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
                     verify(communicator).disableLogging();
@@ -1132,7 +1084,6 @@ public class LoggingEndpointTest {
 
                     endpoint.disableLoggingOnBean("client");
 
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
 
                     verify(client).disableLogging();
@@ -1151,11 +1102,8 @@ public class LoggingEndpointTest {
 
                     endpoint.disableLoggingOnBean("connection");
 
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    @SuppressWarnings("resource")
                     Client client = context.getBean(ClientProvider.class).client();
 
                     verify(connection).disableLogging();

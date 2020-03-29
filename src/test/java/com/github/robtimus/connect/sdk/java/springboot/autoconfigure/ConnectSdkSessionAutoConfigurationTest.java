@@ -97,6 +97,7 @@ public class ConnectSdkSessionAutoConfigurationTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testAutoConfiguration() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
