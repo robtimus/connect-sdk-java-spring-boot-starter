@@ -75,8 +75,8 @@
     <version.hamcrest>2.2</version.hamcrest>
     <version.httpclient>4.5.12</version.httpclient>
     <version.junit>4.13</version.junit>
-    <version.mockito>3.3.0</version.mockito>
-    <version.powermock>2.0.5</version.powermock>
+    <version.mockito>3.3.3</version.mockito>
+    <version.powermock>2.0.6</version.powermock>
     <version.spring-boot>2.1.13.RELEASE</version.spring-boot>
 
     <version.plugin.antrun>1.8</version.plugin.antrun>
