@@ -39,6 +39,7 @@ public class ConnectSdkClientAutoConfigurationTest {
             .withConfiguration(AutoConfigurations.of(ConnectSdkClientAutoConfiguration.class));
 
     @Test
+    @SuppressWarnings("resource")
     public void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class, ConnectSdkConnectionAutoConfiguration.class,
@@ -63,6 +64,7 @@ public class ConnectSdkClientAutoConfigurationTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testAutoConfiguration() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
@@ -83,7 +85,6 @@ public class ConnectSdkClientAutoConfigurationTest {
                     assertThat(context).getBean(Client.class).isExactlyInstanceOf(Client.class);
 
                     // verify that the communicator is used
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
                     // no need to setup a null return value
                     context.getBean(Client.class).merchant("merchantId").payouts().cancel("payoutId", null);

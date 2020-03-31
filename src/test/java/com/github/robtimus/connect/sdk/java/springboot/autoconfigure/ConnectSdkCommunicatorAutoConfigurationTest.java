@@ -48,6 +48,7 @@ public class ConnectSdkCommunicatorAutoConfigurationTest {
             .withConfiguration(AutoConfigurations.of(ConnectSdkCommunicatorAutoConfiguration.class));
 
     @Test
+    @SuppressWarnings("resource")
     public void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class, ConnectSdkConnectionAutoConfiguration.class,
@@ -86,6 +87,7 @@ public class ConnectSdkCommunicatorAutoConfigurationTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testAutoConfiguration() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
@@ -96,7 +98,6 @@ public class ConnectSdkCommunicatorAutoConfigurationTest {
                 .run(context -> {
                     assertThat(context).hasBean("connectSdkCommunicator");
                     assertThat(context).hasSingleBean(Communicator.class);
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(Communicator.class);
                     assertThat(communicator).isExactlyInstanceOf(Communicator.class);
                     assertThat(communicator.getMarshaller()).isSameAs(DefaultMarshaller.INSTANCE);
@@ -106,13 +107,11 @@ public class ConnectSdkCommunicatorAutoConfigurationTest {
                 .run(context -> {
                     assertThat(context).hasBean("connectSdkCommunicator");
                     assertThat(context).hasSingleBean(Communicator.class);
-                    @SuppressWarnings("resource")
                     Communicator communicator = context.getBean(Communicator.class);
                     assertThat(communicator).isExactlyInstanceOf(Communicator.class);
                     assertThat(communicator.getMarshaller()).isSameAs(DefaultMarshaller.INSTANCE);
 
                     // verify that the session's connection is used
-                    @SuppressWarnings("resource")
                     Connection connection = context.getBean(SessionProvider.class).connection();
                     when(connection.post(any(URI.class), anyList(), anyString(), any())).thenReturn(null);
                     context.getBean(Communicator.class).post("/path", null, null, null, Void.class, null);
@@ -134,6 +133,7 @@ public class ConnectSdkCommunicatorAutoConfigurationTest {
     static class SessionProvider {
 
         @Bean
+        @SuppressWarnings("resource")
         public Session session() {
             Session session = mock(Session.class);
             when(session.getApiEndpoint()).thenReturn(URI.create("https://eu.sandbox.api-ingenico.com"));

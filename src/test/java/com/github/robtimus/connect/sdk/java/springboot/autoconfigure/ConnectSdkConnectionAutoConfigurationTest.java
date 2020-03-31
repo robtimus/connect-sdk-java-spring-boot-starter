@@ -34,6 +34,7 @@ public class ConnectSdkConnectionAutoConfigurationTest {
             .withConfiguration(AutoConfigurations.of(ConnectSdkConnectionAutoConfiguration.class));
 
     @Test
+    @SuppressWarnings("resource")
     public void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class)
@@ -46,6 +47,7 @@ public class ConnectSdkConnectionAutoConfigurationTest {
     }
 
     @Test
+    @SuppressWarnings("resource")
     public void testAutoConfiguration() {
         contextRunner
                 .run(context -> {
