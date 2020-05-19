@@ -362,7 +362,7 @@
           <tagNameFormat>@{project.version}</tagNameFormat>
           <useReleaseProfile>false</useReleaseProfile>
           <releaseProfiles>release</releaseProfiles>
-          <goals>deploy site</goals>
+          <goals>deploy</goals>
         </configuration>
       </plugin>
 
