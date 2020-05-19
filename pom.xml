@@ -73,11 +73,8 @@
     <version.commons-codec>1.14</version.commons-codec>
     <version.connect-sdk-java>6.10.0</version.connect-sdk-java>
     <version.gson>2.8.6</version.gson>
-    <version.hamcrest>2.2</version.hamcrest>
     <version.httpclient>4.5.12</version.httpclient>
     <version.httpmime>4.5.12</version.httpmime>
-    <version.junit>4.13</version.junit>
-    <version.mockito>3.3.3</version.mockito>
     <version.powermock>2.0.7</version.powermock>
     <version.spring-boot>2.3.0.RELEASE</version.spring-boot>
 
@@ -171,31 +168,16 @@
     </dependency>
 
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${version.junit}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-library</artifactId>
-      <version>${version.hamcrest}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <version>${version.mockito}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.powermock</groupId>
       <artifactId>powermock-module-junit4</artifactId>
       <version>${version.powermock}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>

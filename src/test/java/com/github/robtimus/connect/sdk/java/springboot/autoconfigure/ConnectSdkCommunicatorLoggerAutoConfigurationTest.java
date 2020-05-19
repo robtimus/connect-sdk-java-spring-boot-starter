@@ -35,6 +35,7 @@ import org.springframework.context.annotation.Configuration;
 import com.github.robtimus.connect.sdk.java.springboot.logging.LogbackCommunicatorLogger;
 import com.ingenico.connect.gateway.sdk.java.logging.CommunicatorLogger;
 
+// PowerMock doesn't work well with JUnit5 yet, so use JUnit4 for just this test class
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(LoggerFactory.class)
 public class ConnectSdkCommunicatorLoggerAutoConfigurationTest {
