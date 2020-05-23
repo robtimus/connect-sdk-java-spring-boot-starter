@@ -19,16 +19,8 @@
   xmlns="https://maven.apache.org/xsd/decoration-1.7.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="https://maven.apache.org/xsd/decoration-1.7.0.xsd https://maven.apache.org/xsd/decoration-1.7.0.xsd">
 
-  <version position="left" />
-  <publishDate position="left" />
-
-  <skin>
-    <groupId>org.apache.maven.skins</groupId>
-    <artifactId>maven-fluido-skin</artifactId>
-    <version>1.7</version>
-  </skin>
-
   <body>
+    <head />
     <menu name="connect-sdk-java-spring-boot-starter">
       <item name="Quick Start" href="index.html" />
       <item name="Releases" href="https://github.com/robtimus/connect-sdk-java-spring-boot-starter/releases" />
@@ -40,12 +32,5 @@
     <menu name="Actuators">
       <item name="Endpoints" href="actuator-endpoints.html" />
     </menu>
-    <menu ref="reports" />
   </body>
-
-  <custom>
-    <fluidoSkin>
-      <sideBarEnabled>true</sideBarEnabled>
-    </fluidoSkin>
-  </custom>
 </project>
