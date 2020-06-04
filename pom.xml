@@ -22,7 +22,7 @@
   <parent>
     <groupId>com.github.robtimus</groupId>
     <artifactId>robtimus-parent</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
     <relativePath />
   </parent>
 
@@ -62,7 +62,7 @@
 
   <properties>
     <version.commons-codec>1.14</version.commons-codec>
-    <version.connect-sdk-java>6.10.0</version.connect-sdk-java>
+    <version.connect-sdk-java>6.11.0</version.connect-sdk-java>
     <version.gson>2.8.6</version.gson>
     <version.httpclient>4.5.12</version.httpclient>
     <version.httpmime>4.5.12</version.httpmime>
