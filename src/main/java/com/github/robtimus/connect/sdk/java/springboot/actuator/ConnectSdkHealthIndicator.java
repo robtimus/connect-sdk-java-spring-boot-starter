@@ -37,7 +37,7 @@ import com.ingenico.connect.gateway.sdk.java.merchant.services.ServicesClient;
  */
 public class ConnectSdkHealthIndicator extends AbstractHealthIndicator {
 
-    /** Add a small margin to account for small delays between calling the health indicator */
+    /** Add a small margin to account for small delays between calling the health indicator. */
     private static final int MARGIN = 10;
 
     private final MerchantClient merchantClient;

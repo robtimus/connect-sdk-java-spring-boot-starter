@@ -33,25 +33,25 @@ public class ConnectSdkProperties {
 
     private Endpoint endpoint;
 
-    /** Connect timeout for HTTP requests */
+    /** Connect timeout for HTTP requests. */
     private int connectTimeout = 5_000;
-    /** Socket/read timeout for HTTP requests */
+    /** Socket/read timeout for HTTP requests. */
     private int socketTimeout = 300_000;
-    /** Maximum number of concurrent HTTP connections */
+    /** Maximum number of concurrent HTTP connections. */
     private int maxConnections = CommunicatorConfiguration.DEFAULT_MAX_CONNECTIONS;
 
-    /** Authorization type, should only be V1HMAC */
+    /** Authorization type, should only be V1HMAC. */
     private AuthorizationType authorizationType = AuthorizationType.V1HMAC;
-    /** Your API key id */
+    /** Your API key id. */
     private String apiKeyId;
-    /** Your secret API key */
+    /** Your secret API key. */
     private String secretApiKey;
 
     private Proxy proxy;
 
     private HTTPS https;
 
-    /** Your company name */
+    /** Your company name. */
     private String integrator;
 
     private ShoppingCartExtension shoppingCartExtension;
@@ -146,11 +146,11 @@ public class ConnectSdkProperties {
 
     public static class Endpoint {
 
-        /** Hostname of the API endpoint to use */
+        /** Hostname of the API endpoint to use. */
         private String host;
-        /** Scheme of the API endpoint to use */
+        /** Scheme of the API endpoint to use. */
         private String scheme = "https";
-        /** Port of the API endpoint to use */
+        /** Port of the API endpoint to use. */
         private int port = -1;
 
         public String getHost() {
@@ -194,11 +194,11 @@ public class ConnectSdkProperties {
 
     public static class Proxy {
 
-        /** URI for the HTTP proxy to use, if any */
+        /** URI for the HTTP proxy to use, if any. */
         private String uri;
-        /** Username for the HTTP proxy to use, if any */
+        /** Username for the HTTP proxy to use, if any. */
         private String username;
-        /** Password for the HTTP proxy to use, if any */
+        /** Password for the HTTP proxy to use, if any. */
         private String password;
 
         public String getUri() {
@@ -228,13 +228,13 @@ public class ConnectSdkProperties {
 
     public static class ShoppingCartExtension {
 
-        /** For shopping cart extensions, the creator */
+        /** For shopping cart extensions, the creator. */
         private String creator;
-        /** For shopping cart extensions, the name */
+        /** For shopping cart extensions, the name. */
         private String name;
-        /** For shopping cart extensions, the version */
+        /** For shopping cart extensions, the version. */
         private String version;
-        /** For shopping cart extensions, the extension id */
+        /** For shopping cart extensions, the extension id. */
         private String extensionId;
 
         public String getCreator() {
