@@ -85,7 +85,7 @@ public class LoggingEndpoint {
     @WriteOperation
     public void enableLoggingOnBean(@Selector String beanName, @Nullable String logger) {
         LoggingCapable loggingCapable = context.getBean(beanName, LoggingCapable.class);
-        findCommunicatorLogger(logger).ifPresent(loggerBean -> loggingCapable.enableLogging(loggerBean));
+        findCommunicatorLogger(logger).ifPresent(loggingCapable::enableLogging);
     }
 
     /**

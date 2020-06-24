@@ -46,7 +46,7 @@ import com.ingenico.connect.gateway.sdk.java.logging.CommunicatorLogger;
 import com.ingenico.connect.gateway.sdk.java.logging.SysOutCommunicatorLogger;
 import com.ingenico.connect.gateway.sdk.java.merchant.MerchantClient;
 
-public class FullAutoConfigurationTest {
+class FullAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(
@@ -58,7 +58,7 @@ public class FullAutoConfigurationTest {
                     ConnectSdkMetaDataProviderAutoConfiguration.class, ConnectSdkSessionAutoConfiguration.class));
 
     @Test
-    public void testWithNoProperties() {
+    void testWithNoProperties() {
         contextRunner.run(context -> {
             assertThat(context).doesNotHaveBean(Authenticator.class);
             assertThat(context).doesNotHaveBean(Client.class);
@@ -76,7 +76,7 @@ public class FullAutoConfigurationTest {
     }
 
     @Test
-    public void testWithMinimalProperties() {
+    void testWithMinimalProperties() {
         contextRunner
                 .withPropertyValues("connect.api.endpoint.host=eu.sandbox.api-ingenico.com", "connect.api.integrator=Integrator",
                         "connect.api.api-key-id=apiKeyId", "connect.api.secret-api-key=secretApiKey")
@@ -97,7 +97,7 @@ public class FullAutoConfigurationTest {
     }
 
     @Test
-    public void testWithMinimalPropertiesForHealth() {
+    void testWithMinimalPropertiesForHealth() {
         contextRunner
                 .withPropertyValues("connect.api.endpoint.host=eu.sandbox.api-ingenico.com", "connect.api.integrator=Integrator",
                         "connect.api.api-key-id=apiKeyId", "connect.api.secret-api-key=secretApiKey", "connect.api.merchant-id=merchantId")
@@ -118,7 +118,7 @@ public class FullAutoConfigurationTest {
     }
 
     @Test
-    public void testWithMinimalPropertiesForEndpoints() {
+    void testWithMinimalPropertiesForEndpoints() {
         contextRunner
                 .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true",
                         "management.endpoint.connectSdkLogging.enabled=true", "spring.jmx.enabled=true")
@@ -139,7 +139,7 @@ public class FullAutoConfigurationTest {
     }
 
     @Test
-    public void testWithAllPropertiesButShoppingCartExtensionExtensionId() {
+    void testWithAllPropertiesButShoppingCartExtensionExtensionId() {
         contextRunner
                 .withPropertyValues("connect.api.merchant-id=merchantId", "connect.api.endpoint.host=eu.sandbox.api-ingenico.com",
                         "connect.api.endpoint.scheme=https", "connect.api.endpoint.port=443", "connect.api.connect-timeout=1000",
@@ -167,7 +167,7 @@ public class FullAutoConfigurationTest {
     }
 
     @Test
-    public void testWithAllProperties() {
+    void testWithAllProperties() {
         contextRunner
                 .withPropertyValues("connect.api.merchant-id=merchantId", "connect.api.endpoint.host=eu.sandbox.api-ingenico.com",
                         "connect.api.endpoint.scheme=https", "connect.api.endpoint.port=443", "connect.api.connect-timeout=1000",
@@ -196,7 +196,7 @@ public class FullAutoConfigurationTest {
     }
 
     @Test
-    public void testWithAllPropertiesAndAdditionalBeans() {
+    void testWithAllPropertiesAndAdditionalBeans() {
         contextRunner
                 .withUserConfiguration(AdditionalBeanProvider.class)
                 .withPropertyValues("connect.api.merchant-id=merchantId", "connect.api.endpoint.host=eu.sandbox.api-ingenico.com",
@@ -226,7 +226,7 @@ public class FullAutoConfigurationTest {
     }
 
     @Test
-    public void testWithInvalidEndpointHost() {
+    void testWithInvalidEndpointHost() {
         contextRunner
                 .withPropertyValues("connect.api.endpoint.host=https://eu.sandbox.api-ingenico.com", "connect.api.integrator=Integrator",
                         "connect.api.api-key-id=apiKeyId", "connect.api.secret-api-key=secretApiKey")
@@ -236,7 +236,7 @@ public class FullAutoConfigurationTest {
     }
 
     @Test
-    public void testWithProvidedBeans() {
+    void testWithProvidedBeans() {
         testWithProvidedBean(AuthenticatorProvider.class, Authenticator.class, c -> c.getBean(AuthenticatorProvider.class).authenticator());
         testWithProvidedBean(ClientProvider.class, Client.class, c -> c.getBean(ClientProvider.class).client());
         testWithProvidedBean(CommunicatorProvider.class, Communicator.class, c -> c.getBean(CommunicatorProvider.class).communicator());
@@ -277,7 +277,7 @@ public class FullAutoConfigurationTest {
     static class AuthenticatorProvider {
 
         @Bean
-        public Authenticator authenticator() {
+        Authenticator authenticator() {
             return new DefaultAuthenticator(AuthorizationType.V1HMAC, "apiKeyId", "secretApiKey");
         }
     }
@@ -289,7 +289,7 @@ public class FullAutoConfigurationTest {
         private Communicator communicator;
 
         @Bean
-        public Client client() {
+        Client client() {
             return new Client(communicator);
         }
     }
@@ -303,7 +303,7 @@ public class FullAutoConfigurationTest {
         private Marshaller marshaller;
 
         @Bean
-        public Communicator communicator() {
+        Communicator communicator() {
             return new Communicator(session, marshaller);
         }
     }
@@ -312,7 +312,7 @@ public class FullAutoConfigurationTest {
     static class CommunicatorLoggerProvider {
 
         @Bean
-        public CommunicatorLogger communicatorLogger() {
+        CommunicatorLogger communicatorLogger() {
             return SysOutCommunicatorLogger.INSTANCE;
         }
     }
@@ -321,7 +321,7 @@ public class FullAutoConfigurationTest {
     static class ConnectionProvider {
 
         @Bean
-        public Connection connection() {
+        Connection connection() {
             return new DefaultConnection(1000, 30000);
         }
     }
@@ -333,7 +333,7 @@ public class FullAutoConfigurationTest {
         private MerchantClient merchantClient;
 
         @Bean
-        public ConnectSdkHealthIndicator healthIndicator() {
+        ConnectSdkHealthIndicator healthIndicator() {
             return new ConnectSdkHealthIndicator(merchantClient, 1);
         }
     }
@@ -342,7 +342,7 @@ public class FullAutoConfigurationTest {
     static class MarshallerProvider {
 
         @Bean
-        public Marshaller marshaller() {
+        Marshaller marshaller() {
             return DefaultMarshaller.INSTANCE;
         }
     }
@@ -354,7 +354,7 @@ public class FullAutoConfigurationTest {
         private Client client;
 
         @Bean
-        public MerchantClient merchantClient() {
+        MerchantClient merchantClient() {
             return client.merchant("merchantId");
         }
     }
@@ -363,7 +363,7 @@ public class FullAutoConfigurationTest {
     static class MetaDataProviderProvider {
 
         @Bean
-        public MetaDataProvider metaDataProvider() {
+        MetaDataProvider metaDataProvider() {
             return new MetaDataProvider("Integrator");
         }
     }
@@ -379,7 +379,7 @@ public class FullAutoConfigurationTest {
         private MetaDataProvider metaDataProvider;
 
         @Bean
-        public Session session() {
+        Session session() {
             return new Session(URI.create("https://eu.sandbox.api-ingenico.com"), connection, authenticator, metaDataProvider);
         }
     }
@@ -388,7 +388,7 @@ public class FullAutoConfigurationTest {
     static class AdditionalBeanProvider {
 
         @Bean
-        public MetaDataProviderBuilderCustomizer metaDataProviderBuilderCustomizer() {
+        MetaDataProviderBuilderCustomizer metaDataProviderBuilderCustomizer() {
             return builder -> builder.withAdditionalRequestHeader(new RequestHeader("custom-name", "custom-value"));
         }
     }

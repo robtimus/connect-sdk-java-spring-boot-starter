@@ -32,13 +32,13 @@ import com.ingenico.connect.gateway.sdk.java.Connection;
 import com.ingenico.connect.gateway.sdk.java.MetaDataProvider;
 import com.ingenico.connect.gateway.sdk.java.Session;
 
-public class ConnectSdkSessionAutoConfigurationTest {
+class ConnectSdkSessionAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(ConnectSdkSessionAutoConfiguration.class));
 
     @Test
-    public void testNoAutoConfigurationWithExistingBean() {
+    void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class, ConnectSdkConnectionAutoConfiguration.class,
                         ConnectSdkAuthenticatorAutoConfiguration.class, ConnectSdkMetaDataProviderAutoConfiguration.class)
@@ -52,7 +52,7 @@ public class ConnectSdkSessionAutoConfigurationTest {
     }
 
     @Test
-    public void testNoAutoConfigurationWithMissingProperties() {
+    void testNoAutoConfigurationWithMissingProperties() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
                         ConnectSdkMetaDataProviderAutoConfiguration.class)
@@ -63,7 +63,7 @@ public class ConnectSdkSessionAutoConfigurationTest {
     }
 
     @Test
-    public void testNoAutoConfigurationWithMissingBeans() {
+    void testNoAutoConfigurationWithMissingBeans() {
         contextRunner
                 .withUserConfiguration(ConnectSdkAuthenticatorAutoConfiguration.class, ConnectSdkMetaDataProviderAutoConfiguration.class)
                 .withPropertyValues("connect.api.endpoint.host=eu.sandbox.api-ingenico.com",
@@ -98,7 +98,7 @@ public class ConnectSdkSessionAutoConfigurationTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testAutoConfiguration() {
+    void testAutoConfiguration() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
                         ConnectSdkMetaDataProviderAutoConfiguration.class)
@@ -124,7 +124,7 @@ public class ConnectSdkSessionAutoConfigurationTest {
     static class ExistingBeanProvider {
 
         @Bean
-        public Session session() {
+        Session session() {
             return mock(Session.class);
         }
     }

@@ -38,13 +38,13 @@ import com.ingenico.connect.gateway.sdk.java.domain.services.TestConnection;
 import com.ingenico.connect.gateway.sdk.java.merchant.MerchantClient;
 import com.ingenico.connect.gateway.sdk.java.merchant.services.ServicesClient;
 
-public class ConnectSdkHealthIndicatorAutoConfigurationTest {
+class ConnectSdkHealthIndicatorAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(ConnectSdkHealthIndicatorAutoConfiguration.class));
 
     @Test
-    public void testNoAutoConfigurationWithMissingClass() throws IOException {
+    void testNoAutoConfigurationWithMissingClass() throws IOException {
         try (FilteredClassLoader classLoader = new FilteredClassLoader(HealthIndicator.class)) {
             contextRunner
                     .withClassLoader(classLoader)
@@ -55,7 +55,7 @@ public class ConnectSdkHealthIndicatorAutoConfigurationTest {
     }
 
     @Test
-    public void testNoAutoConfigurationWithExistingBean() {
+    void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class)
                 .run(context -> {
@@ -67,7 +67,7 @@ public class ConnectSdkHealthIndicatorAutoConfigurationTest {
     }
 
     @Test
-    public void testNoAutoConfigurationWithMissingBeans() {
+    void testNoAutoConfigurationWithMissingBeans() {
         contextRunner
                 .run(context -> {
                     assertThat(context).doesNotHaveBean(ConnectSdkHealthIndicator.class);
@@ -75,7 +75,7 @@ public class ConnectSdkHealthIndicatorAutoConfigurationTest {
     }
 
     @Test
-    public void testNoAutoConfigurationWithDisabledHealthIndicator() {
+    void testNoAutoConfigurationWithDisabledHealthIndicator() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
                         ConnectSdkMetaDataProviderAutoConfiguration.class, ConnectSdkSessionAutoConfiguration.class,
@@ -91,7 +91,7 @@ public class ConnectSdkHealthIndicatorAutoConfigurationTest {
     }
 
     @Test
-    public void testAutoConfiguration() {
+    void testAutoConfiguration() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
                         ConnectSdkMetaDataProviderAutoConfiguration.class, ConnectSdkSessionAutoConfiguration.class,
@@ -134,7 +134,7 @@ public class ConnectSdkHealthIndicatorAutoConfigurationTest {
     static class ExistingBeanProvider {
 
         @Bean
-        public ConnectSdkHealthIndicator healthIndicator() {
+        ConnectSdkHealthIndicator healthIndicator() {
             return mock(ConnectSdkHealthIndicator.class);
         }
     }
@@ -143,7 +143,7 @@ public class ConnectSdkHealthIndicatorAutoConfigurationTest {
     static class MerchantClientProvider {
 
         @Bean
-        public MerchantClient merchantClient() {
+        MerchantClient merchantClient() {
             return mock(MerchantClient.class);
         }
     }

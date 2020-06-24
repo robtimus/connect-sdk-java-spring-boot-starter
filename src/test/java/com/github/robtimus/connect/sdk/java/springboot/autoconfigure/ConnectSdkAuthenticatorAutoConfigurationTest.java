@@ -27,13 +27,13 @@ import org.springframework.context.annotation.Configuration;
 import com.ingenico.connect.gateway.sdk.java.Authenticator;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultAuthenticator;
 
-public class ConnectSdkAuthenticatorAutoConfigurationTest {
+class ConnectSdkAuthenticatorAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(ConnectSdkAuthenticatorAutoConfiguration.class));
 
     @Test
-    public void testNoAutoConfigurationWithExistingBean() {
+    void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class)
                 .withPropertyValues("connect.api.api-key-id=keyId", "connect.api.secret-api-key=secret")
@@ -45,7 +45,7 @@ public class ConnectSdkAuthenticatorAutoConfigurationTest {
     }
 
     @Test
-    public void testNoAutoConfigurationWithMissingProperties() {
+    void testNoAutoConfigurationWithMissingProperties() {
         contextRunner
                 .withPropertyValues("connect.api.api-key-id=keyId")
                 .run(context -> {
@@ -59,7 +59,7 @@ public class ConnectSdkAuthenticatorAutoConfigurationTest {
     }
 
     @Test
-    public void testAutoConfiguration() {
+    void testAutoConfiguration() {
         contextRunner
                 .withPropertyValues("connect.api.api-key-id=keyId", "connect.api.secret-api-key=secret")
                 .run(context -> {
@@ -73,7 +73,7 @@ public class ConnectSdkAuthenticatorAutoConfigurationTest {
     static class ExistingBeanProvider {
 
         @Bean
-        public Authenticator authenticator() {
+        Authenticator authenticator() {
             return mock(Authenticator.class);
         }
     }

@@ -37,12 +37,12 @@ import com.ingenico.connect.gateway.sdk.java.Communicator;
 import com.ingenico.connect.gateway.sdk.java.Connection;
 import com.ingenico.connect.gateway.sdk.java.PooledConnection;
 
-public class ConnectionsEndpointTest {
+class ConnectionsEndpointTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner();
 
     @Test
-    public void testListCloseableBeans() {
+    void testListCloseableBeans() {
         contextRunner
                 .withUserConfiguration(ConnectionProvider.class)
                 .run(context -> {
@@ -97,7 +97,7 @@ public class ConnectionsEndpointTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testCloseIdleConnections() {
+    void testCloseIdleConnections() {
         contextRunner
                 .run(context -> {
                     ConnectionsEndpoint endpoint = new ConnectionsEndpoint(context);
@@ -204,7 +204,7 @@ public class ConnectionsEndpointTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testCloseIdleConnectionsForBean() {
+    void testCloseIdleConnectionsForBean() {
         contextRunner
                 .run(context -> {
                     ConnectionsEndpoint endpoint = new ConnectionsEndpoint(context);
@@ -311,7 +311,7 @@ public class ConnectionsEndpointTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testCloseExpiredConnections() {
+    void testCloseExpiredConnections() {
         contextRunner
                 .run(context -> {
                     ConnectionsEndpoint endpoint = new ConnectionsEndpoint(context);
@@ -418,7 +418,7 @@ public class ConnectionsEndpointTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testCloseExpiredConnectionsForBean() {
+    void testCloseExpiredConnectionsForBean() {
         contextRunner
                 .run(context -> {
                     ConnectionsEndpoint endpoint = new ConnectionsEndpoint(context);
@@ -528,7 +528,7 @@ public class ConnectionsEndpointTest {
 
         @Bean
         @Primary
-        public Connection connection() {
+        Connection connection() {
             return mock(Connection.class);
         }
     }
@@ -537,7 +537,7 @@ public class ConnectionsEndpointTest {
     static class PooledConnectionProvider {
 
         @Bean
-        public PooledConnection pooledConnection() {
+        PooledConnection pooledConnection() {
             return mock(PooledConnection.class);
         }
     }
@@ -546,7 +546,7 @@ public class ConnectionsEndpointTest {
     static class CommunicatorProvider {
 
         @Bean
-        public Communicator communicator() {
+        Communicator communicator() {
             return mock(Communicator.class);
         }
     }
@@ -555,7 +555,7 @@ public class ConnectionsEndpointTest {
     static class ClientProvider {
 
         @Bean
-        public Client client() {
+        Client client() {
             return mock(Client.class);
         }
     }

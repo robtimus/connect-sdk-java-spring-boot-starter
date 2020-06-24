@@ -41,12 +41,12 @@ import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultMarshaller;
 import com.ingenico.connect.gateway.sdk.java.logging.CommunicatorLogger;
 import com.ingenico.connect.gateway.sdk.java.logging.LoggingCapable;
 
-public class LoggingEndpointTest {
+class LoggingEndpointTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner();
 
     @Test
-    public void testListLoggingCapableAndLoggerBeans() {
+    void testListLoggingCapableAndLoggerBeans() {
         contextRunner
                 .run(context -> {
                     LoggingEndpoint endpoint = new LoggingEndpoint(context);
@@ -116,7 +116,7 @@ public class LoggingEndpointTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testEnableLoggingWithNoLoggers() {
+    void testEnableLoggingWithNoLoggers() {
         contextRunner
                 .run(context -> {
                     LoggingEndpoint endpoint = new LoggingEndpoint(context);
@@ -195,7 +195,7 @@ public class LoggingEndpointTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testEnableLoggingWithOneLogger() {
+    void testEnableLoggingWithOneLogger() {
         contextRunner
                 .withUserConfiguration(LoggerProvider.class)
                 .run(context -> {
@@ -285,7 +285,7 @@ public class LoggingEndpointTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testEnableLoggingWithMultipleLoggers() {
+    void testEnableLoggingWithMultipleLoggers() {
         contextRunner
                 .withUserConfiguration(LoggerProvider.class, AdditionalLoggerProvider.class)
                 .run(context -> {
@@ -380,7 +380,7 @@ public class LoggingEndpointTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testEnableLoggingWithSpecificLogger() {
+    void testEnableLoggingWithSpecificLogger() {
         contextRunner
                 .run(context -> {
                     LoggingEndpoint endpoint = new LoggingEndpoint(context);
@@ -490,7 +490,7 @@ public class LoggingEndpointTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testEnableLoggingOnBeanWithNoLoggers() {
+    void testEnableLoggingOnBeanWithNoLoggers() {
         contextRunner
                 .run(context -> {
                     LoggingEndpoint endpoint = new LoggingEndpoint(context);
@@ -586,7 +586,7 @@ public class LoggingEndpointTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testEnableLoggingOnBeanWithOneLogger() {
+    void testEnableLoggingOnBeanWithOneLogger() {
         contextRunner
                 .withUserConfiguration(LoggerProvider.class)
                 .run(context -> {
@@ -692,7 +692,7 @@ public class LoggingEndpointTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testEnableLoggingOnBeanWithMultipleLoggers() {
+    void testEnableLoggingOnBeanWithMultipleLoggers() {
         contextRunner
                 .withUserConfiguration(LoggerProvider.class, AdditionalLoggerProvider.class)
                 .run(context -> {
@@ -803,7 +803,7 @@ public class LoggingEndpointTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testEnableLoggingOnBeanWithSpecificLogger() {
+    void testEnableLoggingOnBeanWithSpecificLogger() {
         contextRunner
                 .run(context -> {
                     LoggingEndpoint endpoint = new LoggingEndpoint(context);
@@ -939,7 +939,7 @@ public class LoggingEndpointTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testDisableLogging() {
+    void testDisableLogging() {
         contextRunner
                 .run(context -> {
                     LoggingEndpoint endpoint = new LoggingEndpoint(context);
@@ -1019,7 +1019,7 @@ public class LoggingEndpointTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testEnableLoggingOnBean() {
+    void testEnableLoggingOnBean() {
         contextRunner
                 .run(context -> {
                     LoggingEndpoint endpoint = new LoggingEndpoint(context);
@@ -1112,7 +1112,7 @@ public class LoggingEndpointTest {
     }
 
     @Test
-    public void testCompoundCommunicatorLogger() {
+    void testCompoundCommunicatorLogger() {
         CommunicatorLogger logger1 = mock(CommunicatorLogger.class);
         CommunicatorLogger logger2 = mock(CommunicatorLogger.class);
         CommunicatorLogger logger3 = mock(CommunicatorLogger.class);
@@ -1147,7 +1147,7 @@ public class LoggingEndpointTest {
 
         @Bean
         @Primary
-        public Connection connection() {
+        Connection connection() {
             return mock(Connection.class);
         }
     }
@@ -1156,7 +1156,7 @@ public class LoggingEndpointTest {
     static class CommunicatorProvider {
 
         @Bean
-        public Communicator communicator() {
+        Communicator communicator() {
             return mock(Communicator.class);
         }
     }
@@ -1165,7 +1165,7 @@ public class LoggingEndpointTest {
     static class ClientProvider {
 
         @Bean
-        public Client client() {
+        Client client() {
             return mock(Client.class);
         }
     }
@@ -1174,7 +1174,7 @@ public class LoggingEndpointTest {
     static class LoggerProvider {
 
         @Bean
-        public CommunicatorLogger logger() {
+        CommunicatorLogger logger() {
             return mock(CommunicatorLogger.class);
         }
     }
@@ -1183,7 +1183,7 @@ public class LoggingEndpointTest {
     static class AdditionalLoggerProvider {
 
         @Bean
-        public CommunicatorLogger additionalLogger() {
+        CommunicatorLogger additionalLogger() {
             return mock(CommunicatorLogger.class);
         }
     }
@@ -1192,7 +1192,7 @@ public class LoggingEndpointTest {
     static class AdditionalBeanProvider {
 
         @Bean
-        public Marshaller marshaller() {
+        Marshaller marshaller() {
             return DefaultMarshaller.INSTANCE;
         }
     }

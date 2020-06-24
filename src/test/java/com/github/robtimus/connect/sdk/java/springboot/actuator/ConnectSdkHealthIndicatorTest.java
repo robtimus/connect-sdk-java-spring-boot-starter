@@ -34,10 +34,10 @@ import com.ingenico.connect.gateway.sdk.java.domain.services.TestConnection;
 import com.ingenico.connect.gateway.sdk.java.merchant.MerchantClient;
 import com.ingenico.connect.gateway.sdk.java.merchant.services.ServicesClient;
 
-public class ConnectSdkHealthIndicatorTest {
+class ConnectSdkHealthIndicatorTest {
 
     @Test
-    public void testNonPositiveMinInterval() {
+    void testNonPositiveMinInterval() {
         MerchantClient merchantClient = mock(MerchantClient.class);
 
         assertThatThrownBy(() -> new ConnectSdkHealthIndicator(merchantClient, 0))
@@ -46,7 +46,7 @@ public class ConnectSdkHealthIndicatorTest {
     }
 
     @Test
-    public void testHealthResultOK() {
+    void testHealthResultOK() {
         MerchantClient merchantClient = mock(MerchantClient.class);
         ServicesClient servicesClient = mock(ServicesClient.class);
 
@@ -64,7 +64,7 @@ public class ConnectSdkHealthIndicatorTest {
     }
 
     @Test
-    public void testHealthThrottled() throws InterruptedException {
+    void testHealthThrottled() throws InterruptedException {
         MerchantClient merchantClient = mock(MerchantClient.class);
         ServicesClient servicesClient = mock(ServicesClient.class);
 
@@ -92,7 +92,7 @@ public class ConnectSdkHealthIndicatorTest {
     }
 
     @Test
-    public void testHealthApiException() {
+    void testHealthApiException() {
         MerchantClient merchantClient = mock(MerchantClient.class);
         ServicesClient servicesClient = mock(ServicesClient.class);
 

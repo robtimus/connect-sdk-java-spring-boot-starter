@@ -32,10 +32,10 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 
-public class LogbackCommunicatorLoggerTest {
+class LogbackCommunicatorLoggerTest {
 
     @Test
-    public void testLogWithOneLevel() {
+    void testLogWithOneLevel() {
         @SuppressWarnings("unchecked")
         Appender<ILoggingEvent> appender = mock(Appender.class);
 
@@ -76,7 +76,7 @@ public class LogbackCommunicatorLoggerTest {
     }
 
     @Test
-    public void testLogWithDifferentLevels() {
+    void testLogWithDifferentLevels() {
         @SuppressWarnings("unchecked")
         Appender<ILoggingEvent> appender = mock(Appender.class);
 

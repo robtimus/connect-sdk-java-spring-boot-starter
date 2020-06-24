@@ -26,13 +26,13 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Configuration;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
 
-public class ConnectSdkPropertiesTest {
+class ConnectSdkPropertiesTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(PropertiesProvider.class));
 
     @Test
-    public void testDefaultProperties() {
+    void testDefaultProperties() {
         contextRunner
                 .run(context -> {
                     ConnectSdkProperties properties = context.getBean(ConnectSdkProperties.class);
@@ -51,7 +51,7 @@ public class ConnectSdkPropertiesTest {
     }
 
     @Test
-    public void testAllPropertiesKebabCase() {
+    void testAllPropertiesKebabCase() {
         contextRunner
                 .withPropertyValues("connect.api.merchant-id=myMerchantId", "connect.api.endpoint.host=localhost", "connect.api.endpoint.scheme=http",
                         "connect.api.endpoint.port=80", "connect.api.connect-timeout=1000", "connect.api.socket-timeout=10000",
@@ -89,7 +89,7 @@ public class ConnectSdkPropertiesTest {
     }
 
     @Test
-    public void testAllPropertiesCamelCase() {
+    void testAllPropertiesCamelCase() {
         contextRunner
                 .withPropertyValues("connect.api.merchantId=myMerchantId", "connect.api.endpoint.host=localhost", "connect.api.endpoint.scheme=http",
                         "connect.api.endpoint.port=80", "connect.api.connectTimeout=1000", "connect.api.socketTimeout=10000",

@@ -33,14 +33,14 @@ import com.ingenico.connect.gateway.sdk.java.Client;
 import com.ingenico.connect.gateway.sdk.java.Communicator;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultMarshaller;
 
-public class ConnectSdkClientAutoConfigurationTest {
+class ConnectSdkClientAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(ConnectSdkClientAutoConfiguration.class));
 
     @Test
     @SuppressWarnings("resource")
-    public void testNoAutoConfigurationWithExistingBean() {
+    void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class, ConnectSdkConnectionAutoConfiguration.class,
                         ConnectSdkAuthenticatorAutoConfiguration.class, ConnectSdkMetaDataProviderAutoConfiguration.class,
@@ -56,7 +56,7 @@ public class ConnectSdkClientAutoConfigurationTest {
     }
 
     @Test
-    public void testNoAutoConfigurationWithMissingBeans() {
+    void testNoAutoConfigurationWithMissingBeans() {
         contextRunner
                 .run(context -> {
                     assertThat(context).doesNotHaveBean(Client.class);
@@ -65,7 +65,7 @@ public class ConnectSdkClientAutoConfigurationTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testAutoConfiguration() {
+    void testAutoConfiguration() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
                         ConnectSdkMetaDataProviderAutoConfiguration.class, ConnectSdkSessionAutoConfiguration.class,
@@ -97,7 +97,7 @@ public class ConnectSdkClientAutoConfigurationTest {
     static class ExistingBeanProvider {
 
         @Bean
-        public Client client() {
+        Client client() {
             return mock(Client.class);
         }
     }
@@ -106,7 +106,7 @@ public class ConnectSdkClientAutoConfigurationTest {
     static class CommunicatorProvider {
 
         @Bean
-        public Communicator communicator() {
+        Communicator communicator() {
             Communicator communicator = mock(Communicator.class);
             when(communicator.getMarshaller()).thenReturn(DefaultMarshaller.INSTANCE);
             return communicator;

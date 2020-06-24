@@ -29,13 +29,13 @@ import com.ingenico.connect.gateway.sdk.java.MetaDataProvider;
 import com.ingenico.connect.gateway.sdk.java.MetaDataProviderBuilder;
 import com.ingenico.connect.gateway.sdk.java.RequestHeader;
 
-public class ConnectSdkMetaDataProviderAutoConfigurationTest {
+class ConnectSdkMetaDataProviderAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(ConnectSdkMetaDataProviderAutoConfiguration.class));
 
     @Test
-    public void testNoAutoConfigurationWithExistingBean() {
+    void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class, CustomizerConfiguration.class)
                 .withPropertyValues("connect.api.integrator=Integrator")
@@ -47,7 +47,7 @@ public class ConnectSdkMetaDataProviderAutoConfigurationTest {
     }
 
     @Test
-    public void testNoAutoConfigurationWithMissingProperties() {
+    void testNoAutoConfigurationWithMissingProperties() {
         contextRunner
                 .run(context -> {
                     assertThat(context).doesNotHaveBean(MetaDataProvider.class);
@@ -55,7 +55,7 @@ public class ConnectSdkMetaDataProviderAutoConfigurationTest {
     }
 
     @Test
-    public void testAutoConfiguration() {
+    void testAutoConfiguration() {
         contextRunner
                 .withPropertyValues("connect.api.integrator=Integrator")
                 .run(context -> {
@@ -86,7 +86,7 @@ public class ConnectSdkMetaDataProviderAutoConfigurationTest {
     static class ExistingBeanProvider {
 
         @Bean
-        public MetaDataProvider metaDataProvider() {
+        MetaDataProvider metaDataProvider() {
             return mock(MetaDataProvider.class);
         }
     }
@@ -95,7 +95,7 @@ public class ConnectSdkMetaDataProviderAutoConfigurationTest {
     static class CustomizerConfiguration {
 
         @Bean
-        public MetaDataProviderBuilderCustomizer customizer() {
+        MetaDataProviderBuilderCustomizer customizer() {
             return builder -> builder.withAdditionalRequestHeader(new RequestHeader("custom-name", "custom-value"));
         }
     }

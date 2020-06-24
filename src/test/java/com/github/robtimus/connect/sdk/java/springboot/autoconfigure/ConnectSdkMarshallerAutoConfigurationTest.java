@@ -27,13 +27,13 @@ import org.springframework.context.annotation.Configuration;
 import com.ingenico.connect.gateway.sdk.java.Marshaller;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultMarshaller;
 
-public class ConnectSdkMarshallerAutoConfigurationTest {
+class ConnectSdkMarshallerAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(ConnectSdkMarshallerAutoConfiguration.class));
 
     @Test
-    public void testNoAutoConfigurationWithExistingBean() {
+    void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class)
                 .run(context -> {
@@ -44,7 +44,7 @@ public class ConnectSdkMarshallerAutoConfigurationTest {
     }
 
     @Test
-    public void testAutoConfiguration() {
+    void testAutoConfiguration() {
         contextRunner
                 .run(context -> {
                     assertThat(context).hasBean("connectSdkMarshaller");
@@ -57,7 +57,7 @@ public class ConnectSdkMarshallerAutoConfigurationTest {
     static class ExistingBeanProvider {
 
         @Bean
-        public Marshaller marshaller() {
+        Marshaller marshaller() {
             return mock(Marshaller.class);
         }
     }

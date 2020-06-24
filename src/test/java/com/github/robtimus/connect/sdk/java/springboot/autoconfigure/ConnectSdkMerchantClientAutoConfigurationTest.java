@@ -29,13 +29,13 @@ import org.springframework.context.annotation.Configuration;
 import com.ingenico.connect.gateway.sdk.java.Client;
 import com.ingenico.connect.gateway.sdk.java.merchant.MerchantClient;
 
-public class ConnectSdkMerchantClientAutoConfigurationTest {
+class ConnectSdkMerchantClientAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(ConnectSdkMerchantClientAutoConfiguration.class));
 
     @Test
-    public void testNoAutoConfigurationWithExistingBean() {
+    void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class, ConnectSdkConnectionAutoConfiguration.class,
                         ConnectSdkAuthenticatorAutoConfiguration.class, ConnectSdkMetaDataProviderAutoConfiguration.class,
@@ -52,7 +52,7 @@ public class ConnectSdkMerchantClientAutoConfigurationTest {
     }
 
     @Test
-    public void testNoAutoConfigurationWithMissingProperties() {
+    void testNoAutoConfigurationWithMissingProperties() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
                         ConnectSdkMetaDataProviderAutoConfiguration.class, ConnectSdkSessionAutoConfiguration.class,
@@ -66,7 +66,7 @@ public class ConnectSdkMerchantClientAutoConfigurationTest {
     }
 
     @Test
-    public void testNoAutoConfigurationWithMissingBeans() {
+    void testNoAutoConfigurationWithMissingBeans() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
                         ConnectSdkMetaDataProviderAutoConfiguration.class, ConnectSdkSessionAutoConfiguration.class,
@@ -81,7 +81,7 @@ public class ConnectSdkMerchantClientAutoConfigurationTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testAutoConfiguration() {
+    void testAutoConfiguration() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
                         ConnectSdkMetaDataProviderAutoConfiguration.class, ConnectSdkSessionAutoConfiguration.class,
@@ -112,7 +112,7 @@ public class ConnectSdkMerchantClientAutoConfigurationTest {
     static class ExistingBeanProvider {
 
         @Bean
-        public MerchantClient merchantClient() {
+        MerchantClient merchantClient() {
             return mock(MerchantClient.class);
         }
     }
@@ -121,7 +121,7 @@ public class ConnectSdkMerchantClientAutoConfigurationTest {
     static class ClientProvider {
 
         @Bean
-        public Client client() {
+        Client client() {
             return mock(Client.class);
         }
     }

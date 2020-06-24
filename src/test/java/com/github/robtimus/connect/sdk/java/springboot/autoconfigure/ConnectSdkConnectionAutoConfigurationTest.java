@@ -28,14 +28,14 @@ import com.ingenico.connect.gateway.sdk.java.Connection;
 import com.ingenico.connect.gateway.sdk.java.PooledConnection;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultConnection;
 
-public class ConnectSdkConnectionAutoConfigurationTest {
+class ConnectSdkConnectionAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(ConnectSdkConnectionAutoConfiguration.class));
 
     @Test
     @SuppressWarnings("resource")
-    public void testNoAutoConfigurationWithExistingBean() {
+    void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class)
                 .run(context -> {
@@ -48,7 +48,7 @@ public class ConnectSdkConnectionAutoConfigurationTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testAutoConfiguration() {
+    void testAutoConfiguration() {
         contextRunner
                 .run(context -> {
                     assertThat(context).hasBean("connectSdkConnection");
@@ -86,7 +86,7 @@ public class ConnectSdkConnectionAutoConfigurationTest {
     static class ExistingBeanProvider {
 
         @Bean
-        public Connection connection() {
+        Connection connection() {
             return mock(Connection.class);
         }
     }

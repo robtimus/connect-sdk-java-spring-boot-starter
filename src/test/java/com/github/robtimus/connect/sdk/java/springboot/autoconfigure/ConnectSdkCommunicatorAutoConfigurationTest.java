@@ -42,14 +42,14 @@ import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultAuthenticator;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultMarshaller;
 
-public class ConnectSdkCommunicatorAutoConfigurationTest {
+class ConnectSdkCommunicatorAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(ConnectSdkCommunicatorAutoConfiguration.class));
 
     @Test
     @SuppressWarnings("resource")
-    public void testNoAutoConfigurationWithExistingBean() {
+    void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class, ConnectSdkConnectionAutoConfiguration.class,
                         ConnectSdkAuthenticatorAutoConfiguration.class, ConnectSdkMetaDataProviderAutoConfiguration.class,
@@ -64,7 +64,7 @@ public class ConnectSdkCommunicatorAutoConfigurationTest {
     }
 
     @Test
-    public void testNoAutoConfigurationWithMissingBeans() {
+    void testNoAutoConfigurationWithMissingBeans() {
         contextRunner
                 .withUserConfiguration(ConnectSdkMarshallerAutoConfiguration.class)
                 .withPropertyValues("connect.api.endpoint.host=eu.sandbox.api-ingenico.com",
@@ -88,7 +88,7 @@ public class ConnectSdkCommunicatorAutoConfigurationTest {
 
     @Test
     @SuppressWarnings("resource")
-    public void testAutoConfiguration() {
+    void testAutoConfiguration() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
                         ConnectSdkMetaDataProviderAutoConfiguration.class, ConnectSdkSessionAutoConfiguration.class,
@@ -124,7 +124,7 @@ public class ConnectSdkCommunicatorAutoConfigurationTest {
     static class ExistingBeanProvider {
 
         @Bean
-        public Communicator communicator() {
+        Communicator communicator() {
             return mock(Communicator.class);
         }
     }
@@ -134,7 +134,7 @@ public class ConnectSdkCommunicatorAutoConfigurationTest {
 
         @Bean
         @SuppressWarnings("resource")
-        public Session session() {
+        Session session() {
             Session session = mock(Session.class);
             when(session.getApiEndpoint()).thenReturn(URI.create("https://eu.sandbox.api-ingenico.com"));
             when(session.getConnection()).thenReturn(connection());
@@ -144,17 +144,17 @@ public class ConnectSdkCommunicatorAutoConfigurationTest {
         }
 
         @Bean
-        public Connection connection() {
+        Connection connection() {
             return mock(Connection.class);
         }
 
         @Bean
-        public Authenticator authenticator() {
+        Authenticator authenticator() {
             return new DefaultAuthenticator(AuthorizationType.V1HMAC, "apiKeyId", "secretApiKey");
         }
 
         @Bean
-        public MetaDataProvider metaDataProvider() {
+        MetaDataProvider metaDataProvider() {
             return new MetaDataProvider("Integrator");
         }
     }

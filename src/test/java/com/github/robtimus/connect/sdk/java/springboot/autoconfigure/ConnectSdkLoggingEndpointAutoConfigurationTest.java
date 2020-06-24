@@ -30,13 +30,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.LoggingEndpoint;
 
-public class ConnectSdkLoggingEndpointAutoConfigurationTest {
+class ConnectSdkLoggingEndpointAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(ConnectSdkLoggingEndpointAutoConfiguration.class));
 
     @Test
-    public void testNoAutoConfigurationWithMissingClass() throws IOException {
+    void testNoAutoConfigurationWithMissingClass() throws IOException {
         try (FilteredClassLoader classLoader = new FilteredClassLoader(Endpoint.class)) {
             contextRunner
                     .withClassLoader(classLoader)
@@ -48,7 +48,7 @@ public class ConnectSdkLoggingEndpointAutoConfigurationTest {
     }
 
     @Test
-    public void testNoAutoConfigurationWithExistingBean() {
+    void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class)
                 .withPropertyValues("management.endpoint.connectSdkLogging.enabled=true", "spring.jmx.enabled=true")
@@ -61,7 +61,7 @@ public class ConnectSdkLoggingEndpointAutoConfigurationTest {
     }
 
     @Test
-    public void testNoAutoConfigurationWithoutEnabledEndpoint() {
+    void testNoAutoConfigurationWithoutEnabledEndpoint() {
         contextRunner
                 .run(context -> {
                     assertThat(context).doesNotHaveBean(LoggingEndpoint.class);
@@ -69,7 +69,7 @@ public class ConnectSdkLoggingEndpointAutoConfigurationTest {
     }
 
     @Test
-    public void testAutoConfigurationWithEnabledEndpoint() {
+    void testAutoConfigurationWithEnabledEndpoint() {
         contextRunner
                 .withPropertyValues("management.endpoint.connectSdkLogging.enabled=true")
                 .run(context -> {
@@ -78,7 +78,7 @@ public class ConnectSdkLoggingEndpointAutoConfigurationTest {
     }
 
     @Test
-    public void testAutoConfigurationWithAvailableEndpoint() {
+    void testAutoConfigurationWithAvailableEndpoint() {
         contextRunner
                 .withPropertyValues("management.endpoint.connectSdkLogging.enabled=true", "spring.jmx.enabled=true")
                 .run(context -> {
@@ -101,7 +101,7 @@ public class ConnectSdkLoggingEndpointAutoConfigurationTest {
         private ApplicationContext context;
 
         @Bean
-        public LoggingEndpoint loggingEndpoint() {
+        LoggingEndpoint loggingEndpoint() {
             return new LoggingEndpoint(context);
         }
     }

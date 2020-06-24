@@ -38,13 +38,13 @@ import com.ingenico.connect.gateway.sdk.java.logging.CommunicatorLogger;
 // PowerMock doesn't work well with JUnit5 yet, so use JUnit4 for just this test class
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(LoggerFactory.class)
-public class ConnectSdkCommunicatorLoggerAutoConfigurationTest {
+class ConnectSdkCommunicatorLoggerAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(ConnectSdkCommunicatorLoggerAutoConfiguration.class));
 
     @Test
-    public void testNoAutoConfigurationWithExistingBean() {
+    void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class)
                 .run(context -> {
@@ -55,7 +55,7 @@ public class ConnectSdkCommunicatorLoggerAutoConfigurationTest {
     }
 
     @Test
-    public void testNoAutoConfigurationWithNoLogbackLoggers() {
+    void testNoAutoConfigurationWithNoLogbackLoggers() {
         mockStatic(LoggerFactory.class);
         when(LoggerFactory.getLogger(anyString())).thenAnswer(context -> {
             String name = context.getArgument(0);
@@ -71,7 +71,7 @@ public class ConnectSdkCommunicatorLoggerAutoConfigurationTest {
     }
 
     @Test
-    public void testAutoConfiguration() {
+    void testAutoConfiguration() {
         contextRunner
                 .run(context -> {
                     assertThat(context).hasBean("connectSdkCommunicatorLogger");
@@ -84,7 +84,7 @@ public class ConnectSdkCommunicatorLoggerAutoConfigurationTest {
     static class ExistingBeanProvider {
 
         @Bean
-        public CommunicatorLogger communicatorLogger() {
+        CommunicatorLogger communicatorLogger() {
             return mock(CommunicatorLogger.class);
         }
     }
