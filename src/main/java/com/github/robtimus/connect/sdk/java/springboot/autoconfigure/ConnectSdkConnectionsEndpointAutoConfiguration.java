@@ -37,6 +37,7 @@ import com.github.robtimus.connect.sdk.java.springboot.actuator.ConnectionsEndpo
 @AutoConfigureAfter(ConnectSdkClientAutoConfiguration.class)
 @ConditionalOnClass(Endpoint.class)
 @ConditionalOnAvailableEndpoint(endpoint = ConnectionsEndpoint.class)
+@SuppressWarnings("javadoc")
 public class ConnectSdkConnectionsEndpointAutoConfiguration {
 
     @Bean

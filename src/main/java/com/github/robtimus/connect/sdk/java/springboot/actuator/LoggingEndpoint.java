@@ -41,6 +41,7 @@ import com.ingenico.connect.gateway.sdk.java.logging.LoggingCapable;
  * @author Rob Spoor
  */
 @Endpoint(id = "connectSdkLogging", enableByDefault = false)
+@SuppressWarnings("javadoc")
 public class LoggingEndpoint {
 
     private final ApplicationContext context;

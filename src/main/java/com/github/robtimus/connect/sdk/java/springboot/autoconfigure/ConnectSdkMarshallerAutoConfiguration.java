@@ -32,6 +32,7 @@ import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultMarshaller;
  */
 @Configuration
 @ConditionalOnMissingBean(Marshaller.class)
+@SuppressWarnings("javadoc")
 public class ConnectSdkMarshallerAutoConfiguration {
 
     @Bean

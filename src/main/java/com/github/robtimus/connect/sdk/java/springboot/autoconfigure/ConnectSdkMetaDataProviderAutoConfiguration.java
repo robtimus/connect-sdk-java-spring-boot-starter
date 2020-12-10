@@ -40,6 +40,7 @@ import com.ingenico.connect.gateway.sdk.java.domain.metadata.ShoppingCartExtensi
 @ConditionalOnMissingBean(MetaDataProvider.class)
 @ConditionalOnProperty(name = "connect.api.integrator")
 @EnableConfigurationProperties(ConnectSdkProperties.class)
+@SuppressWarnings("javadoc")
 public class ConnectSdkMetaDataProviderAutoConfiguration {
 
     private final ConnectSdkProperties properties;

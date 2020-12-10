@@ -48,6 +48,7 @@ import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultConnection;
 @Configuration
 @ConditionalOnMissingBean(Connection.class)
 @EnableConfigurationProperties(ConnectSdkProperties.class)
+@SuppressWarnings({ "nls", "javadoc" })
 public class ConnectSdkConnectionAutoConfiguration {
 
     private final ConnectSdkProperties properties;

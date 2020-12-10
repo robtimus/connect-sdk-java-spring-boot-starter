@@ -38,6 +38,7 @@ import com.ingenico.connect.gateway.sdk.java.domain.services.TestConnection;
 import com.ingenico.connect.gateway.sdk.java.merchant.MerchantClient;
 import com.ingenico.connect.gateway.sdk.java.merchant.services.ServicesClient;
 
+@SuppressWarnings("nls")
 class ConnectSdkHealthIndicatorAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()

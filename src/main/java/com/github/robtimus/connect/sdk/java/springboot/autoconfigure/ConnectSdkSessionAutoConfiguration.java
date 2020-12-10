@@ -47,6 +47,7 @@ import com.ingenico.connect.gateway.sdk.java.Session;
 @ConditionalOnBean({ Connection.class, Authenticator.class, MetaDataProvider.class })
 @ConditionalOnProperty(name = "connect.api.endpoint.host")
 @EnableConfigurationProperties(ConnectSdkProperties.class)
+@SuppressWarnings({ "nls", "javadoc" })
 public class ConnectSdkSessionAutoConfiguration {
 
     private final ConnectSdkProperties properties;

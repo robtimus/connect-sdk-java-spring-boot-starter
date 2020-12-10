@@ -27,6 +27,7 @@ import org.springframework.context.annotation.Configuration;
 import com.ingenico.connect.gateway.sdk.java.Authenticator;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultAuthenticator;
 
+@SuppressWarnings("nls")
 class ConnectSdkAuthenticatorAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()

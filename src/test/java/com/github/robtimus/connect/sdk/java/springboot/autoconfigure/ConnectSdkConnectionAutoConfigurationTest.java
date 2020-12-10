@@ -28,6 +28,7 @@ import com.ingenico.connect.gateway.sdk.java.Connection;
 import com.ingenico.connect.gateway.sdk.java.PooledConnection;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultConnection;
 
+@SuppressWarnings("nls")
 class ConnectSdkConnectionAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()

@@ -38,6 +38,7 @@ import com.ingenico.connect.gateway.sdk.java.logging.CommunicatorLogger;
 // PowerMock doesn't work well with JUnit5 yet, so use JUnit4 for just this test class
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(LoggerFactory.class)
+@SuppressWarnings("nls")
 class ConnectSdkCommunicatorLoggerAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()

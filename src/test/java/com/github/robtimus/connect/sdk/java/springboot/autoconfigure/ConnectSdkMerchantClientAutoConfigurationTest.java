@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Configuration;
 import com.ingenico.connect.gateway.sdk.java.Client;
 import com.ingenico.connect.gateway.sdk.java.merchant.MerchantClient;
 
+@SuppressWarnings("nls")
 class ConnectSdkMerchantClientAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()

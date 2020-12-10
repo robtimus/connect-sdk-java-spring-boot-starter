@@ -33,6 +33,7 @@ import com.ingenico.connect.gateway.sdk.java.Client;
 import com.ingenico.connect.gateway.sdk.java.Communicator;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultMarshaller;
 
+@SuppressWarnings("nls")
 class ConnectSdkClientAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()

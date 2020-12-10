@@ -27,6 +27,7 @@ import org.springframework.context.annotation.Configuration;
 import com.ingenico.connect.gateway.sdk.java.Marshaller;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultMarshaller;
 
+@SuppressWarnings("nls")
 class ConnectSdkMarshallerAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()

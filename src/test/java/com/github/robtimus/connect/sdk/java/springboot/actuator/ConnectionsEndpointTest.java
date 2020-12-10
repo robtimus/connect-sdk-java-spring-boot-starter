@@ -37,6 +37,7 @@ import com.ingenico.connect.gateway.sdk.java.Communicator;
 import com.ingenico.connect.gateway.sdk.java.Connection;
 import com.ingenico.connect.gateway.sdk.java.PooledConnection;
 
+@SuppressWarnings("nls")
 class ConnectionsEndpointTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner();

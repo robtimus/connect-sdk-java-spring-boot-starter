@@ -41,6 +41,7 @@ import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultMarshaller;
 import com.ingenico.connect.gateway.sdk.java.logging.CommunicatorLogger;
 import com.ingenico.connect.gateway.sdk.java.logging.LoggingCapable;
 
+@SuppressWarnings("nls")
 class LoggingEndpointTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner();

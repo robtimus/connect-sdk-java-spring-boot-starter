@@ -29,6 +29,7 @@ import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
  * @author Rob Spoor
  */
 @ConfigurationProperties("connect.api")
+@SuppressWarnings({ "nls", "javadoc" })
 public class ConnectSdkProperties {
 
     private Endpoint endpoint;

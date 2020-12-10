@@ -26,6 +26,7 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Configuration;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
 
+@SuppressWarnings("nls")
 class ConnectSdkPropertiesTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()

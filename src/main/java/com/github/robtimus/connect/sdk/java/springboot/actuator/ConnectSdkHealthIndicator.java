@@ -35,6 +35,7 @@ import com.ingenico.connect.gateway.sdk.java.merchant.services.ServicesClient;
  *
  * @author Rob Spoor
  */
+@SuppressWarnings("nls")
 public class ConnectSdkHealthIndicator extends AbstractHealthIndicator {
 
     /** Add a small margin to account for small delays between calling the health indicator. */

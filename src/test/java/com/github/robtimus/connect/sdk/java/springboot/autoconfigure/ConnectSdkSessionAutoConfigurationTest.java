@@ -32,6 +32,7 @@ import com.ingenico.connect.gateway.sdk.java.Connection;
 import com.ingenico.connect.gateway.sdk.java.MetaDataProvider;
 import com.ingenico.connect.gateway.sdk.java.Session;
 
+@SuppressWarnings("nls")
 class ConnectSdkSessionAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()

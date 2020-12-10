@@ -41,6 +41,7 @@ import com.ingenico.connect.gateway.sdk.java.merchant.MerchantClient;
 @ConditionalOnBean(Client.class)
 @ConditionalOnProperty(name = "connect.api.merchant-id")
 @EnableConfigurationProperties(ConnectSdkProperties.class)
+@SuppressWarnings("javadoc")
 public class ConnectSdkMerchantClientAutoConfiguration {
 
     @Bean

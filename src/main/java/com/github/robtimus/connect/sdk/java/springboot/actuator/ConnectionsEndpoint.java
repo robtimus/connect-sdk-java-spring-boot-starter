@@ -38,6 +38,7 @@ import com.ingenico.connect.gateway.sdk.java.PooledConnection;
  * @author Rob Spoor
  */
 @Endpoint(id = "connectSdkConnections", enableByDefault = false)
+@SuppressWarnings({ "nls", "javadoc" })
 public class ConnectionsEndpoint {
 
     private final ApplicationContext context;

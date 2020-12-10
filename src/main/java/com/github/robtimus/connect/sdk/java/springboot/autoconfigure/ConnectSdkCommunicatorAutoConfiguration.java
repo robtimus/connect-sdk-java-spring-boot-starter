@@ -37,6 +37,7 @@ import com.ingenico.connect.gateway.sdk.java.Session;
 @AutoConfigureAfter({ ConnectSdkSessionAutoConfiguration.class, ConnectSdkMarshallerAutoConfiguration.class })
 @ConditionalOnMissingBean(Communicator.class)
 @ConditionalOnBean({ Session.class, Marshaller.class })
+@SuppressWarnings("javadoc")
 public class ConnectSdkCommunicatorAutoConfiguration {
 
     // don't close the communicator when the bean is destroyed, let the connection be closed directly

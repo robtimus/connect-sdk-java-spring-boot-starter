@@ -44,6 +44,7 @@ import com.ingenico.connect.gateway.sdk.java.merchant.MerchantClient;
 @ConditionalOnMissingBean(ConnectSdkHealthIndicator.class)
 @ConditionalOnBean(MerchantClient.class)
 @ConditionalOnEnabledHealthIndicator("connect-sdk")
+@SuppressWarnings("javadoc")
 public class ConnectSdkHealthIndicatorAutoConfiguration {
 
     @Bean

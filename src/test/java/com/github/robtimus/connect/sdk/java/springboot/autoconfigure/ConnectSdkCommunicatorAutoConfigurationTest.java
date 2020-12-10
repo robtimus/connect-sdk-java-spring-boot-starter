@@ -42,6 +42,7 @@ import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultAuthenticator;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultMarshaller;
 
+@SuppressWarnings("nls")
 class ConnectSdkCommunicatorAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()

@@ -46,6 +46,7 @@ import com.ingenico.connect.gateway.sdk.java.logging.CommunicatorLogger;
 import com.ingenico.connect.gateway.sdk.java.logging.SysOutCommunicatorLogger;
 import com.ingenico.connect.gateway.sdk.java.merchant.MerchantClient;
 
+@SuppressWarnings("nls")
 class FullAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()

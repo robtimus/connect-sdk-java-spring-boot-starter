@@ -46,6 +46,7 @@ import ch.qos.logback.classic.Logger;
 @ConditionalOnMissingBean(CommunicatorLogger.class)
 @ConditionalOnClass({ Logger.class, Level.class })
 @Conditional(OnUsesLogbackCondition.class)
+@SuppressWarnings({ "nls", "javadoc" })
 public class ConnectSdkCommunicatorLoggerAutoConfiguration {
 
     static final String DEFAULT_LOGGER_NAME = Communicator.class.getName();

@@ -36,6 +36,7 @@ import com.ingenico.connect.gateway.sdk.java.Communicator;
 @AutoConfigureAfter(ConnectSdkCommunicatorAutoConfiguration.class)
 @ConditionalOnMissingBean(Client.class)
 @ConditionalOnBean(Communicator.class)
+@SuppressWarnings("javadoc")
 public class ConnectSdkClientAutoConfiguration {
 
     // don't close the client when the bean is destroyed, let the communicator or its connection be closed directly

@@ -39,6 +39,7 @@ import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultAuthenticator;
 @ConditionalOnMissingBean(Authenticator.class)
 @ConditionalOnProperty(prefix = "connect.api", name = { "api-key-id", "secret-api-key" })
 @EnableConfigurationProperties(ConnectSdkProperties.class)
+@SuppressWarnings("javadoc")
 public class ConnectSdkAuthenticatorAutoConfiguration {
 
     private final ConnectSdkProperties properties;
