@@ -296,9 +296,13 @@
 
   <profiles>
     <profile>
-      <!-- profile to test against the minimum support Spring Boot version -->
-      <id>spring-boot-min-version</id>
+      <id>min-versions</id>
       <properties>
+        <version.commons-codec>1.10</version.commons-codec>
+        <version.connect-sdk-java>6.0.0</version.connect-sdk-java>
+        <version.gson>2.0</version.gson>
+        <version.httpclient>4.4</version.httpclient>
+        <version.httpmime>4.4</version.httpmime>
         <version.spring-boot>2.2.0.RELEASE</version.spring-boot>
       </properties>
     </profile>
