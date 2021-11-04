@@ -112,6 +112,7 @@ public class ConnectSdkConnectionAutoConfiguration {
         @Scheduled(fixedDelayString = INTERVAL, initialDelayString = INTERVAL)
         public void closeIdleAndExpiredConnections() {
             connection.closeIdleConnections(idleTime, TimeUnit.MILLISECONDS);
+            connection.closeExpiredConnections();
         }
     }
 }
