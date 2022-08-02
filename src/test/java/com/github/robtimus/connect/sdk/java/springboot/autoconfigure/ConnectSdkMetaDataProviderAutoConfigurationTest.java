@@ -65,7 +65,7 @@ class ConnectSdkMetaDataProviderAutoConfigurationTest {
                     MetaDataProvider metaDataProvider = context.getBean(MetaDataProvider.class);
                     assertThat(metaDataProvider).isExactlyInstanceOf(MetaDataProvider.class);
                     Collection<RequestHeader> exectedMetaDataHeaders = new MetaDataProvider("Integrator").getServerMetaDataHeaders();
-                    assertThat(metaDataProvider.getServerMetaDataHeaders()).hasToString(exectedMetaDataHeaders.toString());
+                    assertThat((Object) metaDataProvider.getServerMetaDataHeaders()).hasToString(exectedMetaDataHeaders.toString());
                 });
         contextRunner
                 .withUserConfiguration(CustomizerConfiguration.class)
@@ -79,7 +79,7 @@ class ConnectSdkMetaDataProviderAutoConfigurationTest {
                             .withAdditionalRequestHeader(new RequestHeader("custom-name", "custom-value"))
                             .build()
                             .getServerMetaDataHeaders();
-                    assertThat(metaDataProvider.getServerMetaDataHeaders()).hasToString(expectedMetaDataHeaders.toString());
+                    assertThat((Object) metaDataProvider.getServerMetaDataHeaders()).hasToString(expectedMetaDataHeaders.toString());
                 });
     }
 
