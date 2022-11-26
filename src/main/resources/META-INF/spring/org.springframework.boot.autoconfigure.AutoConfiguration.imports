@@ -1,0 +1,12 @@
+com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkAuthenticatorAutoConfiguration
+com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkClientAutoConfiguration
+com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkCommunicatorAutoConfiguration
+com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkCommunicatorLoggerAutoConfiguration
+com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkConnectionAutoConfiguration
+com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkConnectionsEndpointAutoConfiguration
+com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkHealthIndicatorAutoConfiguration
+com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkLoggingEndpointAutoConfiguration
+com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkMarshallerAutoConfiguration
+com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkMerchantClientAutoConfiguration
+com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkMetaDataProviderAutoConfiguration
+com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkSessionAutoConfiguration
