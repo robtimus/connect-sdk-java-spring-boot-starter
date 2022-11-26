@@ -193,8 +193,8 @@
           <artifactId>maven-javadoc-plugin</artifactId>
           <configuration>
             <links>
-              <link>https://docs.spring.io/spring-boot/docs/current/api</link>
-              <link>https://docs.spring.io/spring-framework/docs/current/javadoc-api</link>
+              <link>https://docs.spring.io/spring-boot/docs/2.7.x/api</link>
+              <link>https://docs.spring.io/spring-framework/docs/5.3.x/javadoc-api</link>
               <link>https://logback.qos.ch/apidocs</link>
               <link>https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest</link>
             </links>
