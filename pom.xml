@@ -67,6 +67,7 @@
     <version.httpclient>4.5.13</version.httpclient>
     <version.httpmime>4.5.13</version.httpmime>
     <version.powermock>2.0.9</version.powermock>
+    <version.snakeyaml>1.33</version.snakeyaml>
     <version.spring-boot>2.7.6</version.spring-boot>
 
     <robtimus.site-index.generate>false</robtimus.site-index.generate>
@@ -127,6 +128,13 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
       <version>${version.spring-boot}</version>
+    </dependency>
+
+    <!-- Override version provided by spring-boot-starter until it uses a more secure version itself -->
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+      <version>${version.snakeyaml}</version>
     </dependency>
 
     <dependency>
