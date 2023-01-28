@@ -147,6 +147,13 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <version>${version.spring-boot}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <!-- This comes with an older version of SLF4J which causes conflicts -->
+          <groupId>com.jayway.jsonpath</groupId>
+          <artifactId>json-path</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -307,7 +314,6 @@
       <properties>
         <version.java>17</version.java>
         <version.spring-boot>3.0.0</version.spring-boot>
-        <version.slf4j>2.0.4</version.slf4j>
       </properties>
     </profile>
   </profiles>
