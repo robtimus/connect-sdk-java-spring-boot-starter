@@ -22,7 +22,7 @@
   <parent>
     <groupId>com.github.robtimus</groupId>
     <artifactId>robtimus-parent</artifactId>
-    <version>1.5</version>
+    <version>1.8</version>
     <relativePath />
   </parent>
 
@@ -69,8 +69,6 @@
     <version.powermock>2.0.9</version.powermock>
     <version.snakeyaml>1.33</version.snakeyaml>
     <version.spring-boot>2.7.6</version.spring-boot>
-
-    <robtimus.site-index.generate>false</robtimus.site-index.generate>
   </properties>
 
   <dependencies>
@@ -180,20 +178,6 @@
   </dependencies>
 
   <build>
-    <resources>
-      <!-- add LICENSE.txt to META-INF besides the main resources -->
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-      <resource>
-        <directory>${project.basedir}</directory>
-        <targetPath>META-INF</targetPath>
-        <includes>
-          <include>LICENSE.txt</include>
-        </includes>
-      </resource>
-    </resources>
-
     <pluginManagement>
       <plugins>
         <plugin>
@@ -251,8 +235,11 @@
       </plugin>
 
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
+        <groupId>com.github.robtimus</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <configuration>
+          <skipSiteIndex>true</skipSiteIndex>
+        </configuration>
       </plugin>
 
       <plugin>
