@@ -55,7 +55,7 @@ class LogbackCommunicatorLoggerTest {
         verifyNoMoreInteractions(appender);
 
         List<ILoggingEvent> events = eventCaptor.getAllValues();
-        assertThat(events.size()).isEqualTo(2);
+        assertThat(events).hasSize(2);
 
         ILoggingEvent event1 = events.get(0);
         assertThat(event1.getLevel()).isEqualTo(Level.DEBUG);
@@ -96,7 +96,7 @@ class LogbackCommunicatorLoggerTest {
         verifyNoMoreInteractions(appender);
 
         List<ILoggingEvent> events = eventCaptor.getAllValues();
-        assertThat(events.size()).isEqualTo(2);
+        assertThat(events).hasSize(2);
 
         ILoggingEvent event1 = events.get(0);
         assertThat(event1.getLevel()).isEqualTo(Level.DEBUG);

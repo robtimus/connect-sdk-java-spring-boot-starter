@@ -23,6 +23,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import java.util.Arrays;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
@@ -46,1070 +47,1345 @@ class LoggingEndpointTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner();
 
-    @Test
-    void testListLoggingCapableAndLoggerBeans() {
-        contextRunner
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+    @Nested
+    class ListLoggingCapableAndLoggerBeans {
 
-                    LoggingCapableAndLoggerBeans beans = endpoint.listLoggingCapableAndLoggerBeans();
-                    assertThat(beans.getConnections()).isEmpty();
-                    assertThat(beans.getCommunicators()).isEmpty();
-                    assertThat(beans.getClients()).isEmpty();
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+        @Test
+        void testWithNoSupportedBeans() {
+            contextRunner
+                    .run(context -> {
+                        LoggingEndpoint endpoint = new LoggingEndpoint(context);
 
-                    LoggingCapableAndLoggerBeans beans = endpoint.listLoggingCapableAndLoggerBeans();
-                    assertThat(beans.getConnections()).isEqualTo(Arrays.asList("connection"));
-                    assertThat(beans.getCommunicators()).isEmpty();
-                    assertThat(beans.getClients()).isEmpty();
-                    assertThat(beans.getLoggers()).isEmpty();
-                });
-        contextRunner
-                .withUserConfiguration(CommunicatorProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+                        LoggingCapableAndLoggerBeans beans = endpoint.listLoggingCapableAndLoggerBeans();
+                        assertThat(beans.getConnections()).isEmpty();
+                        assertThat(beans.getCommunicators()).isEmpty();
+                        assertThat(beans.getClients()).isEmpty();
+                    });
+        }
 
-                    LoggingCapableAndLoggerBeans beans = endpoint.listLoggingCapableAndLoggerBeans();
-                    assertThat(beans.getConnections()).isEmpty();
-                    assertThat(beans.getCommunicators()).isEqualTo(Arrays.asList("communicator"));
-                    assertThat(beans.getClients()).isEmpty();
-                    assertThat(beans.getLoggers()).isEmpty();
-                });
-        contextRunner
-                .withUserConfiguration(ClientProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+        @Test
+        void testWithConnectionBean() {
+            contextRunner
+                    .withUserConfiguration(ConnectionProvider.class)
+                    .run(context -> {
+                        LoggingEndpoint endpoint = new LoggingEndpoint(context);
 
-                    LoggingCapableAndLoggerBeans beans = endpoint.listLoggingCapableAndLoggerBeans();
-                    assertThat(beans.getConnections()).isEmpty();
-                    assertThat(beans.getCommunicators()).isEmpty();
-                    assertThat(beans.getClients()).isEqualTo(Arrays.asList("client"));
-                    assertThat(beans.getLoggers()).isEmpty();
-                });
-        contextRunner
-                .withUserConfiguration(LoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+                        LoggingCapableAndLoggerBeans beans = endpoint.listLoggingCapableAndLoggerBeans();
+                        assertThat(beans.getConnections()).isEqualTo(Arrays.asList("connection"));
+                        assertThat(beans.getCommunicators()).isEmpty();
+                        assertThat(beans.getClients()).isEmpty();
+                        assertThat(beans.getLoggers()).isEmpty();
+                    });
+        }
 
-                    LoggingCapableAndLoggerBeans beans = endpoint.listLoggingCapableAndLoggerBeans();
-                    assertThat(beans.getConnections()).isEmpty();
-                    assertThat(beans.getCommunicators()).isEmpty();
-                    assertThat(beans.getClients()).isEmpty();
-                    assertThat(beans.getLoggers()).isEqualTo(Arrays.asList("logger"));
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class, LoggerProvider.class,
-                        AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+        @Test
+        void testWithCommunicatorBean() {
+            contextRunner
+                    .withUserConfiguration(CommunicatorProvider.class)
+                    .run(context -> {
+                        LoggingEndpoint endpoint = new LoggingEndpoint(context);
 
-                    LoggingCapableAndLoggerBeans beans = endpoint.listLoggingCapableAndLoggerBeans();
-                    assertThat(beans.getConnections()).isEqualTo(Arrays.asList("connection"));
-                    assertThat(beans.getCommunicators()).isEqualTo(Arrays.asList("communicator"));
-                    assertThat(beans.getClients()).isEqualTo(Arrays.asList("client"));
-                    assertThat(beans.getLoggers()).containsExactlyInAnyOrder("logger", "additionalLogger");
-                });
+                        LoggingCapableAndLoggerBeans beans = endpoint.listLoggingCapableAndLoggerBeans();
+                        assertThat(beans.getConnections()).isEmpty();
+                        assertThat(beans.getCommunicators()).isEqualTo(Arrays.asList("communicator"));
+                        assertThat(beans.getClients()).isEmpty();
+                        assertThat(beans.getLoggers()).isEmpty();
+                    });
+        }
+
+        @Test
+        void testWithClientBean() {
+            contextRunner
+                    .withUserConfiguration(ClientProvider.class)
+                    .run(context -> {
+                        LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                        LoggingCapableAndLoggerBeans beans = endpoint.listLoggingCapableAndLoggerBeans();
+                        assertThat(beans.getConnections()).isEmpty();
+                        assertThat(beans.getCommunicators()).isEmpty();
+                        assertThat(beans.getClients()).isEqualTo(Arrays.asList("client"));
+                        assertThat(beans.getLoggers()).isEmpty();
+                    });
+        }
+
+        @Test
+        void testWithLoggerBean() {
+            contextRunner
+                    .withUserConfiguration(LoggerProvider.class)
+                    .run(context -> {
+                        LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                        LoggingCapableAndLoggerBeans beans = endpoint.listLoggingCapableAndLoggerBeans();
+                        assertThat(beans.getConnections()).isEmpty();
+                        assertThat(beans.getCommunicators()).isEmpty();
+                        assertThat(beans.getClients()).isEmpty();
+                        assertThat(beans.getLoggers()).isEqualTo(Arrays.asList("logger"));
+                    });
+        }
+
+        @Test
+        void testWithBeansOfAllSupportedTypes() {
+            contextRunner
+                    .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class, LoggerProvider.class,
+                            AdditionalLoggerProvider.class)
+                    .run(context -> {
+                        LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                        LoggingCapableAndLoggerBeans beans = endpoint.listLoggingCapableAndLoggerBeans();
+                        assertThat(beans.getConnections()).isEqualTo(Arrays.asList("connection"));
+                        assertThat(beans.getCommunicators()).isEqualTo(Arrays.asList("communicator"));
+                        assertThat(beans.getClients()).isEqualTo(Arrays.asList("client"));
+                        assertThat(beans.getLoggers()).containsExactlyInAnyOrder("logger", "additionalLogger");
+                    });
+        }
     }
 
-    @Test
+    @Nested
     @SuppressWarnings("resource")
-    void testEnableLoggingWithNoLoggers() {
-        contextRunner
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+    class EnableLogging {
 
-                    assertThat(context).doesNotHaveBean(LoggingCapable.class);
-                    assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
+        @Nested
+        class WithNoLoggers {
 
-                    endpoint.enableLogging(null);
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+            @Test
+            void testWithNoSupportedBeans() {
+                contextRunner
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
 
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
+                            assertThat(context).doesNotHaveBean(LoggingCapable.class);
+                            assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
 
-                    endpoint.enableLogging(null);
+                            endpoint.enableLogging(null);
+                        });
+            }
 
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
+            @Test
+            void testWithConnectionBean() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
 
-                    verifyNoMoreInteractions(connection);
-                });
-        contextRunner
-                .withUserConfiguration(CommunicatorProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
 
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-                    assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
+                            endpoint.enableLogging(null);
 
-                    endpoint.enableLogging(null);
+                            Connection connection = context.getBean(ConnectionProvider.class).connection();
 
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
+                            verifyNoMoreInteractions(connection);
+                        });
+            }
 
-                    verifyNoMoreInteractions(communicator);
-                });
-        contextRunner
-                .withUserConfiguration(ClientProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+            @Test
+            void testWithCommunicatorBean() {
+                contextRunner
+                        .withUserConfiguration(CommunicatorProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
 
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Communicator.class);
+                            assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
 
-                    endpoint.enableLogging(null);
+                            endpoint.enableLogging(null);
 
-                    Client client = context.getBean(ClientProvider.class).client();
+                            Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
-                    verifyNoMoreInteractions(client);
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+                            verifyNoMoreInteractions(communicator);
+                        });
+            }
 
-                    // three LoggingCapable beans - connection, communicator and client
-                    assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
+            @Test
+            void testWithClientBean() {
+                contextRunner
+                        .withUserConfiguration(ClientProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
 
-                    endpoint.enableLogging(null);
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Client.class);
+                            assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
 
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    Client client = context.getBean(ClientProvider.class).client();
+                            endpoint.enableLogging(null);
 
-                    verifyNoMoreInteractions(connection, communicator, client);
-                });
+                            Client client = context.getBean(ClientProvider.class).client();
+
+                            verifyNoMoreInteractions(client);
+                        });
+            }
+
+            @Test
+            void testWithBeansOfAllSupportedTypes() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            // three LoggingCapable beans - connection, communicator and client
+                            assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).hasSingleBean(Communicator.class);
+                            assertThat(context).hasSingleBean(Client.class);
+                            assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
+
+                            endpoint.enableLogging(null);
+
+                            Connection connection = context.getBean(ConnectionProvider.class).connection();
+                            Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
+                            Client client = context.getBean(ClientProvider.class).client();
+
+                            verifyNoMoreInteractions(connection, communicator, client);
+                        });
+            }
+        }
+
+        @Nested
+        class WithOneLogger {
+
+            @Test
+            void testWithNoSupportedBeans() {
+                contextRunner
+                        .withUserConfiguration(LoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).doesNotHaveBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(CommunicatorLogger.class);
+
+                            endpoint.enableLogging(null);
+                        });
+            }
+
+            @Test
+            void testWithConnectionBean() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class, LoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).hasSingleBean(CommunicatorLogger.class);
+
+                            endpoint.enableLogging(null);
+
+                            Connection connection = context.getBean(ConnectionProvider.class).connection();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+
+                            verify(connection).enableLogging(logger);
+                            verifyNoMoreInteractions(connection);
+                        });
+            }
+
+            @Test
+            void testWithCommunicatorBean() {
+                contextRunner
+                        .withUserConfiguration(CommunicatorProvider.class, LoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Communicator.class);
+                            assertThat(context).hasSingleBean(CommunicatorLogger.class);
+
+                            endpoint.enableLogging(null);
+
+                            Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+
+                            verify(communicator).enableLogging(logger);
+                            verifyNoMoreInteractions(communicator);
+                        });
+            }
+
+            @Test
+            void testWithClientBean() {
+                contextRunner
+                        .withUserConfiguration(ClientProvider.class, LoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Client.class);
+                            assertThat(context).hasSingleBean(CommunicatorLogger.class);
+
+                            endpoint.enableLogging(null);
+
+                            Client client = context.getBean(ClientProvider.class).client();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+
+                            verify(client).enableLogging(logger);
+                            verifyNoMoreInteractions(client);
+                        });
+            }
+
+            @Test
+            void testWithBeansOfAllSupportedTypes() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class, LoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            // three LoggingCapable beans - connection, communicator and client
+                            assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).hasSingleBean(Communicator.class);
+                            assertThat(context).hasSingleBean(Client.class);
+                            assertThat(context).hasSingleBean(CommunicatorLogger.class);
+
+                            endpoint.enableLogging(null);
+
+                            Connection connection = context.getBean(ConnectionProvider.class).connection();
+                            Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
+                            Client client = context.getBean(ClientProvider.class).client();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+
+                            verify(connection).enableLogging(logger);
+                            verify(communicator).enableLogging(logger);
+                            verify(client).enableLogging(logger);
+                            verifyNoMoreInteractions(connection, communicator, client);
+                        });
+            }
+        }
+
+        @Nested
+        class WithMultipleLoggers {
+
+            @Test
+            void testWithNoSupportedBeans() {
+                contextRunner
+                        .withUserConfiguration(LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).doesNotHaveBean(LoggingCapable.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            endpoint.enableLogging(null);
+                        });
+            }
+
+            @Test
+            void testWithConnectionBean() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            endpoint.enableLogging(null);
+
+                            Connection connection = context.getBean(ConnectionProvider.class).connection();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+                            CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
+
+                            verifyEnableLogging(connection, logger, additionalLogger);
+                            verifyNoMoreInteractions(connection);
+                        });
+            }
+
+            @Test
+            void testWithCommunicatorBean() {
+                contextRunner
+                        .withUserConfiguration(CommunicatorProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Communicator.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            endpoint.enableLogging(null);
+
+                            Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+                            CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
+
+                            verifyEnableLogging(communicator, logger, additionalLogger);
+                            verifyNoMoreInteractions(communicator);
+                        });
+            }
+
+            @Test
+            void testWithClientBean() {
+                contextRunner
+                        .withUserConfiguration(ClientProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Client.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            endpoint.enableLogging(null);
+
+                            Client client = context.getBean(ClientProvider.class).client();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+                            CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
+
+                            verifyEnableLogging(client, logger, additionalLogger);
+                            verifyNoMoreInteractions(client);
+                        });
+            }
+
+            @Test
+            void testWithBeansOfAllSupportedTypes() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class, LoggerProvider.class,
+                                AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            // three LoggingCapable beans - connection, communicator and client
+                            assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).hasSingleBean(Communicator.class);
+                            assertThat(context).hasSingleBean(Client.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            endpoint.enableLogging(null);
+
+                            Connection connection = context.getBean(ConnectionProvider.class).connection();
+                            Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
+                            Client client = context.getBean(ClientProvider.class).client();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+                            CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
+
+                            verifyEnableLogging(connection, logger, additionalLogger);
+                            verifyEnableLogging(communicator, logger, additionalLogger);
+                            verifyEnableLogging(client, logger, additionalLogger);
+                            verifyNoMoreInteractions(connection, communicator, client);
+                        });
+            }
+        }
+
+        @Nested
+        class WithSpecificLogger {
+
+            @Test
+            void testWithMissingBean() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            assertThatThrownBy(() -> endpoint.enableLoggingOnBean("missing-logger", null))
+                                    .isInstanceOf(NoSuchBeanDefinitionException.class)
+                                    .extracting("beanName", "beanType").isEqualTo(Arrays.asList("missing-logger", null));
+                        });
+            }
+
+            @Test
+            void testWithTypeMismatch() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            Connection connection = context.getBean(ConnectionProvider.class).connection();
+
+                            assertThatThrownBy(() -> endpoint.enableLogging("connection"))
+                                    .isInstanceOf(BeanNotOfRequiredTypeException.class)
+                                    .extracting("beanName", "requiredType", "actualType")
+                                            .isEqualTo(Arrays.asList("connection", CommunicatorLogger.class, connection.getClass()));
+
+                            verifyNoMoreInteractions(connection);
+                        });
+            }
+
+            @Test
+            void testWithNoSupportedBeans() {
+                contextRunner
+                        .withUserConfiguration(LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).doesNotHaveBean(LoggingCapable.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            endpoint.enableLogging("logger");
+                        });
+            }
+
+            @Test
+            void testWithConnectionBean() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            endpoint.enableLogging("logger");
+
+                            Connection connection = context.getBean(ConnectionProvider.class).connection();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+
+                            verify(connection).enableLogging(logger);
+                            verifyNoMoreInteractions(connection);
+                        });
+            }
+
+            @Test
+            void testWithCommunicatorBean() {
+                contextRunner
+                        .withUserConfiguration(CommunicatorProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Communicator.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            endpoint.enableLogging("logger");
+
+                            Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+
+                            verify(communicator).enableLogging(logger);
+                            verifyNoMoreInteractions(communicator);
+                        });
+            }
+
+            @Test
+            void testWithClientBean() {
+                contextRunner
+                        .withUserConfiguration(ClientProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Client.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            endpoint.enableLogging("logger");
+
+                            Client client = context.getBean(ClientProvider.class).client();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+
+                            verify(client).enableLogging(logger);
+                            verifyNoMoreInteractions(client);
+                        });
+            }
+
+            @Test
+            void testWithBeansOfAllSupportedTypes() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class, LoggerProvider.class,
+                                AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            // three LoggingCapable beans - connection, communicator and client
+                            assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).hasSingleBean(Communicator.class);
+                            assertThat(context).hasSingleBean(Client.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            endpoint.enableLogging("logger");
+
+                            Connection connection = context.getBean(ConnectionProvider.class).connection();
+                            Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
+                            Client client = context.getBean(ClientProvider.class).client();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+
+                            verify(connection).enableLogging(logger);
+                            verify(communicator).enableLogging(logger);
+                            verify(client).enableLogging(logger);
+                            verifyNoMoreInteractions(connection, communicator, client);
+                        });
+            }
+        }
     }
 
-    @Test
+    @Nested
     @SuppressWarnings("resource")
-    void testEnableLoggingWithOneLogger() {
-        contextRunner
-                .withUserConfiguration(LoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+    class EnableLoggingOnBean {
 
-                    assertThat(context).doesNotHaveBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(CommunicatorLogger.class);
+        @Nested
+        class WithNoLoggers {
 
-                    endpoint.enableLogging(null);
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, LoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+            @Test
+            void testWithMissingBean() {
+                contextRunner
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
 
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).hasSingleBean(CommunicatorLogger.class);
+                            assertThat(context).doesNotHaveBean(LoggingCapable.class);
+                            assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
 
-                    endpoint.enableLogging(null);
+                            assertThatThrownBy(() -> endpoint.enableLoggingOnBean("connection", null))
+                                    .isInstanceOf(NoSuchBeanDefinitionException.class)
+                                    .extracting("beanName", "beanType").isEqualTo(Arrays.asList("connection", null));
+                        });
+            }
 
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+            @Test
+            void testWithTypeMismatch() {
+                contextRunner
+                        .withUserConfiguration(AdditionalBeanProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
 
-                    verify(connection).enableLogging(logger);
-                    verifyNoMoreInteractions(connection);
-                });
-        contextRunner
-                .withUserConfiguration(CommunicatorProvider.class, LoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+                            assertThat(context).doesNotHaveBean(LoggingCapable.class);
+                            assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
 
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-                    assertThat(context).hasSingleBean(CommunicatorLogger.class);
+                            Marshaller marshaller = context.getBean(AdditionalBeanProvider.class).marshaller();
 
-                    endpoint.enableLogging(null);
+                            assertThatThrownBy(() -> endpoint.enableLoggingOnBean("marshaller", null))
+                                    .isInstanceOf(BeanNotOfRequiredTypeException.class)
+                                    .extracting("beanName", "requiredType", "actualType")
+                                            .isEqualTo(Arrays.asList("marshaller", LoggingCapable.class, marshaller.getClass()));
+                        });
+            }
 
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+            @Test
+            void testWithConnectionBean() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
 
-                    verify(communicator).enableLogging(logger);
-                    verifyNoMoreInteractions(communicator);
-                });
-        contextRunner
-                .withUserConfiguration(ClientProvider.class, LoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
 
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).hasSingleBean(CommunicatorLogger.class);
+                            endpoint.enableLoggingOnBean("connection", null);
 
-                    endpoint.enableLogging(null);
+                            Connection connection = context.getBean(ConnectionProvider.class).connection();
 
-                    Client client = context.getBean(ClientProvider.class).client();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+                            verifyNoMoreInteractions(connection);
+                        });
+            }
 
-                    verify(client).enableLogging(logger);
-                    verifyNoMoreInteractions(client);
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class, LoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+            @Test
+            void testWithCommunicatorBean() {
+                contextRunner
+                        .withUserConfiguration(CommunicatorProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
 
-                    // three LoggingCapable beans - connection, communicator and client
-                    assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).hasSingleBean(CommunicatorLogger.class);
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Communicator.class);
+                            assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
 
-                    endpoint.enableLogging(null);
+                            endpoint.enableLoggingOnBean("communicator", null);
 
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    Client client = context.getBean(ClientProvider.class).client();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+                            Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
-                    verify(connection).enableLogging(logger);
-                    verify(communicator).enableLogging(logger);
-                    verify(client).enableLogging(logger);
-                    verifyNoMoreInteractions(connection, communicator, client);
-                });
+                            verifyNoMoreInteractions(communicator);
+                        });
+            }
+
+            @Test
+            void testWithClientBean() {
+                contextRunner
+                        .withUserConfiguration(ClientProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Client.class);
+                            assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
+
+                            endpoint.enableLoggingOnBean("client", null);
+
+                            Client client = context.getBean(ClientProvider.class).client();
+
+                            verifyNoMoreInteractions(client);
+                        });
+            }
+
+            @Test
+            void testWithBeansOfAllSupportedTypes() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            // three LoggingCapable beans - connection, communicator and client
+                            assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).hasSingleBean(Communicator.class);
+                            assertThat(context).hasSingleBean(Client.class);
+                            assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
+
+                            endpoint.enableLoggingOnBean("connection", null);
+
+                            Connection connection = context.getBean(ConnectionProvider.class).connection();
+                            Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
+                            Client client = context.getBean(ClientProvider.class).client();
+
+                            verifyNoMoreInteractions(connection, communicator, client);
+                        });
+            }
+        }
+
+        @Nested
+        class WithOneLogger {
+
+            @Test
+            void testWithMissingBean() {
+                contextRunner
+                        .withUserConfiguration(LoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).doesNotHaveBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(CommunicatorLogger.class);
+
+                            assertThatThrownBy(() -> endpoint.enableLoggingOnBean("connection", null))
+                                    .isInstanceOf(NoSuchBeanDefinitionException.class)
+                                    .extracting("beanName", "beanType").isEqualTo(Arrays.asList("connection", null));
+                        });
+            }
+
+            @Test
+            void testWithTypeMismatch() {
+                contextRunner
+                        .withUserConfiguration(AdditionalBeanProvider.class, LoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(Marshaller.class);
+                            assertThat(context).doesNotHaveBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(CommunicatorLogger.class);
+
+                            Marshaller marshaller = context.getBean(AdditionalBeanProvider.class).marshaller();
+
+                            assertThatThrownBy(() -> endpoint.enableLoggingOnBean("marshaller", null))
+                                    .isInstanceOf(BeanNotOfRequiredTypeException.class)
+                                    .extracting("beanName", "requiredType", "actualType")
+                                            .isEqualTo(Arrays.asList("marshaller", LoggingCapable.class, marshaller.getClass()));
+                        });
+            }
+
+            @Test
+            void testWithConnectionBean() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class, LoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).hasSingleBean(CommunicatorLogger.class);
+
+                            endpoint.enableLoggingOnBean("connection", null);
+
+                            Connection connection = context.getBean(ConnectionProvider.class).connection();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+
+                            verify(connection).enableLogging(logger);
+                            verifyNoMoreInteractions(connection);
+                        });
+            }
+
+            @Test
+            void testWithCommunicatorBean() {
+                contextRunner
+                        .withUserConfiguration(CommunicatorProvider.class, LoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Communicator.class);
+                            assertThat(context).hasSingleBean(CommunicatorLogger.class);
+
+                            endpoint.enableLoggingOnBean("communicator", null);
+
+                            Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+
+                            verify(communicator).enableLogging(logger);
+                            verifyNoMoreInteractions(communicator);
+                        });
+            }
+
+            @Test
+            void testWithClientBean() {
+                contextRunner
+                        .withUserConfiguration(ClientProvider.class, LoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Client.class);
+                            assertThat(context).hasSingleBean(CommunicatorLogger.class);
+
+                            endpoint.enableLoggingOnBean("client", null);
+
+                            Client client = context.getBean(ClientProvider.class).client();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+
+                            verify(client).enableLogging(logger);
+                            verifyNoMoreInteractions(client);
+                        });
+            }
+
+            @Test
+            void testWithBeansOfAllSupportedTypes() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class, LoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            // three LoggingCapable beans - connection, communicator and client
+                            assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).hasSingleBean(Communicator.class);
+                            assertThat(context).hasSingleBean(Client.class);
+                            assertThat(context).hasSingleBean(CommunicatorLogger.class);
+
+                            endpoint.enableLoggingOnBean("connection", null);
+
+                            Connection connection = context.getBean(ConnectionProvider.class).connection();
+                            Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
+                            Client client = context.getBean(ClientProvider.class).client();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+
+                            verify(connection).enableLogging(logger);
+                            verifyNoMoreInteractions(connection, communicator, client);
+                        });
+            }
+        }
+
+        @Nested
+        class WithMultipleLoggers {
+
+            @Test
+            void testWithMissingBean() {
+                contextRunner
+                        .withUserConfiguration(LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).doesNotHaveBean(LoggingCapable.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            assertThatThrownBy(() -> endpoint.enableLoggingOnBean("connection", null))
+                                    .isInstanceOf(NoSuchBeanDefinitionException.class)
+                                    .extracting("beanName", "beanType").isEqualTo(Arrays.asList("connection", null));
+                        });
+            }
+
+            @Test
+            void withTypeMismatch() {
+                contextRunner
+                        .withUserConfiguration(AdditionalBeanProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(Marshaller.class);
+                            assertThat(context).doesNotHaveBean(LoggingCapable.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            Marshaller marshaller = context.getBean(AdditionalBeanProvider.class).marshaller();
+
+                            assertThatThrownBy(() -> endpoint.enableLoggingOnBean("marshaller", null))
+                                    .isInstanceOf(BeanNotOfRequiredTypeException.class)
+                                    .extracting("beanName", "requiredType", "actualType")
+                                            .isEqualTo(Arrays.asList("marshaller", LoggingCapable.class, marshaller.getClass()));
+                        });
+            }
+
+            @Test
+            void testWithConnectionBean() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            endpoint.enableLoggingOnBean("connection", null);
+
+                            Connection connection = context.getBean(ConnectionProvider.class).connection();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+                            CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
+
+                            verifyEnableLogging(connection, logger, additionalLogger);
+                            verifyNoMoreInteractions(connection);
+                        });
+            }
+
+            @Test
+            void testWithCommunicatorBean() {
+                contextRunner
+                        .withUserConfiguration(CommunicatorProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Communicator.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            endpoint.enableLoggingOnBean("communicator", null);
+
+                            Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+                            CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
+
+                            verifyEnableLogging(communicator, logger, additionalLogger);
+                            verifyNoMoreInteractions(communicator);
+                        });
+            }
+
+            @Test
+            void testWithClientBean() {
+                contextRunner
+                        .withUserConfiguration(ClientProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Client.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            endpoint.enableLoggingOnBean("client", null);
+
+                            Client client = context.getBean(ClientProvider.class).client();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+                            CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
+
+                            verifyEnableLogging(client, logger, additionalLogger);
+                            verifyNoMoreInteractions(client);
+                        });
+            }
+
+            @Test
+            void testWithBeansOfAllSupportedTypes() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class, LoggerProvider.class,
+                                AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            // three LoggingCapable beans - connection, communicator and client
+                            assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).hasSingleBean(Communicator.class);
+                            assertThat(context).hasSingleBean(Client.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            endpoint.enableLoggingOnBean("connection", null);
+
+                            Connection connection = context.getBean(ConnectionProvider.class).connection();
+                            Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
+                            Client client = context.getBean(ClientProvider.class).client();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+                            CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
+
+                            verifyEnableLogging(connection, logger, additionalLogger);
+                            verifyNoMoreInteractions(connection, communicator, client);
+                        });
+            }
+        }
+
+        @Nested
+        class WithSpecificLogger {
+
+            @Test
+            void testWithMissingBean() {
+                contextRunner
+                        .withUserConfiguration(LoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).doesNotHaveBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(CommunicatorLogger.class);
+
+                            assertThatThrownBy(() -> endpoint.enableLoggingOnBean("connection", "logger"))
+                                    .isInstanceOf(NoSuchBeanDefinitionException.class)
+                                    .extracting("beanName", "beanType").isEqualTo(Arrays.asList("connection", null));
+                        });
+            }
+
+            @Test
+            void testWithTypeMismatch() {
+                contextRunner
+                        .withUserConfiguration(AdditionalBeanProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(Marshaller.class);
+                            assertThat(context).doesNotHaveBean(LoggingCapable.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            Marshaller marshaller = context.getBean(AdditionalBeanProvider.class).marshaller();
+
+                            assertThatThrownBy(() -> endpoint.enableLoggingOnBean("marshaller", "connection"))
+                                    .isInstanceOf(BeanNotOfRequiredTypeException.class)
+                                    .extracting("beanName", "requiredType", "actualType")
+                                            .isEqualTo(Arrays.asList("marshaller", LoggingCapable.class, marshaller.getClass()));
+                        });
+            }
+
+            @Test
+            void testWithMissingLoggerBean() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
+
+                            assertThatThrownBy(() -> endpoint.enableLoggingOnBean("connection", "logger"))
+                                    .isInstanceOf(NoSuchBeanDefinitionException.class)
+                                    .extracting("beanName", "beanType").isEqualTo(Arrays.asList("logger", null));
+                        });
+            }
+
+            @Test
+            void testWithLoggerTypeMismatch() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            Connection connection = context.getBean(ConnectionProvider.class).connection();
+
+                            assertThatThrownBy(() -> endpoint.enableLoggingOnBean("connection", "connection"))
+                                    .isInstanceOf(BeanNotOfRequiredTypeException.class)
+                                    .extracting("beanName", "requiredType", "actualType")
+                                            .isEqualTo(Arrays.asList("connection", CommunicatorLogger.class, connection.getClass()));
+
+                            verifyNoMoreInteractions(connection);
+                        });
+            }
+
+            @Test
+            void testWithConnectionBean() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            endpoint.enableLoggingOnBean("connection", "logger");
+
+                            Connection connection = context.getBean(ConnectionProvider.class).connection();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+
+                            verify(connection).enableLogging(logger);
+                            verifyNoMoreInteractions(connection);
+                        });
+            }
+
+            @Test
+            void testWithCommunicatorBean() {
+                contextRunner
+                        .withUserConfiguration(CommunicatorProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Communicator.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            endpoint.enableLoggingOnBean("communicator", "logger");
+
+                            Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+
+                            verify(communicator).enableLogging(logger);
+                            verifyNoMoreInteractions(communicator);
+                        });
+            }
+
+            @Test
+            void testWithClientBean() {
+                contextRunner
+                        .withUserConfiguration(ClientProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            assertThat(context).hasSingleBean(LoggingCapable.class);
+                            assertThat(context).hasSingleBean(Client.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            endpoint.enableLoggingOnBean("client", "logger");
+
+                            Client client = context.getBean(ClientProvider.class).client();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+
+                            verify(client).enableLogging(logger);
+                            verifyNoMoreInteractions(client);
+                        });
+            }
+
+            @Test
+            void testWithBeansOfAllSupportedTypes() {
+                contextRunner
+                        .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class, LoggerProvider.class,
+                                AdditionalLoggerProvider.class)
+                        .run(context -> {
+                            LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                            // three LoggingCapable beans - connection, communicator and client
+                            assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
+                            assertThat(context).hasSingleBean(Connection.class);
+                            assertThat(context).hasSingleBean(Communicator.class);
+                            assertThat(context).hasSingleBean(Client.class);
+                            assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+
+                            endpoint.enableLoggingOnBean("connection", "logger");
+
+                            Connection connection = context.getBean(ConnectionProvider.class).connection();
+                            Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
+                            Client client = context.getBean(ClientProvider.class).client();
+                            CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
+
+                            verify(connection).enableLogging(logger);
+                            verifyNoMoreInteractions(connection, communicator, client);
+                        });
+            }
+        }
     }
 
-    @Test
+    @Nested
     @SuppressWarnings("resource")
-    void testEnableLoggingWithMultipleLoggers() {
-        contextRunner
-                .withUserConfiguration(LoggerProvider.class, AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+    class DisableLogging {
 
-                    assertThat(context).doesNotHaveBean(LoggingCapable.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+        @Test
+        void testWithNoSupportedBeans() {
+            contextRunner
+                    .run(context -> {
+                        LoggingEndpoint endpoint = new LoggingEndpoint(context);
 
-                    endpoint.enableLogging(null);
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+                        assertThat(context).doesNotHaveBean(LoggingCapable.class);
 
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+                        endpoint.disableLogging();
+                    });
+        }
 
-                    endpoint.enableLogging(null);
+        @Test
+        void testWithConnection() {
+            contextRunner
+                    .withUserConfiguration(ConnectionProvider.class)
+                    .run(context -> {
+                        LoggingEndpoint endpoint = new LoggingEndpoint(context);
 
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-                    CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
+                        assertThat(context).hasSingleBean(LoggingCapable.class);
+                        assertThat(context).hasSingleBean(Connection.class);
 
-                    verifyEnableLogging(connection, logger, additionalLogger);
-                    verifyNoMoreInteractions(connection);
-                });
-        contextRunner
-                .withUserConfiguration(CommunicatorProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+                        endpoint.disableLogging();
 
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+                        Connection connection = context.getBean(ConnectionProvider.class).connection();
 
-                    endpoint.enableLogging(null);
+                        verify(connection).disableLogging();
+                        verifyNoMoreInteractions(connection);
+                    });
+        }
 
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-                    CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
+        @Test
+        void testWithCommunicator() {
+            contextRunner
+                    .withUserConfiguration(CommunicatorProvider.class)
+                    .run(context -> {
+                        LoggingEndpoint endpoint = new LoggingEndpoint(context);
 
-                    verifyEnableLogging(communicator, logger, additionalLogger);
-                    verifyNoMoreInteractions(communicator);
-                });
-        contextRunner
-                .withUserConfiguration(ClientProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+                        assertThat(context).hasSingleBean(LoggingCapable.class);
+                        assertThat(context).hasSingleBean(Communicator.class);
 
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+                        endpoint.disableLogging();
 
-                    endpoint.enableLogging(null);
+                        Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
-                    Client client = context.getBean(ClientProvider.class).client();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-                    CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
+                        verify(communicator).disableLogging();
+                        verifyNoMoreInteractions(communicator);
+                    });
+        }
 
-                    verifyEnableLogging(client, logger, additionalLogger);
-                    verifyNoMoreInteractions(client);
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class, LoggerProvider.class,
-                        AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
+        @Test
+        void testWithClient() {
+            contextRunner
+                    .withUserConfiguration(ClientProvider.class)
+                    .run(context -> {
+                        LoggingEndpoint endpoint = new LoggingEndpoint(context);
 
-                    // three LoggingCapable beans - connection, communicator and client
-                    assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
+                        assertThat(context).hasSingleBean(LoggingCapable.class);
+                        assertThat(context).hasSingleBean(Client.class);
 
-                    endpoint.enableLogging(null);
+                        endpoint.disableLogging();
 
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    Client client = context.getBean(ClientProvider.class).client();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-                    CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
+                        Client client = context.getBean(ClientProvider.class).client();
 
-                    verifyEnableLogging(connection, logger, additionalLogger);
-                    verifyEnableLogging(communicator, logger, additionalLogger);
-                    verifyEnableLogging(client, logger, additionalLogger);
-                    verifyNoMoreInteractions(connection, communicator, client);
-                });
+                        verify(client).disableLogging();
+                        verifyNoMoreInteractions(client);
+                    });
+        }
+
+        @Test
+        void testWithBeansOfAllSupportedTypes() {
+            contextRunner
+                    .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class)
+                    .run(context -> {
+                        LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                        // three LoggingCapable beans - connection, communicator and client
+                        assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
+                        assertThat(context).hasSingleBean(Connection.class);
+                        assertThat(context).hasSingleBean(Communicator.class);
+                        assertThat(context).hasSingleBean(Client.class);
+
+                        endpoint.disableLogging();
+
+                        Connection connection = context.getBean(ConnectionProvider.class).connection();
+                        Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
+                        Client client = context.getBean(ClientProvider.class).client();
+
+                        verify(connection).disableLogging();
+                        verify(communicator).disableLogging();
+                        verify(client).disableLogging();
+                        verifyNoMoreInteractions(connection, communicator, client);
+                    });
+        }
     }
 
-    @Test
+    @Nested
     @SuppressWarnings("resource")
-    void testEnableLoggingWithSpecificLogger() {
-        contextRunner
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).doesNotHaveBean(LoggingCapable.class);
-                    assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
-
-                    assertThatThrownBy(() -> endpoint.enableLogging("logger"))
-                            .isInstanceOf(NoSuchBeanDefinitionException.class)
-                            .extracting("beanName", "beanType").isEqualTo(Arrays.asList("logger", null));
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
-
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-
-                    assertThatThrownBy(() -> endpoint.enableLogging("connection"))
-                            .isInstanceOf(BeanNotOfRequiredTypeException.class)
-                            .extracting("beanName", "requiredType", "actualType")
-                                    .isEqualTo(Arrays.asList("connection", CommunicatorLogger.class, connection.getClass()));
-
-                    verifyNoMoreInteractions(connection);
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
-
-                    endpoint.enableLogging("logger");
-
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-
-                    verify(connection).enableLogging(logger);
-                    verifyNoMoreInteractions(connection);
-                });
-        contextRunner
-                .withUserConfiguration(CommunicatorProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
-
-                    endpoint.enableLogging("logger");
-
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-
-                    verify(communicator).enableLogging(logger);
-                    verifyNoMoreInteractions(communicator);
-                });
-        contextRunner
-                .withUserConfiguration(ClientProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
-
-                    endpoint.enableLogging("logger");
-
-                    Client client = context.getBean(ClientProvider.class).client();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-
-                    verify(client).enableLogging(logger);
-                    verifyNoMoreInteractions(client);
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class, LoggerProvider.class,
-                        AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    // three LoggingCapable beans - connection, communicator and client
-                    assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
-
-                    endpoint.enableLogging("logger");
-
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    Client client = context.getBean(ClientProvider.class).client();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-
-                    verify(connection).enableLogging(logger);
-                    verify(communicator).enableLogging(logger);
-                    verify(client).enableLogging(logger);
-                    verifyNoMoreInteractions(connection, communicator, client);
-                });
-    }
-
-    @Test
-    @SuppressWarnings("resource")
-    void testEnableLoggingOnBeanWithNoLoggers() {
-        contextRunner
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).doesNotHaveBean(LoggingCapable.class);
-                    assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
-
-                    assertThatThrownBy(() -> endpoint.enableLoggingOnBean("connection", null))
-                            .isInstanceOf(NoSuchBeanDefinitionException.class)
-                            .extracting("beanName", "beanType").isEqualTo(Arrays.asList("connection", null));
-                });
-        contextRunner
-                .withUserConfiguration(AdditionalBeanProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).doesNotHaveBean(LoggingCapable.class);
-                    assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
-
-                    Marshaller marshaller = context.getBean(AdditionalBeanProvider.class).marshaller();
-
-                    assertThatThrownBy(() -> endpoint.enableLoggingOnBean("marshaller", null))
-                            .isInstanceOf(BeanNotOfRequiredTypeException.class)
-                            .extracting("beanName", "requiredType", "actualType")
-                                    .isEqualTo(Arrays.asList("marshaller", LoggingCapable.class, marshaller.getClass()));
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
-
-                    endpoint.enableLoggingOnBean("connection", null);
-
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-
-                    verifyNoMoreInteractions(connection);
-                });
-        contextRunner
-                .withUserConfiguration(CommunicatorProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-                    assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
-
-                    endpoint.enableLoggingOnBean("communicator", null);
-
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-
-                    verifyNoMoreInteractions(communicator);
-                });
-        contextRunner
-                .withUserConfiguration(ClientProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
-
-                    endpoint.enableLoggingOnBean("client", null);
-
-                    Client client = context.getBean(ClientProvider.class).client();
-
-                    verifyNoMoreInteractions(client);
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    // three LoggingCapable beans - connection, communicator and client
-                    assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
-
-                    endpoint.enableLoggingOnBean("connection", null);
-
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    Client client = context.getBean(ClientProvider.class).client();
-
-                    verifyNoMoreInteractions(connection, communicator, client);
-                });
-    }
-
-    @Test
-    @SuppressWarnings("resource")
-    void testEnableLoggingOnBeanWithOneLogger() {
-        contextRunner
-                .withUserConfiguration(LoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).doesNotHaveBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(CommunicatorLogger.class);
-
-                    assertThatThrownBy(() -> endpoint.enableLoggingOnBean("connection", null))
-                            .isInstanceOf(NoSuchBeanDefinitionException.class)
-                            .extracting("beanName", "beanType").isEqualTo(Arrays.asList("connection", null));
-                });
-        contextRunner
-                .withUserConfiguration(AdditionalBeanProvider.class, LoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(Marshaller.class);
-                    assertThat(context).doesNotHaveBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(CommunicatorLogger.class);
-
-                    Marshaller marshaller = context.getBean(AdditionalBeanProvider.class).marshaller();
-
-                    assertThatThrownBy(() -> endpoint.enableLoggingOnBean("marshaller", null))
-                            .isInstanceOf(BeanNotOfRequiredTypeException.class)
-                            .extracting("beanName", "requiredType", "actualType")
-                                    .isEqualTo(Arrays.asList("marshaller", LoggingCapable.class, marshaller.getClass()));
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, LoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).hasSingleBean(CommunicatorLogger.class);
-
-                    endpoint.enableLoggingOnBean("connection", null);
-
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-
-                    verify(connection).enableLogging(logger);
-                    verifyNoMoreInteractions(connection);
-                });
-        contextRunner
-                .withUserConfiguration(CommunicatorProvider.class, LoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-                    assertThat(context).hasSingleBean(CommunicatorLogger.class);
-
-                    endpoint.enableLoggingOnBean("communicator", null);
-
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-
-                    verify(communicator).enableLogging(logger);
-                    verifyNoMoreInteractions(communicator);
-                });
-        contextRunner
-                .withUserConfiguration(ClientProvider.class, LoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).hasSingleBean(CommunicatorLogger.class);
-
-                    endpoint.enableLoggingOnBean("client", null);
-
-                    Client client = context.getBean(ClientProvider.class).client();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-
-                    verify(client).enableLogging(logger);
-                    verifyNoMoreInteractions(client);
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class, LoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    // three LoggingCapable beans - connection, communicator and client
-                    assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).hasSingleBean(CommunicatorLogger.class);
-
-                    endpoint.enableLoggingOnBean("connection", null);
-
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    Client client = context.getBean(ClientProvider.class).client();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-
-                    verify(connection).enableLogging(logger);
-                    verifyNoMoreInteractions(connection, communicator, client);
-                });
-    }
-
-    @Test
-    @SuppressWarnings("resource")
-    void testEnableLoggingOnBeanWithMultipleLoggers() {
-        contextRunner
-                .withUserConfiguration(LoggerProvider.class, AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).doesNotHaveBean(LoggingCapable.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
-
-                    assertThatThrownBy(() -> endpoint.enableLoggingOnBean("connection", null))
-                            .isInstanceOf(NoSuchBeanDefinitionException.class)
-                            .extracting("beanName", "beanType").isEqualTo(Arrays.asList("connection", null));
-                });
-        contextRunner
-                .withUserConfiguration(AdditionalBeanProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(Marshaller.class);
-                    assertThat(context).doesNotHaveBean(LoggingCapable.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
-
-                    Marshaller marshaller = context.getBean(AdditionalBeanProvider.class).marshaller();
-
-                    assertThatThrownBy(() -> endpoint.enableLoggingOnBean("marshaller", null))
-                            .isInstanceOf(BeanNotOfRequiredTypeException.class)
-                            .extracting("beanName", "requiredType", "actualType")
-                                    .isEqualTo(Arrays.asList("marshaller", LoggingCapable.class, marshaller.getClass()));
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
-
-                    endpoint.enableLoggingOnBean("connection", null);
-
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-                    CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
-
-                    verifyEnableLogging(connection, logger, additionalLogger);
-                    verifyNoMoreInteractions(connection);
-                });
-        contextRunner
-                .withUserConfiguration(CommunicatorProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
-
-                    endpoint.enableLoggingOnBean("communicator", null);
-
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-                    CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
-
-                    verifyEnableLogging(communicator, logger, additionalLogger);
-                    verifyNoMoreInteractions(communicator);
-                });
-        contextRunner
-                .withUserConfiguration(ClientProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
-
-                    endpoint.enableLoggingOnBean("client", null);
-
-                    Client client = context.getBean(ClientProvider.class).client();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-                    CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
-
-                    verifyEnableLogging(client, logger, additionalLogger);
-                    verifyNoMoreInteractions(client);
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class, LoggerProvider.class,
-                        AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    // three LoggingCapable beans - connection, communicator and client
-                    assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
-
-                    endpoint.enableLoggingOnBean("connection", null);
-
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    Client client = context.getBean(ClientProvider.class).client();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-                    CommunicatorLogger additionalLogger = context.getBean(AdditionalLoggerProvider.class).additionalLogger();
-
-                    verifyEnableLogging(connection, logger, additionalLogger);
-                    verifyNoMoreInteractions(connection, communicator, client);
-                });
-    }
-
-    @Test
-    @SuppressWarnings("resource")
-    void testEnableLoggingOnBeanWithSpecificLogger() {
-        contextRunner
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).doesNotHaveBean(LoggingCapable.class);
-                    assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
-
-                    assertThatThrownBy(() -> endpoint.enableLoggingOnBean("connection", "logger"))
-                            .isInstanceOf(NoSuchBeanDefinitionException.class)
-                            .extracting("beanName", "beanType").isEqualTo(Arrays.asList("connection", null));
-                });
-        contextRunner
-                .withUserConfiguration(AdditionalBeanProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(Marshaller.class);
-                    assertThat(context).doesNotHaveBean(LoggingCapable.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
-
-                    Marshaller marshaller = context.getBean(AdditionalBeanProvider.class).marshaller();
-
-                    assertThatThrownBy(() -> endpoint.enableLoggingOnBean("marshaller", "connection"))
-                            .isInstanceOf(BeanNotOfRequiredTypeException.class)
-                            .extracting("beanName", "requiredType", "actualType")
-                                    .isEqualTo(Arrays.asList("marshaller", LoggingCapable.class, marshaller.getClass()));
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
-
-                    assertThatThrownBy(() -> endpoint.enableLoggingOnBean("connection", "logger"))
-                            .isInstanceOf(NoSuchBeanDefinitionException.class)
-                            .extracting("beanName", "beanType").isEqualTo(Arrays.asList("logger", null));
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
-
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-
-                    assertThatThrownBy(() -> endpoint.enableLoggingOnBean("connection", "connection"))
-                            .isInstanceOf(BeanNotOfRequiredTypeException.class)
-                            .extracting("beanName", "requiredType", "actualType")
-                                    .isEqualTo(Arrays.asList("connection", CommunicatorLogger.class, connection.getClass()));
-
-                    verifyNoMoreInteractions(connection);
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
-
-                    endpoint.enableLoggingOnBean("connection", "logger");
-
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-
-                    verify(connection).enableLogging(logger);
-                    verifyNoMoreInteractions(connection);
-                });
-        contextRunner
-                .withUserConfiguration(CommunicatorProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
-
-                    endpoint.enableLoggingOnBean("communicator", "logger");
-
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-
-                    verify(communicator).enableLogging(logger);
-                    verifyNoMoreInteractions(communicator);
-                });
-        contextRunner
-                .withUserConfiguration(ClientProvider.class, LoggerProvider.class, AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
-
-                    endpoint.enableLoggingOnBean("client", "logger");
-
-                    Client client = context.getBean(ClientProvider.class).client();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-
-                    verify(client).enableLogging(logger);
-                    verifyNoMoreInteractions(client);
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class, LoggerProvider.class,
-                        AdditionalLoggerProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    // three LoggingCapable beans - connection, communicator and client
-                    assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).getBeans(CommunicatorLogger.class).hasSize(2);
-
-                    endpoint.enableLoggingOnBean("connection", "logger");
-
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    Client client = context.getBean(ClientProvider.class).client();
-                    CommunicatorLogger logger = context.getBean(LoggerProvider.class).logger();
-
-                    verify(connection).enableLogging(logger);
-                    verifyNoMoreInteractions(connection, communicator, client);
-                });
-    }
-
-    @Test
-    @SuppressWarnings("resource")
-    void testDisableLogging() {
-        contextRunner
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).doesNotHaveBean(LoggingCapable.class);
-
-                    endpoint.disableLogging();
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Connection.class);
-
-                    endpoint.disableLogging();
-
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-
-                    verify(connection).disableLogging();
-                    verifyNoMoreInteractions(connection);
-                });
-        contextRunner
-                .withUserConfiguration(CommunicatorProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-
-                    endpoint.disableLogging();
-
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-
-                    verify(communicator).disableLogging();
-                    verifyNoMoreInteractions(communicator);
-                });
-        contextRunner
-                .withUserConfiguration(ClientProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Client.class);
-
-                    endpoint.disableLogging();
-
-                    Client client = context.getBean(ClientProvider.class).client();
-
-                    verify(client).disableLogging();
-                    verifyNoMoreInteractions(client);
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    // three LoggingCapable beans - connection, communicator and client
-                    assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-                    assertThat(context).hasSingleBean(Client.class);
-
-                    endpoint.disableLogging();
-
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    Client client = context.getBean(ClientProvider.class).client();
-
-                    verify(connection).disableLogging();
-                    verify(communicator).disableLogging();
-                    verify(client).disableLogging();
-                    verifyNoMoreInteractions(connection, communicator, client);
-                });
-    }
-
-    @Test
-    @SuppressWarnings("resource")
-    void testEnableLoggingOnBean() {
-        contextRunner
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).doesNotHaveBean(LoggingCapable.class);
-
-                    assertThatThrownBy(() -> endpoint.disableLoggingOnBean("connection"))
-                            .isInstanceOf(NoSuchBeanDefinitionException.class)
-                            .extracting("beanName", "beanType").isEqualTo(Arrays.asList("connection", null));
-                });
-        contextRunner
-                .withUserConfiguration(AdditionalBeanProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).doesNotHaveBean(LoggingCapable.class);
-
-                    Marshaller marshaller = context.getBean(AdditionalBeanProvider.class).marshaller();
-
-                    assertThatThrownBy(() -> endpoint.disableLoggingOnBean("marshaller"))
-                            .isInstanceOf(BeanNotOfRequiredTypeException.class)
-                            .extracting("beanName", "requiredType", "actualType")
-                                    .isEqualTo(Arrays.asList("marshaller", LoggingCapable.class, marshaller.getClass()));
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Connection.class);
-
-                    endpoint.disableLoggingOnBean("connection");
-
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-
-                    verify(connection).disableLogging();
-                    verifyNoMoreInteractions(connection);
-                });
-        contextRunner
-                .withUserConfiguration(CommunicatorProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-
-                    endpoint.disableLoggingOnBean("communicator");
-
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-
-                    verify(communicator).disableLogging();
-                    verifyNoMoreInteractions(communicator);
-                });
-        contextRunner
-                .withUserConfiguration(ClientProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    assertThat(context).hasSingleBean(LoggingCapable.class);
-                    assertThat(context).hasSingleBean(Client.class);
-
-                    endpoint.disableLoggingOnBean("client");
-
-                    Client client = context.getBean(ClientProvider.class).client();
-
-                    verify(client).disableLogging();
-                    verifyNoMoreInteractions(client);
-                });
-        contextRunner
-                .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class)
-                .run(context -> {
-                    LoggingEndpoint endpoint = new LoggingEndpoint(context);
-
-                    // three LoggingCapable beans - connection, communicator and client
-                    assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).hasSingleBean(Communicator.class);
-                    assertThat(context).hasSingleBean(Client.class);
-
-                    endpoint.disableLoggingOnBean("connection");
-
-                    Connection connection = context.getBean(ConnectionProvider.class).connection();
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    Client client = context.getBean(ClientProvider.class).client();
-
-                    verify(connection).disableLogging();
-                    verifyNoMoreInteractions(connection, communicator, client);
-                });
+    class DisableLoggingOnBean {
+
+        @Test
+        void testWithMissingBean() {
+            contextRunner
+                    .run(context -> {
+                        LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                        assertThat(context).doesNotHaveBean(LoggingCapable.class);
+
+                        assertThatThrownBy(() -> endpoint.disableLoggingOnBean("connection"))
+                                .isInstanceOf(NoSuchBeanDefinitionException.class)
+                                .extracting("beanName", "beanType").isEqualTo(Arrays.asList("connection", null));
+                    });
+        }
+
+        @Test
+        void testWithTypeMismatch() {
+            contextRunner
+                    .withUserConfiguration(AdditionalBeanProvider.class)
+                    .run(context -> {
+                        LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                        assertThat(context).doesNotHaveBean(LoggingCapable.class);
+
+                        Marshaller marshaller = context.getBean(AdditionalBeanProvider.class).marshaller();
+
+                        assertThatThrownBy(() -> endpoint.disableLoggingOnBean("marshaller"))
+                                .isInstanceOf(BeanNotOfRequiredTypeException.class)
+                                .extracting("beanName", "requiredType", "actualType")
+                                        .isEqualTo(Arrays.asList("marshaller", LoggingCapable.class, marshaller.getClass()));
+                    });
+        }
+
+        @Test
+        void testWithConnection() {
+            contextRunner
+                    .withUserConfiguration(ConnectionProvider.class)
+                    .run(context -> {
+                        LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                        assertThat(context).hasSingleBean(LoggingCapable.class);
+                        assertThat(context).hasSingleBean(Connection.class);
+
+                        endpoint.disableLoggingOnBean("connection");
+
+                        Connection connection = context.getBean(ConnectionProvider.class).connection();
+
+                        verify(connection).disableLogging();
+                        verifyNoMoreInteractions(connection);
+                    });
+        }
+
+        @Test
+        void testWithCommunicator() {
+            contextRunner
+                    .withUserConfiguration(CommunicatorProvider.class)
+                    .run(context -> {
+                        LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                        assertThat(context).hasSingleBean(LoggingCapable.class);
+                        assertThat(context).hasSingleBean(Communicator.class);
+
+                        endpoint.disableLoggingOnBean("communicator");
+
+                        Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
+
+                        verify(communicator).disableLogging();
+                        verifyNoMoreInteractions(communicator);
+                    });
+        }
+
+        @Test
+        void testWithClient() {
+            contextRunner
+                    .withUserConfiguration(ClientProvider.class)
+                    .run(context -> {
+                        LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                        assertThat(context).hasSingleBean(LoggingCapable.class);
+                        assertThat(context).hasSingleBean(Client.class);
+
+                        endpoint.disableLoggingOnBean("client");
+
+                        Client client = context.getBean(ClientProvider.class).client();
+
+                        verify(client).disableLogging();
+                        verifyNoMoreInteractions(client);
+                    });
+        }
+
+        @Test
+        void testWithBeansOfAllSupportedTypes() {
+            contextRunner
+                    .withUserConfiguration(ConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class)
+                    .run(context -> {
+                        LoggingEndpoint endpoint = new LoggingEndpoint(context);
+
+                        // three LoggingCapable beans - connection, communicator and client
+                        assertThat(context).getBeans(LoggingCapable.class).hasSize(3);
+                        assertThat(context).hasSingleBean(Connection.class);
+                        assertThat(context).hasSingleBean(Communicator.class);
+                        assertThat(context).hasSingleBean(Client.class);
+
+                        endpoint.disableLoggingOnBean("connection");
+
+                        Connection connection = context.getBean(ConnectionProvider.class).connection();
+                        Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
+                        Client client = context.getBean(ClientProvider.class).client();
+
+                        verify(connection).disableLogging();
+                        verifyNoMoreInteractions(connection, communicator, client);
+                    });
+        }
     }
 
     @Test

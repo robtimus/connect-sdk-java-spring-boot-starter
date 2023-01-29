@@ -69,7 +69,7 @@ class ConnectSdkConnectionAutoConfigurationTest {
                     assertThat(context).getBean(Connection.class).isExactlyInstanceOf(DefaultConnection.class);
                     assertThat(context).getBean(Connection.class).isSameAs(context.getBean(PooledConnection.class));
                     assertThat(context).hasSingleBean(ConnectSdkConnectionAutoConfiguration.ConnectionManager.class);
-                    Thread.sleep(50);
+                    // Note: it's currently not possible to test that idle connections have been closed after 10 seconds
                 });
         contextRunner
                 .withPropertyValues("connect.api.close-idle-connections.enabled=false")
