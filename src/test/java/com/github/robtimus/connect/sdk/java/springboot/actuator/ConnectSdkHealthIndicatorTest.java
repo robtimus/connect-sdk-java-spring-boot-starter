@@ -19,8 +19,10 @@ package com.github.robtimus.connect.sdk.java.springboot.actuator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,7 +67,7 @@ class ConnectSdkHealthIndicatorTest {
     }
 
     @Test
-    void testHealthThrottled() throws InterruptedException {
+    void testHealthThrottled() {
         MerchantClient merchantClient = mock(MerchantClient.class);
         ServicesClient servicesClient = mock(ServicesClient.class);
 
@@ -85,9 +87,7 @@ class ConnectSdkHealthIndicatorTest {
         assertThat(health.getStatus()).isEqualTo(Status.UNKNOWN);
         assertThat(health.getDetails()).isEqualTo(Collections.emptyMap());
 
-        Thread.sleep(1000);
-
-        health = healthIndicator.health();
+        health = await().atMost(Duration.ofMillis(1050)).until(healthIndicator::health, h -> h.getStatus() == Status.UP);
         assertThat(health.getStatus()).isEqualTo(Status.UP);
         assertThat(health.getDetails()).isEqualTo(Collections.singletonMap("result", "OK"));
     }
