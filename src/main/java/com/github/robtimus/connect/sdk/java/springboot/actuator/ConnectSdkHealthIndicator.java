@@ -79,4 +79,8 @@ public class ConnectSdkHealthIndicator extends AbstractHealthIndicator {
             builder.down();
         }
     }
+
+    long lastCheck() {
+        return lastCheck;
+    }
 }
