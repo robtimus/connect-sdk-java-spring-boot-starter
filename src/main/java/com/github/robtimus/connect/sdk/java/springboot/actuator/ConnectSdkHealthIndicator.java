@@ -47,6 +47,8 @@ public class ConnectSdkHealthIndicator extends AbstractHealthIndicator {
     private long lastCheck;
 
     /**
+     * Creates a new health indicator.
+     *
      * @param merchantClient The merchant client to use.
      * @param minInterval The minimum interval in seconds between calls. Must be &gt; 0.
      */

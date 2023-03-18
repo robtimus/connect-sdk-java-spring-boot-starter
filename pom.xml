@@ -22,7 +22,7 @@
   <parent>
     <groupId>com.github.robtimus</groupId>
     <artifactId>robtimus-parent</artifactId>
-    <version>1.8</version>
+    <version>1.9</version>
     <relativePath />
   </parent>
 
@@ -202,9 +202,14 @@
             <links>
               <link>https://docs.spring.io/spring-boot/docs/2.7.x/api</link>
               <link>https://docs.spring.io/spring-framework/docs/5.3.x/javadoc-api</link>
-              <link>https://logback.qos.ch/apidocs</link>
               <link>https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest</link>
             </links>
+            <offlineLinks>
+              <offlineLink>
+                <url>https://logback.qos.ch/apidocs/</url>
+                <location>${project.basedir}/src/main/apidocs/ch.qos.logback/logback-classic</location>
+              </offlineLink>
+            </offlineLinks>
           </configuration>
         </plugin>
       </plugins>
