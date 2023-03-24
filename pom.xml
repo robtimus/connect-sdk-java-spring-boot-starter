@@ -63,13 +63,13 @@
   <properties>
     <version.awaitility>4.2.0</version.awaitility>
     <version.commons-codec>1.15</version.commons-codec>
-    <version.connect-sdk-java>6.30.1</version.connect-sdk-java>
-    <version.gson>2.9.0</version.gson>
-    <version.httpclient>4.5.13</version.httpclient>
-    <version.httpmime>4.5.13</version.httpmime>
+    <version.connect-sdk-java>6.36.0</version.connect-sdk-java>
+    <version.gson>2.10.1</version.gson>
+    <version.httpclient>4.5.14</version.httpclient>
+    <version.httpmime>4.5.14</version.httpmime>
     <version.powermock>2.0.9</version.powermock>
-    <version.snakeyaml>1.33</version.snakeyaml>
-    <version.spring-boot>2.7.6</version.spring-boot>
+    <version.snakeyaml>2.0</version.snakeyaml>
+    <version.spring-boot>2.7.10</version.spring-boot>
   </properties>
 
   <dependencies>
