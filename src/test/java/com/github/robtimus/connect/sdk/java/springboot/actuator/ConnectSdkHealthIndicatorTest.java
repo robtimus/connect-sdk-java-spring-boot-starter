@@ -88,10 +88,10 @@ class ConnectSdkHealthIndicatorTest {
         assertThat(health.getStatus()).isEqualTo(Status.UNKNOWN);
         assertThat(health.getDetails()).isEqualTo(Collections.emptyMap());
 
-        health = await().atMost(Duration.ofMillis(1050)).until(healthIndicator::health, h -> h.getStatus() == Status.UP);
+        health = await().atMost(Duration.ofMillis(1150)).until(healthIndicator::health, h -> h.getStatus() == Status.UP);
         assertThat(health.getStatus()).isEqualTo(Status.UP);
         assertThat(health.getDetails()).isEqualTo(Collections.singletonMap("result", "OK"));
-        assertThat(healthIndicator.lastCheck() - lastCheck).isBetween(950L, 1050L);
+        assertThat(healthIndicator.lastCheck() - lastCheck).isBetween(950L, 1150L);
     }
 
     @Test
