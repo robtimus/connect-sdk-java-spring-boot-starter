@@ -56,6 +56,10 @@ jobs:
 
   spring-boot-3:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        springboot: ['3.0.0', '3.1.0']
+      fail-fast: false
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -65,7 +69,7 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
       - name: Build with Maven
-        run: mvn compile --file pom.xml -B --no-transfer-progress -Pspring-boot-3
+        run: mvn test --file pom.xml -B --no-transfer-progress -Pspring-boot-3 -Dversion.spring-boot=${{matrix.springboot}}
 
   native-module:
     runs-on: ubuntu-latest
