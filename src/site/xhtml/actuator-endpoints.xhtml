@@ -54,7 +54,7 @@ curl -X POST http://&lt;host&gt;/actuator/connectSdkLogging/myBean -H Content-Ty
 
   <h3>Connections</h3>
   <p>ID: <tt>connectSdkConnections</tt></p>
-  <p>This actuator endpoint that allows you to call <tt>closeIdleConnections</tt> and <tt>closeExpiredConnections</tt> on beans of types
+  <p>This actuator endpoint allows you to call <tt>closeIdleConnections</tt> and <tt>closeExpiredConnections</tt> on beans of types
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/PooledConnection.html">PooledConnection</a>,
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Communicator.html">Communicator</a> and
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a>.
@@ -100,6 +100,20 @@ curl -X POST http://&lt;host&gt;/actuator/connectSdkConnections/myBean -H Conten
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a> bean.</p>
   <p>HTTP endpoint example:</p>
   <pre>curl -X POST http://&lt;host&gt;/actuator/connectSdkConnections/myBean</pre>
+
+  <hr />
+
+  <h3>Authentication</h3>
+  <p>ID: <tt>connectSdkApiKey</tt></p>
+  <p>This actuator endpoint allows you to manage the API key of the <a href="auto-configuration.html#authenticator">auto-configured Authenticator</a> during runtime;
+     not available when a custom <tt>Authenticator</tt> is provided. It defines the following operations:</p>
+
+  <h4>setApiKey</h4>
+  <p>Changes the API key id, secret API key and authorization type (defaults to <tt>V1HMAC</tt>) of the auto-configured <tt>Authenticator</tt>.</p>
+  <p>HTTP endpoint example:</p>
+  <pre>curl -X POST http://&lt;host&gt;/actuator/connectSdkApiKey -H Content-Type:application/json
+curl -X POST http://&lt;host&gt;/actuator/connectSdkApiKey -H Content-Type:application/json -d '{"apiKeyId": "myApiKeyId", "secretApiKey": "mySecretKeyId"}'
+curl -X POST http://&lt;host&gt;/actuator/connectSdkApiKey -H Content-Type:application/json -d '{"apiKeyId": "myApiKeyId", "secretApiKey": "mySecretKeyId", "authorizationType": "V1HMAC"}'</pre>
 </div>
 </body>
 </html>

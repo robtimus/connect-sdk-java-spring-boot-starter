@@ -19,15 +19,19 @@ package com.github.robtimus.connect.sdk.java.springboot.autoconfigure;
 
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
+import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import com.github.robtimus.connect.sdk.java.springboot.ReconfigurableAuthenticator;
+import com.github.robtimus.connect.sdk.java.springboot.actuator.ApiKeyEndpoint;
 import com.ingenico.connect.gateway.sdk.java.Authenticator;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultAuthenticator;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for <a href="https://github.com/Ingenico-ePayments/connect-sdk-java/">connect-sdk-java</a>'s
@@ -54,6 +58,13 @@ public class ConnectSdkAuthenticatorAutoConfiguration {
         AuthorizationType authorizationType = properties.getAuthorizationType();
         String apiKeyId = properties.getApiKeyId();
         String secretApiKey = properties.getSecretApiKey();
-        return new DefaultAuthenticator(authorizationType, apiKeyId, secretApiKey);
+        return new ReconfigurableAuthenticator(authorizationType, apiKeyId, secretApiKey);
+    }
+
+    @Bean
+    @ConditionalOnClass(Endpoint.class)
+    @ConditionalOnAvailableEndpoint(endpoint = ApiKeyEndpoint.class)
+    public ApiKeyEndpoint connectSdkApiKeyEndpoint(ReconfigurableAuthenticator authenticator) {
+        return new ApiKeyEndpoint(authenticator);
     }
 }
