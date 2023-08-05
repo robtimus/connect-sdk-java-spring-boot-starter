@@ -54,7 +54,7 @@ public class ConnectSdkAuthenticatorAutoConfiguration {
     }
 
     @Bean
-    public Authenticator connectSdkAuthenticator() {
+    public ReconfigurableAuthenticator connectSdkAuthenticator() {
         AuthorizationType authorizationType = properties.getAuthorizationType();
         String apiKeyId = properties.getApiKeyId();
         String secretApiKey = properties.getSecretApiKey();
