@@ -19,14 +19,14 @@ package com.github.robtimus.connect.sdk.java.springboot.actuator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.awaitility.Awaitility.await;
+import static org.awaitility.Awaitility.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import java.time.Duration;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.Status;
@@ -88,10 +88,14 @@ class ConnectSdkHealthIndicatorTest {
         assertThat(health.getStatus()).isEqualTo(Status.UNKNOWN);
         assertThat(health.getDetails()).isEqualTo(Collections.emptyMap());
 
-        health = await().atMost(Duration.ofMillis(1150)).until(healthIndicator::health, h -> h.getStatus() == Status.UP);
+        health = given()
+                .pollInterval(25, TimeUnit.MILLISECONDS)
+                .await().atMost(1050, TimeUnit.MILLISECONDS)
+                .until(healthIndicator::health, h -> h.getStatus() == Status.UP);
+
         assertThat(health.getStatus()).isEqualTo(Status.UP);
         assertThat(health.getDetails()).isEqualTo(Collections.singletonMap("result", "OK"));
-        assertThat(healthIndicator.lastCheck() - lastCheck).isBetween(950L, 1150L);
+        assertThat(healthIndicator.lastCheck() - lastCheck).isBetween(950L, 1050L);
     }
 
     @Test
