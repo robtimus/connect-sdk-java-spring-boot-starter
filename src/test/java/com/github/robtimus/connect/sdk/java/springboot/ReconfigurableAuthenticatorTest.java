@@ -17,85 +17,33 @@
 
 package com.github.robtimus.connect.sdk.java.springboot;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import java.net.URI;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import static com.github.robtimus.connect.sdk.java.springboot.util.AuthenticatorTestUtil.assertSignatureCalculation;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import com.ingenico.connect.gateway.sdk.java.Authenticator;
-import com.ingenico.connect.gateway.sdk.java.MetaDataProvider;
-import com.ingenico.connect.gateway.sdk.java.RequestHeader;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultAuthenticator;
 
 @SuppressWarnings("nls")
 class ReconfigurableAuthenticatorTest {
 
     @Test
-    void testSignature() {
+    void testSignatureWithInitialApiKey() {
         String apiKeyId = UUID.randomUUID().toString();
         String secretApiKey = UUID.randomUUID().toString();
-
-        String method = "GET";
-        URI uri = URI.create("http://localhost/v1/test/services/testconnection");
-        List<RequestHeader> headers = getRequestHeaders();
 
         Authenticator reconfigurableAuthenticator = new ReconfigurableAuthenticator(AuthorizationType.V1HMAC, apiKeyId, secretApiKey);
 
-        Authenticator defaultAuthenticator = new DefaultAuthenticator(AuthorizationType.V1HMAC, apiKeyId, secretApiKey);
-
-        assertEquals(defaultAuthenticator.createSimpleAuthenticationSignature(method, uri, headers),
-                reconfigurableAuthenticator.createSimpleAuthenticationSignature(method, uri, headers));
+        assertSignatureCalculation(reconfigurableAuthenticator, apiKeyId, secretApiKey);
     }
 
     @Test
-    void testSignatureWithNewApiKeySameAsOld() {
+    void testSignatureWithNewApiKey() {
         String apiKeyId = UUID.randomUUID().toString();
         String secretApiKey = UUID.randomUUID().toString();
-
-        String method = "GET";
-        URI uri = URI.create("http://localhost/v1/test/services/testconnection");
-        List<RequestHeader> headers = getRequestHeaders();
-
-        ReconfigurableAuthenticator reconfigurableAuthenticator = new ReconfigurableAuthenticator(AuthorizationType.V1HMAC, apiKeyId, secretApiKey);
-        reconfigurableAuthenticator.setApiKey(AuthorizationType.V1HMAC, apiKeyId, secretApiKey);
-
-        Authenticator defaultAuthenticator = new DefaultAuthenticator(AuthorizationType.V1HMAC, apiKeyId, secretApiKey);
-
-        assertEquals(defaultAuthenticator.createSimpleAuthenticationSignature(method, uri, headers),
-                reconfigurableAuthenticator.createSimpleAuthenticationSignature(method, uri, headers));
-    }
-
-    @Test
-    void testSignatureWithNewApiKeyDifferentFromOld() {
-        String apiKeyId = UUID.randomUUID().toString();
-        String secretApiKey = UUID.randomUUID().toString();
-
-        String method = "GET";
-        URI uri = URI.create("http://localhost/v1/test/services/testconnection");
-        List<RequestHeader> headers = getRequestHeaders();
 
         ReconfigurableAuthenticator reconfigurableAuthenticator = new ReconfigurableAuthenticator(AuthorizationType.V1HMAC, "x", "x");
         reconfigurableAuthenticator.setApiKey(AuthorizationType.V1HMAC, apiKeyId, secretApiKey);
 
-        Authenticator defaultAuthenticator = new DefaultAuthenticator(AuthorizationType.V1HMAC, apiKeyId, secretApiKey);
-
-        assertEquals(defaultAuthenticator.createSimpleAuthenticationSignature(method, uri, headers),
-                reconfigurableAuthenticator.createSimpleAuthenticationSignature(method, uri, headers));
-    }
-
-    private static List<RequestHeader> getRequestHeaders() {
-        List<RequestHeader> headers = new ArrayList<>();
-        headers.addAll(new MetaDataProvider("robtimus").getServerMetaDataHeaders());
-        headers.add(new RequestHeader("Date", getDate()));
-        headers.add(new RequestHeader("Content-Type", "application/json"));
-        return headers;
-    }
-
-    private static String getDate() {
-        return ZonedDateTime.now().format(DateTimeFormatter.RFC_1123_DATE_TIME);
+        assertSignatureCalculation(reconfigurableAuthenticator, apiKeyId, secretApiKey);
     }
 }

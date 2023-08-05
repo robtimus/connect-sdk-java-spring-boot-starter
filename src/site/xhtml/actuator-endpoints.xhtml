@@ -72,8 +72,7 @@ curl -X POST http://&lt;host&gt;/actuator/connectSdkLogging/myBean -H Content-Ty
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a> beans.</p>
   <p>Arguments <tt>idleTime</tt> and <tt>timeUnit</tt> must be given.</p>
   <p>HTTP endpoint examples:</p>
-  <pre>curl -X POST &quot;http://&lt;host&gt;/actuator/connectSdkConnections?idleTime=20&amp;timeUnit=SECONDS&quot; -H Content-Type:application/json
-curl -X POST http://&lt;host&gt;/actuator/connectSdkConnections -H Content-Type:application/json -d '{"idleTime": 20, "timeUnit": "SECONDS"}'</pre>
+  <pre>curl -X POST http://&lt;host&gt;/actuator/connectSdkConnections -H Content-Type:application/json -d '{"idleTime": 20, "timeUnit": "SECONDS"}'</pre>
 
   <h4>closeIdleConnectionsForBean</h4>
   <p>Closes idle connections for a specific
@@ -82,8 +81,7 @@ curl -X POST http://&lt;host&gt;/actuator/connectSdkConnections -H Content-Type:
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a> bean.</p>
   <p>Arguments <tt>idleTime</tt> and <tt>timeUnit</tt> must be given.</p>
   <p>HTTP endpoint examples:</p>
-  <pre>curl -X POST &quot;http://&lt;host&gt;/actuator/connectSdkConnections/myBean?idleTime=20&amp;timeUnit=SECONDS&quot; -H Content-Type:application/json
-curl -X POST http://&lt;host&gt;/actuator/connectSdkConnections/myBean -H Content-Type:application/json -d '{"idleTime": 20, "timeUnit": "SECONDS"}'</pre>
+  <pre>curl -X POST http://&lt;host&gt;/actuator/connectSdkConnections/myBean -H Content-Type:application/json -d '{"idleTime": 20, "timeUnit": "SECONDS"}'</pre>
 
   <h4>closeExpiredConnections</h4>
   <p>Closes expired connections for all available
