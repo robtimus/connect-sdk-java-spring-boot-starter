@@ -53,12 +53,12 @@ curl -X POST http://&lt;host&gt;/actuator/connectSdkLogging/myBean -H Content-Ty
   <hr />
 
   <h3>Connections</h3>
-  <p>ID: <tt>connectSdkConnections</tt></p>
-  <p>This actuator endpoint allows you to call <tt>closeIdleConnections</tt> and <tt>closeExpiredConnections</tt> on beans of types
+  <p>ID: <tt>connectSdkConnections</tt> / <tt>idleConnectSdkConnections</tt> / <tt>expiredConnectSdkConnections</tt></p>
+  <p>These actuator endpoints allow you to call <tt>closeIdleConnections</tt> and <tt>closeExpiredConnections</tt> on beans of types
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/PooledConnection.html">PooledConnection</a>,
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Communicator.html">Communicator</a> and
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a>.
-     It defines the following operations:</p>
+     They define the following operations:</p>
 
   <h4>listCloseableBeans</h4>
   <p>Lists all available <tt>PooledConnection</tt>, <tt>Communicator</tt> and <tt>Client</tt> beans.</p>
@@ -72,7 +72,7 @@ curl -X POST http://&lt;host&gt;/actuator/connectSdkLogging/myBean -H Content-Ty
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a> beans.</p>
   <p>Arguments <tt>idleTime</tt> and <tt>timeUnit</tt> must be given.</p>
   <p>HTTP endpoint examples:</p>
-  <pre>curl -X POST http://&lt;host&gt;/actuator/connectSdkConnections -H Content-Type:application/json -d '{"idleTime": 20, "timeUnit": "SECONDS"}'</pre>
+  <pre>curl -X DELETE 'http://&lt;host&gt;/actuator/idleConnectSdkConnections?idleTime=20&amp;timeUnit=SECONDS'</pre>
 
   <h4>closeIdleConnectionsForBean</h4>
   <p>Closes idle connections for a specific
@@ -81,7 +81,7 @@ curl -X POST http://&lt;host&gt;/actuator/connectSdkLogging/myBean -H Content-Ty
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a> bean.</p>
   <p>Arguments <tt>idleTime</tt> and <tt>timeUnit</tt> must be given.</p>
   <p>HTTP endpoint examples:</p>
-  <pre>curl -X POST http://&lt;host&gt;/actuator/connectSdkConnections/myBean -H Content-Type:application/json -d '{"idleTime": 20, "timeUnit": "SECONDS"}'</pre>
+  <pre>curl -X DELETE 'http://&lt;host&gt;/actuator/idleConnectSdkConnections/myBean?idleTime=20&amp;timeUnit=SECONDS'</pre>
 
   <h4>closeExpiredConnections</h4>
   <p>Closes expired connections for all available
@@ -89,7 +89,7 @@ curl -X POST http://&lt;host&gt;/actuator/connectSdkLogging/myBean -H Content-Ty
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Communicator.html">Communicator</a> and
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a> beans.</p>
   <p>HTTP endpoint example:</p>
-  <pre>curl -X POST http://&lt;host&gt;/actuator/connectSdkConnections</pre>
+  <pre>curl -X DELETE http://&lt;host&gt;/actuator/expiredConnectSdkConnections</pre>
 
   <h4>closeExpiredConnectionsForBean</h4>
   <p>Closes expired connections for a specific
@@ -97,7 +97,7 @@ curl -X POST http://&lt;host&gt;/actuator/connectSdkLogging/myBean -H Content-Ty
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Communicator.html">Communicator</a> and
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a> bean.</p>
   <p>HTTP endpoint example:</p>
-  <pre>curl -X POST http://&lt;host&gt;/actuator/connectSdkConnections/myBean</pre>
+  <pre>curl -X DELETE http://&lt;host&gt;/actuator/expiredConnectSdkConnections/myBean</pre>
 
   <hr />
 

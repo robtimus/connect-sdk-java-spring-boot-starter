@@ -19,6 +19,7 @@ package com.github.robtimus.connect.sdk.java.springboot.autoconfigure;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
@@ -29,6 +30,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.ConnectionsEndpoint;
+import com.github.robtimus.connect.sdk.java.springboot.actuator.ExpiredConnectionsEndpoint;
+import com.github.robtimus.connect.sdk.java.springboot.actuator.IdleConnectionsEndpoint;
 
 @SuppressWarnings("nls")
 class ConnectSdkConnectionsEndpointAutoConfigurationTest {
@@ -36,66 +39,202 @@ class ConnectSdkConnectionsEndpointAutoConfigurationTest {
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(ConnectSdkConnectionsEndpointAutoConfiguration.class));
 
-    @Test
-    void testNoAutoConfigurationWithMissingClass() throws IOException {
-        try (FilteredClassLoader classLoader = new FilteredClassLoader(Endpoint.class)) {
+    @Nested
+    class ConnectionsEndpointTest {
+
+        @Test
+        void testNoAutoConfigurationWithMissingClass() throws IOException {
+            try (FilteredClassLoader classLoader = new FilteredClassLoader(Endpoint.class)) {
+                contextRunner
+                        .withClassLoader(classLoader)
+                        .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true", "spring.jmx.enabled=true",
+                                "management.endpoints.jmx.exposure.include=connectSdkConnections")
+                        .run(context -> {
+                            assertThat(context).doesNotHaveBean(ConnectionsEndpoint.class);
+                        });
+            }
+        }
+
+        @Test
+        void testNoAutoConfigurationWithExistingBean() {
             contextRunner
-                    .withClassLoader(classLoader)
+                    .withUserConfiguration(ExistingBeanProvider.class)
                     .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true", "spring.jmx.enabled=true",
                             "management.endpoints.jmx.exposure.include=connectSdkConnections")
+                    .run(context -> {
+                        assertThat(context).doesNotHaveBean("connectSdkConnectionsEndpoint");
+                        assertThat(context).hasSingleBean(ConnectionsEndpoint.class);
+                        assertThat(context).getBean(ConnectionsEndpoint.class)
+                                .isSameAs(context.getBean(ExistingBeanProvider.class).connectionsEndpoint());
+                    });
+        }
+
+        @Test
+        void testNoAutoConfigurationWithoutEnabledEndpoint() {
+            contextRunner
                     .run(context -> {
                         assertThat(context).doesNotHaveBean(ConnectionsEndpoint.class);
                     });
         }
+
+        @Test
+        void testAutoConfigurationWithEnabledEndpoint() {
+            contextRunner
+                    .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true")
+                    .run(context -> {
+                        assertThat(context).doesNotHaveBean(ConnectionsEndpoint.class);
+                    });
+        }
+
+        @Test
+        void testAutoConfigurationWithAvailableEndpoint() {
+            contextRunner
+                    .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true", "spring.jmx.enabled=true",
+                            "management.endpoints.jmx.exposure.include=connectSdkConnections")
+                    .run(context -> {
+                        assertThat(context).hasBean("connectSdkConnectionsEndpoint");
+                        assertThat(context).hasSingleBean(ConnectionsEndpoint.class);
+                    });
+            contextRunner
+                    .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true",
+                            "management.endpoints.web.exposure.include=connectSdkConnections")
+                    .run(context -> {
+                        assertThat(context).hasBean("connectSdkConnectionsEndpoint");
+                        assertThat(context).hasSingleBean(ConnectionsEndpoint.class);
+                    });
+        }
     }
 
-    @Test
-    void testNoAutoConfigurationWithExistingBean() {
-        contextRunner
-                .withUserConfiguration(ExistingBeanProvider.class)
-                .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true", "spring.jmx.enabled=true",
-                        "management.endpoints.jmx.exposure.include=connectSdkConnections")
-                .run(context -> {
-                    assertThat(context).doesNotHaveBean("connectSdkConnectionsEndpoint");
-                    assertThat(context).hasSingleBean(ConnectionsEndpoint.class);
-                    assertThat(context).getBean(ConnectionsEndpoint.class)
-                            .isSameAs(context.getBean(ExistingBeanProvider.class).connectionsEndpoint());
-                });
+    @Nested
+    class IdleConnectionsEndpointTest {
+
+        @Test
+        void testNoAutoConfigurationWithMissingClass() throws IOException {
+            try (FilteredClassLoader classLoader = new FilteredClassLoader(Endpoint.class)) {
+                contextRunner
+                        .withClassLoader(classLoader)
+                        .withPropertyValues("management.endpoint.idleConnectSdkConnections.enabled=true", "spring.jmx.enabled=true",
+                                "management.endpoints.jmx.exposure.include=idleConnectSdkConnections")
+                        .run(context -> {
+                            assertThat(context).doesNotHaveBean(IdleConnectionsEndpoint.class);
+                        });
+            }
+        }
+
+        @Test
+        void testNoAutoConfigurationWithExistingBean() {
+            contextRunner
+                    .withUserConfiguration(ExistingBeanProvider.class)
+                    .withPropertyValues("management.endpoint.idleConnectSdkConnections.enabled=true", "spring.jmx.enabled=true",
+                            "management.endpoints.jmx.exposure.include=idleConnectSdkConnections")
+                    .run(context -> {
+                        assertThat(context).doesNotHaveBean("idleConnectSdkConnectionsEndpoint");
+                        assertThat(context).hasSingleBean(IdleConnectionsEndpoint.class);
+                        assertThat(context).getBean(IdleConnectionsEndpoint.class)
+                                .isSameAs(context.getBean(ExistingBeanProvider.class).idleConnectionsEndpoint());
+                    });
+        }
+
+        @Test
+        void testNoAutoConfigurationWithoutEnabledEndpoint() {
+            contextRunner
+                    .run(context -> {
+                        assertThat(context).doesNotHaveBean(IdleConnectionsEndpoint.class);
+                    });
+        }
+
+        @Test
+        void testAutoConfigurationWithEnabledEndpoint() {
+            contextRunner
+                    .withPropertyValues("management.endpoint.idleConnectSdkConnections.enabled=true")
+                    .run(context -> {
+                        assertThat(context).doesNotHaveBean(IdleConnectionsEndpoint.class);
+                    });
+        }
+
+        @Test
+        void testAutoConfigurationWithAvailableEndpoint() {
+            contextRunner
+                    .withPropertyValues("management.endpoint.idleConnectSdkConnections.enabled=true", "spring.jmx.enabled=true",
+                            "management.endpoints.jmx.exposure.include=idleConnectSdkConnections")
+                    .run(context -> {
+                        assertThat(context).hasBean("idleConnectSdkConnectionsEndpoint");
+                        assertThat(context).hasSingleBean(IdleConnectionsEndpoint.class);
+                    });
+            contextRunner
+                    .withPropertyValues("management.endpoint.idleConnectSdkConnections.enabled=true",
+                            "management.endpoints.web.exposure.include=idleConnectSdkConnections")
+                    .run(context -> {
+                        assertThat(context).hasBean("idleConnectSdkConnectionsEndpoint");
+                        assertThat(context).hasSingleBean(IdleConnectionsEndpoint.class);
+                    });
+        }
     }
 
-    @Test
-    void testNoAutoConfigurationWithoutEnabledEndpoint() {
-        contextRunner
-                .run(context -> {
-                    assertThat(context).doesNotHaveBean(ConnectionsEndpoint.class);
-                });
-    }
+    @Nested
+    class ExpiredConnectionsEndpointTest {
 
-    @Test
-    void testAutoConfigurationWithEnabledEndpoint() {
-        contextRunner
-                .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true")
-                .run(context -> {
-                    assertThat(context).doesNotHaveBean(ConnectionsEndpoint.class);
-                });
-    }
+        @Test
+        void testNoAutoConfigurationWithMissingClass() throws IOException {
+            try (FilteredClassLoader classLoader = new FilteredClassLoader(Endpoint.class)) {
+                contextRunner
+                        .withClassLoader(classLoader)
+                        .withPropertyValues("management.endpoint.expiredConnectSdkConnections.enabled=true", "spring.jmx.enabled=true",
+                                "management.endpoints.jmx.exposure.include=expiredConnectSdkConnections")
+                        .run(context -> {
+                            assertThat(context).doesNotHaveBean(ExpiredConnectionsEndpoint.class);
+                        });
+            }
+        }
 
-    @Test
-    void testAutoConfigurationWithAvailableEndpoint() {
-        contextRunner
-                .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true", "spring.jmx.enabled=true",
-                        "management.endpoints.jmx.exposure.include=connectSdkConnections")
-                .run(context -> {
-                    assertThat(context).hasBean("connectSdkConnectionsEndpoint");
-                    assertThat(context).hasSingleBean(ConnectionsEndpoint.class);
-                });
-        contextRunner
-                .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true",
-                        "management.endpoints.web.exposure.include=connectSdkConnections")
-                .run(context -> {
-                    assertThat(context).hasBean("connectSdkConnectionsEndpoint");
-                    assertThat(context).hasSingleBean(ConnectionsEndpoint.class);
-                });
+        @Test
+        void testNoAutoConfigurationWithExistingBean() {
+            contextRunner
+                    .withUserConfiguration(ExistingBeanProvider.class)
+                    .withPropertyValues("management.endpoint.expiredConnectSdkConnections.enabled=true", "spring.jmx.enabled=true",
+                            "management.endpoints.jmx.exposure.include=expiredConnectSdkConnections")
+                    .run(context -> {
+                        assertThat(context).doesNotHaveBean("expiredConnectSdkConnectionsEndpoint");
+                        assertThat(context).hasSingleBean(ExpiredConnectionsEndpoint.class);
+                        assertThat(context).getBean(ExpiredConnectionsEndpoint.class)
+                                .isSameAs(context.getBean(ExistingBeanProvider.class).expiredConnectionsEndpoint());
+                    });
+        }
+
+        @Test
+        void testNoAutoConfigurationWithoutEnabledEndpoint() {
+            contextRunner
+                    .run(context -> {
+                        assertThat(context).doesNotHaveBean(ExpiredConnectionsEndpoint.class);
+                    });
+        }
+
+        @Test
+        void testAutoConfigurationWithEnabledEndpoint() {
+            contextRunner
+                    .withPropertyValues("management.endpoint.expiredConnectSdkConnections.enabled=true")
+                    .run(context -> {
+                        assertThat(context).doesNotHaveBean(ExpiredConnectionsEndpoint.class);
+                    });
+        }
+
+        @Test
+        void testAutoConfigurationWithAvailableEndpoint() {
+            contextRunner
+                    .withPropertyValues("management.endpoint.expiredConnectSdkConnections.enabled=true", "spring.jmx.enabled=true",
+                            "management.endpoints.jmx.exposure.include=expiredConnectSdkConnections")
+                    .run(context -> {
+                        assertThat(context).hasBean("expiredConnectSdkConnectionsEndpoint");
+                        assertThat(context).hasSingleBean(ExpiredConnectionsEndpoint.class);
+                    });
+            contextRunner
+                    .withPropertyValues("management.endpoint.expiredConnectSdkConnections.enabled=true",
+                            "management.endpoints.web.exposure.include=expiredConnectSdkConnections")
+                    .run(context -> {
+                        assertThat(context).hasBean("expiredConnectSdkConnectionsEndpoint");
+                        assertThat(context).hasSingleBean(ExpiredConnectionsEndpoint.class);
+                    });
+        }
     }
 
     @Configuration
@@ -107,6 +246,16 @@ class ConnectSdkConnectionsEndpointAutoConfigurationTest {
         @Bean
         ConnectionsEndpoint connectionsEndpoint() {
             return new ConnectionsEndpoint(context);
+        }
+
+        @Bean
+        IdleConnectionsEndpoint idleConnectionsEndpoint() {
+            return new IdleConnectionsEndpoint(context);
+        }
+
+        @Bean
+        ExpiredConnectionsEndpoint expiredConnectionsEndpoint() {
+            return new ExpiredConnectionsEndpoint(context);
         }
     }
 }

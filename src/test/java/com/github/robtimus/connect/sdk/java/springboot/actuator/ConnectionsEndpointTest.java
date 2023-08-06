@@ -19,7 +19,6 @@ package com.github.robtimus.connect.sdk.java.springboot.actuator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import java.util.Arrays;
@@ -28,9 +27,10 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import com.github.robtimus.connect.sdk.java.springboot.actuator.BeanProviders.ClientProvider;
+import com.github.robtimus.connect.sdk.java.springboot.actuator.BeanProviders.CommunicatorProvider;
+import com.github.robtimus.connect.sdk.java.springboot.actuator.BeanProviders.ConnectionProvider;
+import com.github.robtimus.connect.sdk.java.springboot.actuator.BeanProviders.PooledConnectionProvider;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.ConnectionsEndpoint.BeanNotCloseableException;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.ConnectionsEndpoint.CloseableBeans;
 import com.ingenico.connect.gateway.sdk.java.Client;
@@ -118,7 +118,7 @@ class ConnectionsEndpointTest {
     }
 
     @Nested
-    @SuppressWarnings("resource")
+    @SuppressWarnings({ "resource", "deprecation" })
     class CloseIdleConnections {
 
         @Test
@@ -249,7 +249,7 @@ class ConnectionsEndpointTest {
     }
 
     @Nested
-    @SuppressWarnings("resource")
+    @SuppressWarnings({ "resource", "deprecation" })
     class CloseIdleConnectionsForBean {
 
         @Test
@@ -380,7 +380,7 @@ class ConnectionsEndpointTest {
     }
 
     @Nested
-    @SuppressWarnings("resource")
+    @SuppressWarnings({ "resource", "deprecation" })
     class CloseExpiredConnections {
 
         @Test
@@ -511,7 +511,7 @@ class ConnectionsEndpointTest {
     }
 
     @Nested
-    @SuppressWarnings("resource")
+    @SuppressWarnings({ "resource", "deprecation" })
     class CloseExpiredConnectionsForBean {
 
         @Test
@@ -638,43 +638,6 @@ class ConnectionsEndpointTest {
                         verify(client).closeExpiredConnections();
                         verifyNoMoreInteractions(connection, pooledConnection, communicator, client);
                     });
-        }
-    }
-
-    @Configuration
-    static class ConnectionProvider {
-
-        @Bean
-        @Primary
-        Connection connection() {
-            return mock(Connection.class);
-        }
-    }
-
-    @Configuration
-    static class PooledConnectionProvider {
-
-        @Bean
-        PooledConnection pooledConnection() {
-            return mock(PooledConnection.class);
-        }
-    }
-
-    @Configuration
-    static class CommunicatorProvider {
-
-        @Bean
-        Communicator communicator() {
-            return mock(Communicator.class);
-        }
-    }
-
-    @Configuration
-    static class ClientProvider {
-
-        @Bean
-        Client client() {
-            return mock(Client.class);
         }
     }
 }

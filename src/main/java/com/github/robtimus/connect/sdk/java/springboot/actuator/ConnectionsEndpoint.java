@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
@@ -43,8 +42,14 @@ public class ConnectionsEndpoint {
 
     private final ApplicationContext context;
 
+    private final IdleConnectionsEndpoint idleConnectionsEndpoint;
+    private final ExpiredConnectionsEndpoint expiredConnectionsEndpoint;
+
     public ConnectionsEndpoint(ApplicationContext context) {
         this.context = context;
+
+        idleConnectionsEndpoint = new IdleConnectionsEndpoint(context);
+        expiredConnectionsEndpoint = new ExpiredConnectionsEndpoint(context);
     }
 
     /**
@@ -64,13 +69,12 @@ public class ConnectionsEndpoint {
      *
      * @param idleTime The idle time.
      * @param timeUnit The time unit.
+     * @deprecated Use {@link IdleConnectionsEndpoint} instead.
      */
     @WriteOperation
+    @Deprecated
     public void closeIdleConnections(Long idleTime, TimeUnit timeUnit) {
-        closeConnections(
-                connection -> connection.closeIdleConnections(idleTime, timeUnit),
-                communicator -> communicator.closeIdleConnections(idleTime, timeUnit),
-                client -> client.closeIdleConnections(idleTime, timeUnit));
+        idleConnectionsEndpoint.closeIdleConnections(idleTime, timeUnit);
     }
 
     /**
@@ -79,63 +83,35 @@ public class ConnectionsEndpoint {
      * @param beanName The name of the {@link PooledConnection}, {@link Communicator} or {@link Client} bean.
      * @param idleTime The idle time.
      * @param timeUnit The time unit.
+     * @deprecated Use {@link IdleConnectionsEndpoint} instead.
      */
     @WriteOperation
+    @Deprecated
     public void closeIdleConnectionsForBean(@Selector String beanName, Long idleTime, TimeUnit timeUnit) {
-        closeConnectionsForBean(beanName,
-                connection -> connection.closeIdleConnections(idleTime, timeUnit),
-                communicator -> communicator.closeIdleConnections(idleTime, timeUnit),
-                client -> client.closeIdleConnections(idleTime, timeUnit));
+        idleConnectionsEndpoint.closeIdleConnectionsForBean(beanName, idleTime, timeUnit);
     }
 
     /**
      * Closes all expired connections for all {@link PooledConnection}, {@link Communicator} and {@link Client} beans.
+     *
+     * @deprecated Use {@link ExpiredConnectionsEndpoint} instead.
      */
     @WriteOperation
+    @Deprecated
     public void closeExpiredConnections() {
-        closeConnections(
-                PooledConnection::closeExpiredConnections,
-                Communicator::closeExpiredConnections,
-                Client::closeExpiredConnections);
+        expiredConnectionsEndpoint.closeExpiredConnections();
     }
 
     /**
      * Closes all expired connections for a specific {@link PooledConnection}, {@link Communicator} or {@link Client} bean.
      *
      * @param beanName The name of the {@link PooledConnection}, {@link Communicator} or {@link Client} bean.
+     * @deprecated Use {@link ExpiredConnectionsEndpoint} instead.
      */
     @WriteOperation
+    @Deprecated
     public void closeExpiredConnectionsForBean(@Selector String beanName) {
-        closeConnectionsForBean(beanName,
-                PooledConnection::closeExpiredConnections,
-                Communicator::closeExpiredConnections,
-                Client::closeExpiredConnections);
-    }
-
-    private void closeConnections(Consumer<PooledConnection> connectionAction,
-            Consumer<Communicator> communicatorAction,
-            Consumer<Client> clientAction) {
-
-        context.getBeansOfType(PooledConnection.class).values().forEach(connectionAction);
-        context.getBeansOfType(Communicator.class).values().forEach(communicatorAction);
-        context.getBeansOfType(Client.class).values().forEach(clientAction);
-    }
-
-    private void closeConnectionsForBean(String beanName,
-            Consumer<PooledConnection> connectionAction,
-            Consumer<Communicator> communicatorAction,
-            Consumer<Client> clientAction) {
-
-        Object bean = context.getBean(beanName);
-        if (bean instanceof PooledConnection) {
-            connectionAction.accept((PooledConnection) bean);
-        } else if (bean instanceof Communicator) {
-            communicatorAction.accept((Communicator) bean);
-        } else if (bean instanceof Client) {
-            clientAction.accept((Client) bean);
-        } else {
-            throw new BeanNotCloseableException(beanName, bean.getClass());
-        }
+        expiredConnectionsEndpoint.closeExpiredConnectionsForBean(beanName);
     }
 
     public static class CloseableBeans {
@@ -157,13 +133,14 @@ public class ConnectionsEndpoint {
         }
     }
 
+    // TODO: make this a top-level class for the next major version bump
     @SuppressWarnings("serial")
     public static final class BeanNotCloseableException extends BeansException {
 
         private final String beanName;
         private final Class<?> actualType;
 
-        private BeanNotCloseableException(String beanName, Class<?> actualType) {
+        BeanNotCloseableException(String beanName, Class<?> actualType) {
             super("Bean named '" + beanName + "' is expected to be of type '" + PooledConnection.class.getName() + "', '"
                     + Communicator.class + "' or '" + Client.class + "' but was actually of type '" + actualType.getTypeName() + "'");
 

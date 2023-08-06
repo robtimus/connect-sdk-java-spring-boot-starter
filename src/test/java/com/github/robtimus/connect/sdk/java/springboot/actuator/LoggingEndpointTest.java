@@ -29,16 +29,18 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import com.github.robtimus.connect.sdk.java.springboot.actuator.BeanProviders.AdditionalBeanProvider;
+import com.github.robtimus.connect.sdk.java.springboot.actuator.BeanProviders.AdditionalLoggerProvider;
+import com.github.robtimus.connect.sdk.java.springboot.actuator.BeanProviders.ClientProvider;
+import com.github.robtimus.connect.sdk.java.springboot.actuator.BeanProviders.CommunicatorProvider;
+import com.github.robtimus.connect.sdk.java.springboot.actuator.BeanProviders.ConnectionProvider;
+import com.github.robtimus.connect.sdk.java.springboot.actuator.BeanProviders.LoggerProvider;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.LoggingEndpoint.CompoundCommunicatorLogger;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.LoggingEndpoint.LoggingCapableAndLoggerBeans;
 import com.ingenico.connect.gateway.sdk.java.Client;
 import com.ingenico.connect.gateway.sdk.java.Communicator;
 import com.ingenico.connect.gateway.sdk.java.Connection;
 import com.ingenico.connect.gateway.sdk.java.Marshaller;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultMarshaller;
 import com.ingenico.connect.gateway.sdk.java.logging.CommunicatorLogger;
 import com.ingenico.connect.gateway.sdk.java.logging.LoggingCapable;
 
@@ -1417,60 +1419,5 @@ class LoggingEndpointTest {
         assertThat(logger).isInstanceOf(CompoundCommunicatorLogger.class);
         CompoundCommunicatorLogger compoundLogger = (CompoundCommunicatorLogger) logger;
         assertThat(compoundLogger.loggers).containsExactlyInAnyOrder(loggers);
-    }
-
-    @Configuration
-    static class ConnectionProvider {
-
-        @Bean
-        @Primary
-        Connection connection() {
-            return mock(Connection.class);
-        }
-    }
-
-    @Configuration
-    static class CommunicatorProvider {
-
-        @Bean
-        Communicator communicator() {
-            return mock(Communicator.class);
-        }
-    }
-
-    @Configuration
-    static class ClientProvider {
-
-        @Bean
-        Client client() {
-            return mock(Client.class);
-        }
-    }
-
-    @Configuration
-    static class LoggerProvider {
-
-        @Bean
-        CommunicatorLogger logger() {
-            return mock(CommunicatorLogger.class);
-        }
-    }
-
-    @Configuration
-    static class AdditionalLoggerProvider {
-
-        @Bean
-        CommunicatorLogger additionalLogger() {
-            return mock(CommunicatorLogger.class);
-        }
-    }
-
-    @Configuration
-    static class AdditionalBeanProvider {
-
-        @Bean
-        Marshaller marshaller() {
-            return DefaultMarshaller.INSTANCE;
-        }
     }
 }

@@ -27,23 +27,41 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.ConnectionsEndpoint;
+import com.github.robtimus.connect.sdk.java.springboot.actuator.ExpiredConnectionsEndpoint;
+import com.github.robtimus.connect.sdk.java.springboot.actuator.IdleConnectionsEndpoint;
 
 /**
- * {@link EnableAutoConfiguration Auto-configuration} for {@link ConnectionsEndpoint}.
+ * {@link EnableAutoConfiguration Auto-configuration} for {@link ConnectionsEndpoint}, {@link IdleConnectionsEndpoint} and
+ * {@link ExpiredConnectionsEndpoint}.
  *
  * @author Rob Spoor
  */
 @Configuration
 @AutoConfigureAfter(ConnectSdkClientAutoConfiguration.class)
 @ConditionalOnClass(Endpoint.class)
-@ConditionalOnAvailableEndpoint(endpoint = ConnectionsEndpoint.class)
 @SuppressWarnings("javadoc")
 public class ConnectSdkConnectionsEndpointAutoConfiguration {
 
+    // there will always be at least one closeable bean available - either a custom Connection, or the auto-configured Connection
+
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnAvailableEndpoint(endpoint = ConnectionsEndpoint.class)
     public ConnectionsEndpoint connectSdkConnectionsEndpoint(ApplicationContext context) {
-        // there will always be at least one closeable bean available - either a custom Connection, or the auto-configured Connection
         return new ConnectionsEndpoint(context);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnAvailableEndpoint(endpoint = IdleConnectionsEndpoint.class)
+    public IdleConnectionsEndpoint idleConnectSdkConnectionsEndpoint(ApplicationContext context) {
+        return new IdleConnectionsEndpoint(context);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnAvailableEndpoint(endpoint = ExpiredConnectionsEndpoint.class)
+    public ExpiredConnectionsEndpoint expiredConnectSdkConnectionsEndpoint(ApplicationContext context) {
+        return new ExpiredConnectionsEndpoint(context);
     }
 }

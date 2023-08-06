@@ -74,8 +74,11 @@ import com.ingenico.connect.gateway.sdk.java.logging.CommunicatorLogger;
         "management.endpoint.health.show-details=always",
         "management.endpoint.connectSdkApiKey.enabled=true",
         "management.endpoint.connectSdkConnections.enabled=true",
+        "management.endpoint.idleConnectSdkConnections.enabled=true",
+        "management.endpoint.expiredConnectSdkConnections.enabled=true",
         "management.endpoint.connectSdkLogging.enabled=true",
-        "management.endpoints.web.exposure.include=health,connectSdkApiKey,connectSdkConnections,connectSdkLogging"
+        "management.endpoints.web.exposure.include="
+                + "health,connectSdkApiKey,connectSdkConnections,connectSdkLogging,idleConnectSdkConnections,expiredConnectSdkConnections"
 })
 @SuppressWarnings("nls")
 class EndpointsTest {
@@ -193,12 +196,9 @@ class EndpointsTest {
             @Test
             @SuppressWarnings("resource")
             void testForAllBeans() {
-                String requestBody = "{\"idleTime\": 20, \"timeUnit\": \"SECONDS\"}";
-
-                RequestEntity<String> request = RequestEntity
-                        .post(getActuatorBaseURI().resolve("connectSdkConnections"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(requestBody);
+                RequestEntity<Void> request = RequestEntity
+                        .delete(getActuatorBaseURI().resolve("idleConnectSdkConnections?idleTime=20&timeUnit=SECONDS"))
+                        .build();
 
                 ResponseEntity<Void> response = restTemplateBuilder
                         .build()
@@ -213,12 +213,9 @@ class EndpointsTest {
             @Test
             @SuppressWarnings("resource")
             void testForSpecificBean() {
-                String requestBody = "{\"idleTime\": 20, \"timeUnit\": \"SECONDS\"}";
-
-                RequestEntity<String> request = RequestEntity
-                        .post(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(requestBody);
+                RequestEntity<Void> request = RequestEntity
+                        .delete(getActuatorBaseURI().resolve("idleConnectSdkConnections/mockConnection?idleTime=20&timeUnit=SECONDS"))
+                        .build();
 
                 ResponseEntity<Void> response = restTemplateBuilder
                         .build()
@@ -237,7 +234,7 @@ class EndpointsTest {
             @SuppressWarnings("resource")
             void testForAllBeans() {
                 RequestEntity<Void> request = RequestEntity
-                        .post(getActuatorBaseURI().resolve("connectSdkConnections"))
+                        .delete(getActuatorBaseURI().resolve("expiredConnectSdkConnections"))
                         .build();
 
                 ResponseEntity<Void> response = restTemplateBuilder
@@ -254,7 +251,7 @@ class EndpointsTest {
             @SuppressWarnings("resource")
             void testForSpecificBean() {
                 RequestEntity<Void> request = RequestEntity
-                        .post(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection"))
+                        .delete(getActuatorBaseURI().resolve("expiredConnectSdkConnections/mockConnection"))
                         .build();
 
                 ResponseEntity<Void> response = restTemplateBuilder
