@@ -38,8 +38,8 @@ class ConnectSdkPropertiesTest {
                 .run(context -> {
                     ConnectSdkProperties properties = context.getBean(ConnectSdkProperties.class);
                     assertThat(properties.getEndpoint()).isNull();
-                    assertThat(properties.getConnectTimeout()).isEqualTo(5000);
-                    assertThat(properties.getSocketTimeout()).isEqualTo(300000);
+                    assertThat(properties.getConnectTimeout()).isEqualTo(5_000);
+                    assertThat(properties.getSocketTimeout()).isEqualTo(300_000);
                     assertThat(properties.getMaxConnections()).isEqualTo(10);
                     assertThat(properties.getAuthorizationType()).isEqualTo(AuthorizationType.V1HMAC);
                     assertThat(properties.getApiKeyId()).isNull();
@@ -68,8 +68,8 @@ class ConnectSdkPropertiesTest {
                     assertThat(properties.getEndpoint().getHost()).isEqualTo("localhost");
                     assertThat(properties.getEndpoint().getScheme()).isEqualTo("http");
                     assertThat(properties.getEndpoint().getPort()).isEqualTo(80);
-                    assertThat(properties.getConnectTimeout()).isEqualTo(1000);
-                    assertThat(properties.getSocketTimeout()).isEqualTo(10000);
+                    assertThat(properties.getConnectTimeout()).isEqualTo(1_000);
+                    assertThat(properties.getSocketTimeout()).isEqualTo(10_000);
                     assertThat(properties.getMaxConnections()).isEqualTo(1);
                     assertThat(properties.getAuthorizationType()).isEqualTo(AuthorizationType.V1HMAC);
                     assertThat(properties.getApiKeyId()).isEqualTo("myKeyId");
@@ -106,8 +106,8 @@ class ConnectSdkPropertiesTest {
                     assertThat(properties.getEndpoint().getHost()).isEqualTo("localhost");
                     assertThat(properties.getEndpoint().getScheme()).isEqualTo("http");
                     assertThat(properties.getEndpoint().getPort()).isEqualTo(80);
-                    assertThat(properties.getConnectTimeout()).isEqualTo(1000);
-                    assertThat(properties.getSocketTimeout()).isEqualTo(10000);
+                    assertThat(properties.getConnectTimeout()).isEqualTo(1_000);
+                    assertThat(properties.getSocketTimeout()).isEqualTo(10_000);
                     assertThat(properties.getMaxConnections()).isEqualTo(1);
                     assertThat(properties.getAuthorizationType()).isEqualTo(AuthorizationType.V1HMAC);
                     assertThat(properties.getApiKeyId()).isEqualTo("myKeyId");

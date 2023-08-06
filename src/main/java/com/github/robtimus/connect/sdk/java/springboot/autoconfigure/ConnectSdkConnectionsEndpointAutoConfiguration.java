@@ -17,6 +17,8 @@
 
 package com.github.robtimus.connect.sdk.java.springboot.autoconfigure;
 
+import static com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkConnectionAutoConfiguration.ConnectionManager.IDLE_TIME;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -54,8 +56,8 @@ public class ConnectSdkConnectionsEndpointAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnAvailableEndpoint(endpoint = IdleConnectionsEndpoint.class)
-    public IdleConnectionsEndpoint idleConnectSdkConnectionsEndpoint(ApplicationContext context) {
-        return new IdleConnectionsEndpoint(context);
+    public IdleConnectionsEndpoint idleConnectSdkConnectionsEndpoint(ApplicationContext context, @Value(IDLE_TIME) long defaultIdleTimeInMillis) {
+        return new IdleConnectionsEndpoint(context, defaultIdleTimeInMillis);
     }
 
     @Bean

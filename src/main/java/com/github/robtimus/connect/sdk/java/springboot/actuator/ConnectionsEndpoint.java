@@ -48,7 +48,8 @@ public class ConnectionsEndpoint {
     public ConnectionsEndpoint(ApplicationContext context) {
         this.context = context;
 
-        idleConnectionsEndpoint = new IdleConnectionsEndpoint(context);
+        // The default idle time is not used here, as an explicit idle time is required in this endpoint
+        idleConnectionsEndpoint = new IdleConnectionsEndpoint(context, 0);
         expiredConnectionsEndpoint = new ExpiredConnectionsEndpoint(context);
     }
 

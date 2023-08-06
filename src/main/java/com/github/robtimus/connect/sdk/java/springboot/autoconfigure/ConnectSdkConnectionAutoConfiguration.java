@@ -99,12 +99,13 @@ public class ConnectSdkConnectionAutoConfiguration {
     @EnableScheduling
     static class ConnectionManager {
 
+        static final String IDLE_TIME = "${connect.api.close-idle-connections.idle-time:20000}";
         private static final String INTERVAL = "${connect.api.close-idle-connections.interval:10000}";
 
         private final PooledConnection connection;
         private final long idleTime;
 
-        ConnectionManager(PooledConnection connection, @Value("${connect.api.close-idle-connections.idle-time:20000}") long idleTime) {
+        ConnectionManager(PooledConnection connection, @Value(IDLE_TIME) long idleTime) {
             this.connection = Objects.requireNonNull(connection);
             this.idleTime = idleTime;
         }

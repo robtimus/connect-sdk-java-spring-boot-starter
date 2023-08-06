@@ -193,37 +193,78 @@ class EndpointsTest {
         @Nested
         class CloseIdleConnections {
 
-            @Test
-            @SuppressWarnings("resource")
-            void testForAllBeans() {
-                RequestEntity<Void> request = RequestEntity
-                        .delete(getActuatorBaseURI().resolve("idleConnectSdkConnections?idleTime=20&timeUnit=SECONDS"))
-                        .build();
+            @Nested
+            class ForAllBeans {
 
-                ResponseEntity<Void> response = restTemplateBuilder
-                        .build()
-                        .exchange(request, Void.class);
+                @Test
+                @SuppressWarnings("resource")
+                void testWithDefaultIdleTime() {
+                    RequestEntity<Void> request = RequestEntity
+                            .delete(getActuatorBaseURI().resolve("idleConnectSdkConnections"))
+                            .build();
 
-                assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+                    ResponseEntity<Void> response = restTemplateBuilder
+                            .build()
+                            .exchange(request, Void.class);
 
-                // 3 times: one through the client, once through the communicator, once through the connection itself
-                verify(connection, times(3)).closeIdleConnections(20, TimeUnit.SECONDS);
+                    assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+
+                    // 3 times: one through the client, once through the communicator, once through the connection itself
+                    verify(connection, times(3)).closeIdleConnections(20_000, TimeUnit.MILLISECONDS);
+                }
+
+                @Test
+                @SuppressWarnings("resource")
+                void testWithExplicitIdleTime() {
+                    RequestEntity<Void> request = RequestEntity
+                            .delete(getActuatorBaseURI().resolve("idleConnectSdkConnections?idleTime=10s"))
+                            .build();
+
+                    ResponseEntity<Void> response = restTemplateBuilder
+                            .build()
+                            .exchange(request, Void.class);
+
+                    assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+
+                    // 3 times: one through the client, once through the communicator, once through the connection itself
+                    verify(connection, times(3)).closeIdleConnections(10_000, TimeUnit.MILLISECONDS);
+                }
             }
 
-            @Test
-            @SuppressWarnings("resource")
-            void testForSpecificBean() {
-                RequestEntity<Void> request = RequestEntity
-                        .delete(getActuatorBaseURI().resolve("idleConnectSdkConnections/mockConnection?idleTime=20&timeUnit=SECONDS"))
-                        .build();
+            @Nested
+            class ForSpecificBean {
 
-                ResponseEntity<Void> response = restTemplateBuilder
-                        .build()
-                        .exchange(request, Void.class);
+                @Test
+                @SuppressWarnings("resource")
+                void testWithDefaultIdleTime() {
+                    RequestEntity<Void> request = RequestEntity
+                            .delete(getActuatorBaseURI().resolve("idleConnectSdkConnections/mockConnection"))
+                            .build();
 
-                assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+                    ResponseEntity<Void> response = restTemplateBuilder
+                            .build()
+                            .exchange(request, Void.class);
 
-                verify(connection).closeIdleConnections(20, TimeUnit.SECONDS);
+                    assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+
+                    verify(connection).closeIdleConnections(20_000, TimeUnit.MILLISECONDS);
+                }
+
+                @Test
+                @SuppressWarnings("resource")
+                void testWithExplicitIdleTime() {
+                    RequestEntity<Void> request = RequestEntity
+                            .delete(getActuatorBaseURI().resolve("idleConnectSdkConnections/mockConnection?idleTime=10s"))
+                            .build();
+
+                    ResponseEntity<Void> response = restTemplateBuilder
+                            .build()
+                            .exchange(request, Void.class);
+
+                    assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+
+                    verify(connection).closeIdleConnections(10_000, TimeUnit.MILLISECONDS);
+                }
             }
         }
 

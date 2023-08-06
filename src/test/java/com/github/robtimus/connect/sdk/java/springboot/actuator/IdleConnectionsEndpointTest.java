@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Nested;
@@ -50,14 +51,14 @@ class IdleConnectionsEndpointTest {
         void testWithNoSupportedBeans() {
             contextRunner
                     .run(context -> {
-                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context);
+                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context, 10_000);
 
                         assertThat(context).doesNotHaveBean(Connection.class);
                         assertThat(context).doesNotHaveBean(PooledConnection.class);
                         assertThat(context).doesNotHaveBean(Communicator.class);
                         assertThat(context).doesNotHaveBean(Client.class);
 
-                        endpoint.closeIdleConnections(20L, TimeUnit.SECONDS);
+                        endpoint.closeIdleConnections(Duration.ofSeconds(20));
                     });
         }
 
@@ -66,14 +67,14 @@ class IdleConnectionsEndpointTest {
             contextRunner
                     .withUserConfiguration(ConnectionProvider.class)
                     .run(context -> {
-                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context);
+                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context, 10_000);
 
                         assertThat(context).hasSingleBean(Connection.class);
                         assertThat(context).doesNotHaveBean(PooledConnection.class);
                         assertThat(context).doesNotHaveBean(Communicator.class);
                         assertThat(context).doesNotHaveBean(Client.class);
 
-                        endpoint.closeIdleConnections(20L, TimeUnit.SECONDS);
+                        endpoint.closeIdleConnections(Duration.ofSeconds(20));
 
                         Connection connection = context.getBean(ConnectionProvider.class).connection();
 
@@ -86,7 +87,7 @@ class IdleConnectionsEndpointTest {
             contextRunner
                     .withUserConfiguration(PooledConnectionProvider.class)
                     .run(context -> {
-                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context);
+                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context, 10_000);
 
                         // the PooledConnection bean is also a Connection bean
                         assertThat(context).hasSingleBean(Connection.class);
@@ -94,11 +95,11 @@ class IdleConnectionsEndpointTest {
                         assertThat(context).doesNotHaveBean(Communicator.class);
                         assertThat(context).doesNotHaveBean(Client.class);
 
-                        endpoint.closeIdleConnections(20L, TimeUnit.SECONDS);
+                        endpoint.closeIdleConnections(Duration.ofSeconds(20));
 
                         PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
 
-                        verify(pooledConnection).closeIdleConnections(20L, TimeUnit.SECONDS);
+                        verify(pooledConnection).closeIdleConnections(20_000L, TimeUnit.MILLISECONDS);
                         verifyNoMoreInteractions(pooledConnection);
                     });
         }
@@ -108,18 +109,18 @@ class IdleConnectionsEndpointTest {
             contextRunner
                     .withUserConfiguration(CommunicatorProvider.class)
                     .run(context -> {
-                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context);
+                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context, 10_000);
 
                         assertThat(context).doesNotHaveBean(Connection.class);
                         assertThat(context).doesNotHaveBean(PooledConnection.class);
                         assertThat(context).hasSingleBean(Communicator.class);
                         assertThat(context).doesNotHaveBean(Client.class);
 
-                        endpoint.closeIdleConnections(20L, TimeUnit.SECONDS);
+                        endpoint.closeIdleConnections(Duration.ofSeconds(20));
 
                         Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
-                        verify(communicator).closeIdleConnections(20L, TimeUnit.SECONDS);
+                        verify(communicator).closeIdleConnections(20_000L, TimeUnit.MILLISECONDS);
                         verifyNoMoreInteractions(communicator);
                     });
         }
@@ -129,18 +130,18 @@ class IdleConnectionsEndpointTest {
             contextRunner
                     .withUserConfiguration(ClientProvider.class)
                     .run(context -> {
-                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context);
+                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context, 10_000);
 
                         assertThat(context).doesNotHaveBean(Connection.class);
                         assertThat(context).doesNotHaveBean(PooledConnection.class);
                         assertThat(context).doesNotHaveBean(Communicator.class);
                         assertThat(context).hasSingleBean(Client.class);
 
-                        endpoint.closeIdleConnections(20L, TimeUnit.SECONDS);
+                        endpoint.closeIdleConnections(Duration.ofSeconds(20));
 
                         Client client = context.getBean(ClientProvider.class).client();
 
-                        verify(client).closeIdleConnections(20L, TimeUnit.SECONDS);
+                        verify(client).closeIdleConnections(20_000L, TimeUnit.MILLISECONDS);
                         verifyNoMoreInteractions(client);
                     });
         }
@@ -150,7 +151,7 @@ class IdleConnectionsEndpointTest {
             contextRunner
                     .withUserConfiguration(ConnectionProvider.class, PooledConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class)
                     .run(context -> {
-                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context);
+                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context, 10_000);
 
                         // two Connection beans - connection and pooledConnection
                         assertThat(context).getBeans(Connection.class).hasSize(2);
@@ -158,16 +159,16 @@ class IdleConnectionsEndpointTest {
                         assertThat(context).hasSingleBean(Communicator.class);
                         assertThat(context).hasSingleBean(Client.class);
 
-                        endpoint.closeIdleConnections(20L, TimeUnit.SECONDS);
+                        endpoint.closeIdleConnections(null);
 
                         Connection connection = context.getBean(ConnectionProvider.class).connection();
                         PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
                         Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
                         Client client = context.getBean(ClientProvider.class).client();
 
-                        verify(pooledConnection).closeIdleConnections(20L, TimeUnit.SECONDS);
-                        verify(communicator).closeIdleConnections(20L, TimeUnit.SECONDS);
-                        verify(client).closeIdleConnections(20L, TimeUnit.SECONDS);
+                        verify(pooledConnection).closeIdleConnections(10_000, TimeUnit.MILLISECONDS);
+                        verify(communicator).closeIdleConnections(10_000, TimeUnit.MILLISECONDS);
+                        verify(client).closeIdleConnections(10_000, TimeUnit.MILLISECONDS);
                         verifyNoMoreInteractions(connection, pooledConnection, communicator, client);
                     });
         }
@@ -181,7 +182,7 @@ class IdleConnectionsEndpointTest {
         void testWithNoSupportedBeans() {
             contextRunner
                     .run(context -> {
-                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context);
+                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context, 10_000);
 
                         assertThat(context).doesNotHaveBean(Connection.class);
                         assertThat(context).doesNotHaveBean(PooledConnection.class);
@@ -199,7 +200,7 @@ class IdleConnectionsEndpointTest {
             contextRunner
                     .withUserConfiguration(ConnectionProvider.class)
                     .run(context -> {
-                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context);
+                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context, 10_000);
 
                         assertThat(context).hasSingleBean(Connection.class);
                         assertThat(context).doesNotHaveBean(PooledConnection.class);
@@ -219,7 +220,7 @@ class IdleConnectionsEndpointTest {
             contextRunner
                     .withUserConfiguration(PooledConnectionProvider.class)
                     .run(context -> {
-                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context);
+                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context, 10_000);
 
                         // the PooledConnection bean is also a Connection bean
                         assertThat(context).hasSingleBean(Connection.class);
@@ -227,11 +228,11 @@ class IdleConnectionsEndpointTest {
                         assertThat(context).doesNotHaveBean(Communicator.class);
                         assertThat(context).doesNotHaveBean(Client.class);
 
-                        endpoint.closeIdleConnectionsForBean("pooledConnection", 20L, TimeUnit.SECONDS);
+                        endpoint.closeIdleConnectionsForBean("pooledConnection", Duration.ofSeconds(20));
 
                         PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
 
-                        verify(pooledConnection).closeIdleConnections(20L, TimeUnit.SECONDS);
+                        verify(pooledConnection).closeIdleConnections(20_000, TimeUnit.MILLISECONDS);
                         verifyNoMoreInteractions(pooledConnection);
                     });
         }
@@ -241,18 +242,18 @@ class IdleConnectionsEndpointTest {
             contextRunner
                     .withUserConfiguration(CommunicatorProvider.class)
                     .run(context -> {
-                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context);
+                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context, 10_000);
 
                         assertThat(context).doesNotHaveBean(Connection.class);
                         assertThat(context).doesNotHaveBean(PooledConnection.class);
                         assertThat(context).hasSingleBean(Communicator.class);
                         assertThat(context).doesNotHaveBean(Client.class);
 
-                        endpoint.closeIdleConnectionsForBean("communicator", 20L, TimeUnit.SECONDS);
+                        endpoint.closeIdleConnectionsForBean("communicator", Duration.ofSeconds(20));
 
                         Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
-                        verify(communicator).closeIdleConnections(20L, TimeUnit.SECONDS);
+                        verify(communicator).closeIdleConnections(20_000, TimeUnit.MILLISECONDS);
                         verifyNoMoreInteractions(communicator);
                     });
         }
@@ -262,18 +263,18 @@ class IdleConnectionsEndpointTest {
             contextRunner
                     .withUserConfiguration(ClientProvider.class)
                     .run(context -> {
-                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context);
+                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context, 10_000);
 
                         assertThat(context).doesNotHaveBean(Connection.class);
                         assertThat(context).doesNotHaveBean(PooledConnection.class);
                         assertThat(context).doesNotHaveBean(Communicator.class);
                         assertThat(context).hasSingleBean(Client.class);
 
-                        endpoint.closeIdleConnectionsForBean("client", 20L, TimeUnit.SECONDS);
+                        endpoint.closeIdleConnectionsForBean("client", Duration.ofSeconds(20));
 
                         Client client = context.getBean(ClientProvider.class).client();
 
-                        verify(client).closeIdleConnections(20L, TimeUnit.SECONDS);
+                        verify(client).closeIdleConnections(20_000, TimeUnit.MILLISECONDS);
                         verifyNoMoreInteractions(client);
                     });
         }
@@ -283,7 +284,7 @@ class IdleConnectionsEndpointTest {
             contextRunner
                     .withUserConfiguration(ConnectionProvider.class, PooledConnectionProvider.class, CommunicatorProvider.class, ClientProvider.class)
                     .run(context -> {
-                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context);
+                        IdleConnectionsEndpoint endpoint = new IdleConnectionsEndpoint(context, 10_000);
 
                         // two Connection beans - connection and pooledConnection
                         assertThat(context).getBeans(Connection.class).hasSize(2);
@@ -291,14 +292,14 @@ class IdleConnectionsEndpointTest {
                         assertThat(context).hasSingleBean(Communicator.class);
                         assertThat(context).hasSingleBean(Client.class);
 
-                        endpoint.closeIdleConnectionsForBean("client", 20L, TimeUnit.SECONDS);
+                        endpoint.closeIdleConnectionsForBean("client", null);
 
                         Connection connection = context.getBean(ConnectionProvider.class).connection();
                         PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
                         Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
                         Client client = context.getBean(ClientProvider.class).client();
 
-                        verify(client).closeIdleConnections(20L, TimeUnit.SECONDS);
+                        verify(client).closeIdleConnections(10_000, TimeUnit.MILLISECONDS);
                         verifyNoMoreInteractions(connection, pooledConnection, communicator, client);
                     });
         }

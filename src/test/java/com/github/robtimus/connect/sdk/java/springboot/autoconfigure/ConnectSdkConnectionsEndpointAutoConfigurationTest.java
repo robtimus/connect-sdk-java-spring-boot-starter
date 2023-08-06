@@ -250,7 +250,7 @@ class ConnectSdkConnectionsEndpointAutoConfigurationTest {
 
         @Bean
         IdleConnectionsEndpoint idleConnectionsEndpoint() {
-            return new IdleConnectionsEndpoint(context);
+            return new IdleConnectionsEndpoint(context, 10_000);
         }
 
         @Bean

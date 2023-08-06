@@ -319,7 +319,7 @@ class FullAutoConfigurationTest {
 
         @Bean
         Connection connection() {
-            return new DefaultConnection(1000, 30000);
+            return new DefaultConnection(1_000, 30_000);
         }
     }
 
