@@ -89,6 +89,12 @@ class EndpointsTest {
     @Autowired
     private PooledConnection connection;
 
+    @Autowired
+    private Authenticator authenticator;
+
+    @Autowired
+    private CommunicatorLogger logger;
+
     @BeforeEach
     void resetMocks() {
         reset(connection);
@@ -103,9 +109,6 @@ class EndpointsTest {
 
         @Nested
         class SetApiKey {
-
-            @Autowired
-            private Authenticator authenticator;
 
             private URI getActuatorURI() {
                 return getActuatorBaseURI().resolve("connectSdkApiKey");
@@ -267,9 +270,6 @@ class EndpointsTest {
 
     @Nested
     class Logging {
-
-        @Autowired
-        private CommunicatorLogger logger;
 
         @Test
         void testListLoggingCapableAndLoggerBeans() {
