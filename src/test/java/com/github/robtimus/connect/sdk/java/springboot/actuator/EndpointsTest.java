@@ -29,6 +29,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
@@ -74,11 +75,8 @@ import com.ingenico.connect.gateway.sdk.java.logging.CommunicatorLogger;
         "management.endpoint.health.show-details=always",
         "management.endpoint.connectSdkApiKey.enabled=true",
         "management.endpoint.connectSdkConnections.enabled=true",
-        "management.endpoint.idleConnectSdkConnections.enabled=true",
-        "management.endpoint.expiredConnectSdkConnections.enabled=true",
         "management.endpoint.connectSdkLogging.enabled=true",
-        "management.endpoints.web.exposure.include="
-                + "health,connectSdkApiKey,connectSdkConnections,connectSdkLogging,idleConnectSdkConnections,expiredConnectSdkConnections"
+        "management.endpoints.web.exposure.include=health,connectSdkApiKey,connectSdkConnections,connectSdkLogging"
 })
 @SuppressWarnings("nls")
 class EndpointsTest {
@@ -200,7 +198,7 @@ class EndpointsTest {
                 @SuppressWarnings("resource")
                 void testWithDefaultIdleTime() {
                     RequestEntity<Void> request = RequestEntity
-                            .delete(getActuatorBaseURI().resolve("idleConnectSdkConnections"))
+                            .delete(getActuatorBaseURI().resolve("connectSdkConnections?close=idle"))
                             .build();
 
                     ResponseEntity<Void> response = restTemplateBuilder
@@ -211,13 +209,14 @@ class EndpointsTest {
 
                     // 3 times: one through the client, once through the communicator, once through the connection itself
                     verify(connection, times(3)).closeIdleConnections(20_000, TimeUnit.MILLISECONDS);
+                    verifyNoMoreInteractions(connection);
                 }
 
                 @Test
                 @SuppressWarnings("resource")
                 void testWithExplicitIdleTime() {
                     RequestEntity<Void> request = RequestEntity
-                            .delete(getActuatorBaseURI().resolve("idleConnectSdkConnections?idleTime=10s"))
+                            .delete(getActuatorBaseURI().resolve("connectSdkConnections?close=idle&idleTime=10s"))
                             .build();
 
                     ResponseEntity<Void> response = restTemplateBuilder
@@ -228,6 +227,7 @@ class EndpointsTest {
 
                     // 3 times: one through the client, once through the communicator, once through the connection itself
                     verify(connection, times(3)).closeIdleConnections(10_000, TimeUnit.MILLISECONDS);
+                    verifyNoMoreInteractions(connection);
                 }
             }
 
@@ -238,7 +238,7 @@ class EndpointsTest {
                 @SuppressWarnings("resource")
                 void testWithDefaultIdleTime() {
                     RequestEntity<Void> request = RequestEntity
-                            .delete(getActuatorBaseURI().resolve("idleConnectSdkConnections/mockConnection"))
+                            .delete(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection?close=idle"))
                             .build();
 
                     ResponseEntity<Void> response = restTemplateBuilder
@@ -248,13 +248,14 @@ class EndpointsTest {
                     assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
                     verify(connection).closeIdleConnections(20_000, TimeUnit.MILLISECONDS);
+                    verifyNoMoreInteractions(connection);
                 }
 
                 @Test
                 @SuppressWarnings("resource")
                 void testWithExplicitIdleTime() {
                     RequestEntity<Void> request = RequestEntity
-                            .delete(getActuatorBaseURI().resolve("idleConnectSdkConnections/mockConnection?idleTime=10s"))
+                            .delete(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection?close=idle&idleTime=10s"))
                             .build();
 
                     ResponseEntity<Void> response = restTemplateBuilder
@@ -264,6 +265,7 @@ class EndpointsTest {
                     assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
                     verify(connection).closeIdleConnections(10_000, TimeUnit.MILLISECONDS);
+                    verifyNoMoreInteractions(connection);
                 }
             }
         }
@@ -275,7 +277,7 @@ class EndpointsTest {
             @SuppressWarnings("resource")
             void testForAllBeans() {
                 RequestEntity<Void> request = RequestEntity
-                        .delete(getActuatorBaseURI().resolve("expiredConnectSdkConnections"))
+                        .delete(getActuatorBaseURI().resolve("connectSdkConnections?close=expired"))
                         .build();
 
                 ResponseEntity<Void> response = restTemplateBuilder
@@ -286,13 +288,14 @@ class EndpointsTest {
 
                 // 3 times: one through the client, once through the communicator, once through the connection itself
                 verify(connection, times(3)).closeExpiredConnections();
+                verifyNoMoreInteractions(connection);
             }
 
             @Test
             @SuppressWarnings("resource")
             void testForSpecificBean() {
                 RequestEntity<Void> request = RequestEntity
-                        .delete(getActuatorBaseURI().resolve("expiredConnectSdkConnections/mockConnection"))
+                        .delete(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection?close=expired"))
                         .build();
 
                 ResponseEntity<Void> response = restTemplateBuilder
@@ -302,6 +305,93 @@ class EndpointsTest {
                 assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
                 verify(connection).closeExpiredConnections();
+                verifyNoMoreInteractions(connection);
+            }
+        }
+
+        @Nested
+        class CloseIdleAndExpiredConnections {
+
+            @Nested
+            class ForAllBeans {
+
+                @Test
+                @SuppressWarnings("resource")
+                void testWithDefaultIdleTime() {
+                    RequestEntity<Void> request = RequestEntity
+                            .delete(getActuatorBaseURI().resolve("connectSdkConnections"))
+                            .build();
+
+                    ResponseEntity<Void> response = restTemplateBuilder
+                            .build()
+                            .exchange(request, Void.class);
+
+                    assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+
+                    // 3 times: one through the client, once through the communicator, once through the connection itself
+                    verify(connection, times(3)).closeIdleConnections(20_000, TimeUnit.MILLISECONDS);
+                    verify(connection, times(3)).closeExpiredConnections();
+                    verifyNoMoreInteractions(connection);
+                }
+
+                @Test
+                @SuppressWarnings("resource")
+                void testWithExplicitIdleTime() {
+                    RequestEntity<Void> request = RequestEntity
+                            .delete(getActuatorBaseURI().resolve("connectSdkConnections?idleTime=10s"))
+                            .build();
+
+                    ResponseEntity<Void> response = restTemplateBuilder
+                            .build()
+                            .exchange(request, Void.class);
+
+                    assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+
+                    // 3 times: one through the client, once through the communicator, once through the connection itself
+                    verify(connection, times(3)).closeIdleConnections(10_000, TimeUnit.MILLISECONDS);
+                    verify(connection, times(3)).closeExpiredConnections();
+                    verifyNoMoreInteractions(connection);
+                }
+            }
+
+            @Nested
+            class ForSpecificBean {
+
+                @Test
+                @SuppressWarnings("resource")
+                void testWithDefaultIdleTime() {
+                    RequestEntity<Void> request = RequestEntity
+                            .delete(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection"))
+                            .build();
+
+                    ResponseEntity<Void> response = restTemplateBuilder
+                            .build()
+                            .exchange(request, Void.class);
+
+                    assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+
+                    verify(connection).closeIdleConnections(20_000, TimeUnit.MILLISECONDS);
+                    verify(connection).closeExpiredConnections();
+                    verifyNoMoreInteractions(connection);
+                }
+
+                @Test
+                @SuppressWarnings("resource")
+                void testWithExplicitIdleTime() {
+                    RequestEntity<Void> request = RequestEntity
+                            .delete(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection?idleTime=10s"))
+                            .build();
+
+                    ResponseEntity<Void> response = restTemplateBuilder
+                            .build()
+                            .exchange(request, Void.class);
+
+                    assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+
+                    verify(connection).closeIdleConnections(10_000, TimeUnit.MILLISECONDS);
+                    verify(connection).closeExpiredConnections();
+                    verifyNoMoreInteractions(connection);
+                }
             }
         }
     }
@@ -348,6 +438,7 @@ class EndpointsTest {
 
                 // 3 times: one through the client, once through the communicator, once through the connection itself
                 verify(connection, times(3)).enableLogging(logger);
+                verifyNoMoreInteractions(connection);
             }
 
             @Nested
@@ -371,6 +462,7 @@ class EndpointsTest {
 
                     // 3 times: one through the client, once through the communicator, once through the connection itself
                     verify(connection, times(3)).enableLogging(logger);
+                    verifyNoMoreInteractions(connection);
                 }
 
                 @Test
@@ -391,6 +483,7 @@ class EndpointsTest {
 
                     // 3 times: one through the client, once through the communicator, once through the connection itself
                     verify(connection, times(3)).enableLogging(logger);
+                    verifyNoMoreInteractions(connection);
                 }
             }
 
@@ -409,6 +502,7 @@ class EndpointsTest {
                 assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
                 verify(connection).enableLogging(logger);
+                verifyNoMoreInteractions(connection);
             }
 
             @Nested
@@ -431,6 +525,7 @@ class EndpointsTest {
                     assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
                     verify(connection).enableLogging(logger);
+                    verifyNoMoreInteractions(connection);
                 }
 
                 @Test
@@ -450,6 +545,7 @@ class EndpointsTest {
                     assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
                     verify(connection).enableLogging(logger);
+                    verifyNoMoreInteractions(connection);
                 }
             }
         }
@@ -472,6 +568,7 @@ class EndpointsTest {
 
                 // 3 times: one through the client, once through the communicator, once through the connection itself
                 verify(connection, times(3)).disableLogging();
+                verifyNoMoreInteractions(connection);
             }
 
             @Test
@@ -488,6 +585,7 @@ class EndpointsTest {
                 assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
                 verify(connection).disableLogging();
+                verifyNoMoreInteractions(connection);
             }
         }
     }

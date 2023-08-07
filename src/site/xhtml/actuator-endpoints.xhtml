@@ -53,57 +53,47 @@ curl -X POST http://&lt;host&gt;/actuator/connectSdkLogging/myBean -H Content-Ty
   <hr />
 
   <h3>Connections</h3>
-  <p>ID: <tt>connectSdkConnections</tt> / <tt>idleConnectSdkConnections</tt> / <tt>expiredConnectSdkConnections</tt></p>
-  <p>These actuator endpoints allow you to call <tt>closeIdleConnections</tt> and <tt>closeExpiredConnections</tt> on beans of types
+  <p>ID: <tt>connectSdkConnections</tt></p>
+  <p>This actuator endpoint allows you to call <tt>closeIdleConnections</tt> and <tt>closeExpiredConnections</tt> on beans of types
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/PooledConnection.html">PooledConnection</a>,
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Communicator.html">Communicator</a> and
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a>.
-     They define the following operations:</p>
+     It defines the following operations:</p>
 
   <h4>listCloseableBeans</h4>
   <p>Lists all available <tt>PooledConnection</tt>, <tt>Communicator</tt> and <tt>Client</tt> beans.</p>
   <p>HTTP endpoint example:</p>
   <pre>curl -X GET http://&lt;host&gt;/actuator/connectSdkConnections</pre>
 
-  <h4>closeIdleConnections</h4>
-  <p>Closes idle connections for all available
+  <h4>closeConnections</h4>
+  <p>Closes connections for all available
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/PooledConnection.html">PooledConnection</a>,
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Communicator.html">Communicator</a> and
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a> beans.</p>
   <p>Argument <tt>idleTime</tt> is optional, and defaults to the value of the <tt>connect.api.close-idle-connections.idle-time</tt> <a href="properties.html">property</a>.
      It can be specified <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config.typesafe-configuration-properties.conversion.durations">as a duration in the Spring Boot supported format</a>.</p>
+  <p>Argument <tt>close</tt> can be <tt>idle</tt> to close only idle connections, <tt>expired</tt> to close only expired connections, or omitted to close both idle and expired connections.</p>
   <p>HTTP endpoint examples:</p>
-  <pre>curl -X DELETE http://&lt;host&gt;/actuator/idleConnectSdkConnections
-curl -X DELETE http://&lt;host&gt;/actuator/idleConnectSdkConnections?idleTime=10000
-curl -X DELETE http://&lt;host&gt;/actuator/idleConnectSdkConnections?idleTime=10s</pre>
+  <pre>curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections
+curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections?idleTime=10000
+curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections?idleTime=10s
+curl -X DELETE 'http://&lt;host&gt;/actuator/connectSdkConnections?close=idle&amp;idleTime=10000'
+curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections?close=expired</pre>
 
-  <h4>closeIdleConnectionsForBean</h4>
-  <p>Closes idle connections for a specific
+  <h4>closeConnectionsForBean</h4>
+  <p>Closes connections for a specific
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/PooledConnection.html">PooledConnection</a>,
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Communicator.html">Communicator</a> or
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a> bean.</p>
   <p>Argument <tt>idleTime</tt> is optional, and defaults to the value of the <tt>connect.api.close-idle-connections.idle-time</tt> <a href="properties.html">property</a>.
      It can be specified <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config.typesafe-configuration-properties.conversion.durations">as a duration in the Spring Boot supported format</a>.</p>
+  <p>Argument <tt>close</tt> can be <tt>idle</tt> to close only idle connections, <tt>expired</tt> to close only expired connections, or omitted to close both idle and expired connections.</p>
   <p>HTTP endpoint examples:</p>
-  <pre>curl -X DELETE http://&lt;host&gt;/actuator/idleConnectSdkConnections/myBean
-curl -X DELETE http://&lt;host&gt;/actuator/idleConnectSdkConnections/myBean?idleTime=10000
-curl -X DELETE http://&lt;host&gt;/actuator/idleConnectSdkConnections/myBean?idleTime=10s</pre>
-
-  <h4>closeExpiredConnections</h4>
-  <p>Closes expired connections for all available
-     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/PooledConnection.html">PooledConnection</a>,
-     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Communicator.html">Communicator</a> and
-     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a> beans.</p>
-  <p>HTTP endpoint example:</p>
-  <pre>curl -X DELETE http://&lt;host&gt;/actuator/expiredConnectSdkConnections</pre>
-
-  <h4>closeExpiredConnectionsForBean</h4>
-  <p>Closes expired connections for a specific
-     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/PooledConnection.html">PooledConnection</a>,
-     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Communicator.html">Communicator</a> or
-     <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a> bean.</p>
-  <p>HTTP endpoint example:</p>
-  <pre>curl -X DELETE http://&lt;host&gt;/actuator/expiredConnectSdkConnections/myBean</pre>
+  <pre>curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections/myBean
+curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections/myBean?idleTime=10000
+curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections/myBean?idleTime=10s
+curl -X DELETE 'http://&lt;host&gt;/actuator/connectSdkConnections/myBean?close=idle&amp;idleTime=10000'
+curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections/myBean?close=expired</pre>
 
   <hr />
 

@@ -29,18 +29,16 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.ConnectionsEndpoint;
-import com.github.robtimus.connect.sdk.java.springboot.actuator.ExpiredConnectionsEndpoint;
-import com.github.robtimus.connect.sdk.java.springboot.actuator.IdleConnectionsEndpoint;
 
 /**
- * {@link EnableAutoConfiguration Auto-configuration} for {@link ConnectionsEndpoint}, {@link IdleConnectionsEndpoint} and
- * {@link ExpiredConnectionsEndpoint}.
+ * {@link EnableAutoConfiguration Auto-configuration} for {@link ConnectionsEndpoint}.
  *
  * @author Rob Spoor
  */
 @Configuration
 @AutoConfigureAfter(ConnectSdkClientAutoConfiguration.class)
 @ConditionalOnClass(Endpoint.class)
+@ConditionalOnAvailableEndpoint(endpoint = ConnectionsEndpoint.class)
 @SuppressWarnings("javadoc")
 public class ConnectSdkConnectionsEndpointAutoConfiguration {
 
@@ -48,22 +46,7 @@ public class ConnectSdkConnectionsEndpointAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnAvailableEndpoint(endpoint = ConnectionsEndpoint.class)
-    public ConnectionsEndpoint connectSdkConnectionsEndpoint(ApplicationContext context) {
-        return new ConnectionsEndpoint(context);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnAvailableEndpoint(endpoint = IdleConnectionsEndpoint.class)
-    public IdleConnectionsEndpoint idleConnectSdkConnectionsEndpoint(ApplicationContext context, @Value(IDLE_TIME) long defaultIdleTimeInMillis) {
-        return new IdleConnectionsEndpoint(context, defaultIdleTimeInMillis);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnAvailableEndpoint(endpoint = ExpiredConnectionsEndpoint.class)
-    public ExpiredConnectionsEndpoint expiredConnectSdkConnectionsEndpoint(ApplicationContext context) {
-        return new ExpiredConnectionsEndpoint(context);
+    public ConnectionsEndpoint connectSdkConnectionsEndpoint(ApplicationContext context, @Value(IDLE_TIME) long defaultIdleTimeInMillis) {
+        return new ConnectionsEndpoint(context, defaultIdleTimeInMillis);
     }
 }
