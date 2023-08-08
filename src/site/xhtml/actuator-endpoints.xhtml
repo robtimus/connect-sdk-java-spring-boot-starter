@@ -72,13 +72,13 @@ curl -X POST http://&lt;host&gt;/actuator/connectSdkLogging/myBean -H Content-Ty
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a> beans.</p>
   <p>Argument <tt>idleTime</tt> is optional, and defaults to the value of the <tt>connect.api.close-idle-connections.idle-time</tt> <a href="properties.html">property</a>.
      It can be specified <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config.typesafe-configuration-properties.conversion.durations">as a duration in the Spring Boot supported format</a>.</p>
-  <p>Argument <tt>close</tt> can be <tt>idle</tt> to close only idle connections, <tt>expired</tt> to close only expired connections, or omitted to close both idle and expired connections.</p>
+  <p>Argument <tt>state</tt> can be <tt>idle</tt> to close only idle connections, <tt>expired</tt> to close only expired connections, or omitted to close both idle and expired connections.</p>
   <p>HTTP endpoint examples:</p>
   <pre>curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections
 curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections?idleTime=10000
 curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections?idleTime=10s
-curl -X DELETE 'http://&lt;host&gt;/actuator/connectSdkConnections?close=idle&amp;idleTime=10000'
-curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections?close=expired</pre>
+curl -X DELETE 'http://&lt;host&gt;/actuator/connectSdkConnections?state=idle&amp;idleTime=10000'
+curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections?state=expired</pre>
 
   <h4>closeConnectionsForBean</h4>
   <p>Closes connections for a specific
@@ -87,13 +87,13 @@ curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections?close=expired<
      <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a> bean.</p>
   <p>Argument <tt>idleTime</tt> is optional, and defaults to the value of the <tt>connect.api.close-idle-connections.idle-time</tt> <a href="properties.html">property</a>.
      It can be specified <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config.typesafe-configuration-properties.conversion.durations">as a duration in the Spring Boot supported format</a>.</p>
-  <p>Argument <tt>close</tt> can be <tt>idle</tt> to close only idle connections, <tt>expired</tt> to close only expired connections, or omitted to close both idle and expired connections.</p>
+  <p>Argument <tt>state</tt> can be <tt>idle</tt> to close only idle connections, <tt>expired</tt> to close only expired connections, or omitted to close both idle and expired connections.</p>
   <p>HTTP endpoint examples:</p>
   <pre>curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections/myBean
 curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections/myBean?idleTime=10000
 curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections/myBean?idleTime=10s
-curl -X DELETE 'http://&lt;host&gt;/actuator/connectSdkConnections/myBean?close=idle&amp;idleTime=10000'
-curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections/myBean?close=expired</pre>
+curl -X DELETE 'http://&lt;host&gt;/actuator/connectSdkConnections/myBean?state=idle&amp;idleTime=10000'
+curl -X DELETE http://&lt;host&gt;/actuator/connectSdkConnections/myBean?state=expired</pre>
 
   <hr />
 

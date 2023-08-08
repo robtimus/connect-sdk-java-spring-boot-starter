@@ -17,6 +17,8 @@
 
 package com.github.robtimus.connect.sdk.java.springboot.actuator;
 
+import static com.github.robtimus.connect.sdk.java.springboot.actuator.ConnectionsEndpoint.CloseableConnectionState.EXPIRED;
+import static com.github.robtimus.connect.sdk.java.springboot.actuator.ConnectionsEndpoint.CloseableConnectionState.IDLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
@@ -34,7 +36,6 @@ import com.github.robtimus.connect.sdk.java.springboot.actuator.BeanProviders.Co
 import com.github.robtimus.connect.sdk.java.springboot.actuator.BeanProviders.PooledConnectionProvider;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.ConnectionsEndpoint.BeanNotCloseableException;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.ConnectionsEndpoint.CloseableBeans;
-import com.github.robtimus.connect.sdk.java.springboot.actuator.ConnectionsEndpoint.ConnectionsCloseType;
 import com.ingenico.connect.gateway.sdk.java.Client;
 import com.ingenico.connect.gateway.sdk.java.Communicator;
 import com.ingenico.connect.gateway.sdk.java.Connection;
@@ -140,7 +141,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).doesNotHaveBean(Communicator.class);
                                 assertThat(context).doesNotHaveBean(Client.class);
 
-                                endpoint.closeConnections(Duration.ofSeconds(20), ConnectionsCloseType.IDLE);
+                                endpoint.closeConnections(Duration.ofSeconds(20), IDLE);
                             });
                 }
 
@@ -156,7 +157,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).doesNotHaveBean(Communicator.class);
                                 assertThat(context).doesNotHaveBean(Client.class);
 
-                                endpoint.closeConnections(Duration.ofSeconds(20), ConnectionsCloseType.IDLE);
+                                endpoint.closeConnections(Duration.ofSeconds(20), IDLE);
 
                                 Connection connection = context.getBean(ConnectionProvider.class).connection();
 
@@ -177,7 +178,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).doesNotHaveBean(Communicator.class);
                                 assertThat(context).doesNotHaveBean(Client.class);
 
-                                endpoint.closeConnections(Duration.ofSeconds(20), ConnectionsCloseType.IDLE);
+                                endpoint.closeConnections(Duration.ofSeconds(20), IDLE);
 
                                 PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
 
@@ -198,7 +199,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).hasSingleBean(Communicator.class);
                                 assertThat(context).doesNotHaveBean(Client.class);
 
-                                endpoint.closeConnections(Duration.ofSeconds(20), ConnectionsCloseType.IDLE);
+                                endpoint.closeConnections(Duration.ofSeconds(20), IDLE);
 
                                 Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
@@ -219,7 +220,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).doesNotHaveBean(Communicator.class);
                                 assertThat(context).hasSingleBean(Client.class);
 
-                                endpoint.closeConnections(Duration.ofSeconds(20), ConnectionsCloseType.IDLE);
+                                endpoint.closeConnections(Duration.ofSeconds(20), IDLE);
 
                                 Client client = context.getBean(ClientProvider.class).client();
 
@@ -242,7 +243,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).hasSingleBean(Communicator.class);
                                 assertThat(context).hasSingleBean(Client.class);
 
-                                endpoint.closeConnections(Duration.ofSeconds(20), ConnectionsCloseType.IDLE);
+                                endpoint.closeConnections(Duration.ofSeconds(20), IDLE);
 
                                 Connection connection = context.getBean(ConnectionProvider.class).connection();
                                 PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
@@ -271,7 +272,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).doesNotHaveBean(Communicator.class);
                                 assertThat(context).doesNotHaveBean(Client.class);
 
-                                endpoint.closeConnections(null, ConnectionsCloseType.IDLE);
+                                endpoint.closeConnections(null, IDLE);
                             });
                 }
 
@@ -287,7 +288,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).doesNotHaveBean(Communicator.class);
                                 assertThat(context).doesNotHaveBean(Client.class);
 
-                                endpoint.closeConnections(null, ConnectionsCloseType.IDLE);
+                                endpoint.closeConnections(null, IDLE);
 
                                 Connection connection = context.getBean(ConnectionProvider.class).connection();
 
@@ -308,7 +309,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).doesNotHaveBean(Communicator.class);
                                 assertThat(context).doesNotHaveBean(Client.class);
 
-                                endpoint.closeConnections(null, ConnectionsCloseType.IDLE);
+                                endpoint.closeConnections(null, IDLE);
 
                                 PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
 
@@ -329,7 +330,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).hasSingleBean(Communicator.class);
                                 assertThat(context).doesNotHaveBean(Client.class);
 
-                                endpoint.closeConnections(null, ConnectionsCloseType.IDLE);
+                                endpoint.closeConnections(null, IDLE);
 
                                 Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
@@ -350,7 +351,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).doesNotHaveBean(Communicator.class);
                                 assertThat(context).hasSingleBean(Client.class);
 
-                                endpoint.closeConnections(null, ConnectionsCloseType.IDLE);
+                                endpoint.closeConnections(null, IDLE);
 
                                 Client client = context.getBean(ClientProvider.class).client();
 
@@ -373,7 +374,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).hasSingleBean(Communicator.class);
                                 assertThat(context).hasSingleBean(Client.class);
 
-                                endpoint.closeConnections(null, ConnectionsCloseType.IDLE);
+                                endpoint.closeConnections(null, IDLE);
 
                                 Connection connection = context.getBean(ConnectionProvider.class).connection();
                                 PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
@@ -403,7 +404,7 @@ class ConnectionsEndpointTest {
                             assertThat(context).doesNotHaveBean(Communicator.class);
                             assertThat(context).doesNotHaveBean(Client.class);
 
-                            endpoint.closeConnections(null, ConnectionsCloseType.EXPIRED);
+                            endpoint.closeConnections(null, EXPIRED);
                         });
             }
 
@@ -419,7 +420,7 @@ class ConnectionsEndpointTest {
                             assertThat(context).doesNotHaveBean(Communicator.class);
                             assertThat(context).doesNotHaveBean(Client.class);
 
-                            endpoint.closeConnections(null, ConnectionsCloseType.EXPIRED);
+                            endpoint.closeConnections(null, EXPIRED);
 
                             Connection connection = context.getBean(ConnectionProvider.class).connection();
 
@@ -440,7 +441,7 @@ class ConnectionsEndpointTest {
                             assertThat(context).doesNotHaveBean(Communicator.class);
                             assertThat(context).doesNotHaveBean(Client.class);
 
-                            endpoint.closeConnections(null, ConnectionsCloseType.EXPIRED);
+                            endpoint.closeConnections(null, EXPIRED);
 
                             PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
 
@@ -461,7 +462,7 @@ class ConnectionsEndpointTest {
                             assertThat(context).hasSingleBean(Communicator.class);
                             assertThat(context).doesNotHaveBean(Client.class);
 
-                            endpoint.closeConnections(null, ConnectionsCloseType.EXPIRED);
+                            endpoint.closeConnections(null, EXPIRED);
 
                             Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
@@ -482,7 +483,7 @@ class ConnectionsEndpointTest {
                             assertThat(context).doesNotHaveBean(Communicator.class);
                             assertThat(context).hasSingleBean(Client.class);
 
-                            endpoint.closeConnections(null, ConnectionsCloseType.EXPIRED);
+                            endpoint.closeConnections(null, EXPIRED);
 
                             Client client = context.getBean(ClientProvider.class).client();
 
@@ -505,7 +506,7 @@ class ConnectionsEndpointTest {
                             assertThat(context).hasSingleBean(Communicator.class);
                             assertThat(context).hasSingleBean(Client.class);
 
-                            endpoint.closeConnections(null, ConnectionsCloseType.EXPIRED);
+                            endpoint.closeConnections(null, EXPIRED);
 
                             Connection connection = context.getBean(ConnectionProvider.class).connection();
                             PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
@@ -821,7 +822,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).doesNotHaveBean(Client.class);
 
                                 Duration idleTime = Duration.ofSeconds(20);
-                                assertThatThrownBy(() -> endpoint.closeConnectionsForBean("pooledConnection", idleTime, ConnectionsCloseType.IDLE))
+                                assertThatThrownBy(() -> endpoint.closeConnectionsForBean("pooledConnection", idleTime, IDLE))
                                         .isInstanceOf(NoSuchBeanDefinitionException.class).extracting("beanName", "beanType")
                                         .isEqualTo(Arrays.asList("pooledConnection", null));
                             });
@@ -842,7 +843,7 @@ class ConnectionsEndpointTest {
                                 Connection connection = context.getBean(ConnectionProvider.class).connection();
 
                                 Duration idleTime = Duration.ofSeconds(20);
-                                assertThatThrownBy(() -> endpoint.closeConnectionsForBean("connection", idleTime, ConnectionsCloseType.IDLE))
+                                assertThatThrownBy(() -> endpoint.closeConnectionsForBean("connection", idleTime, IDLE))
                                         .isInstanceOf(BeanNotCloseableException.class).extracting("beanName", "actualType")
                                         .isEqualTo(Arrays.asList("connection", connection.getClass()));
                             });
@@ -861,7 +862,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).doesNotHaveBean(Communicator.class);
                                 assertThat(context).doesNotHaveBean(Client.class);
 
-                                endpoint.closeConnectionsForBean("pooledConnection", Duration.ofSeconds(20), ConnectionsCloseType.IDLE);
+                                endpoint.closeConnectionsForBean("pooledConnection", Duration.ofSeconds(20), IDLE);
 
                                 PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
 
@@ -882,7 +883,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).hasSingleBean(Communicator.class);
                                 assertThat(context).doesNotHaveBean(Client.class);
 
-                                endpoint.closeConnectionsForBean("communicator", Duration.ofSeconds(20), ConnectionsCloseType.IDLE);
+                                endpoint.closeConnectionsForBean("communicator", Duration.ofSeconds(20), IDLE);
 
                                 Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
@@ -903,7 +904,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).doesNotHaveBean(Communicator.class);
                                 assertThat(context).hasSingleBean(Client.class);
 
-                                endpoint.closeConnectionsForBean("client", Duration.ofSeconds(20), ConnectionsCloseType.IDLE);
+                                endpoint.closeConnectionsForBean("client", Duration.ofSeconds(20), IDLE);
 
                                 Client client = context.getBean(ClientProvider.class).client();
 
@@ -926,7 +927,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).hasSingleBean(Communicator.class);
                                 assertThat(context).hasSingleBean(Client.class);
 
-                                endpoint.closeConnectionsForBean("client", Duration.ofSeconds(20), ConnectionsCloseType.IDLE);
+                                endpoint.closeConnectionsForBean("client", Duration.ofSeconds(20), IDLE);
 
                                 Connection connection = context.getBean(ConnectionProvider.class).connection();
                                 PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
@@ -953,7 +954,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).doesNotHaveBean(Communicator.class);
                                 assertThat(context).doesNotHaveBean(Client.class);
 
-                                assertThatThrownBy(() -> endpoint.closeConnectionsForBean("pooledConnection", null, ConnectionsCloseType.IDLE))
+                                assertThatThrownBy(() -> endpoint.closeConnectionsForBean("pooledConnection", null, IDLE))
                                         .isInstanceOf(NoSuchBeanDefinitionException.class).extracting("beanName", "beanType")
                                         .isEqualTo(Arrays.asList("pooledConnection", null));
                             });
@@ -973,7 +974,7 @@ class ConnectionsEndpointTest {
 
                                 Connection connection = context.getBean(ConnectionProvider.class).connection();
 
-                                assertThatThrownBy(() -> endpoint.closeConnectionsForBean("connection", null, ConnectionsCloseType.IDLE))
+                                assertThatThrownBy(() -> endpoint.closeConnectionsForBean("connection", null, IDLE))
                                         .isInstanceOf(BeanNotCloseableException.class).extracting("beanName", "actualType")
                                         .isEqualTo(Arrays.asList("connection", connection.getClass()));
                             });
@@ -992,7 +993,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).doesNotHaveBean(Communicator.class);
                                 assertThat(context).doesNotHaveBean(Client.class);
 
-                                endpoint.closeConnectionsForBean("pooledConnection", null, ConnectionsCloseType.IDLE);
+                                endpoint.closeConnectionsForBean("pooledConnection", null, IDLE);
 
                                 PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
 
@@ -1013,7 +1014,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).hasSingleBean(Communicator.class);
                                 assertThat(context).doesNotHaveBean(Client.class);
 
-                                endpoint.closeConnectionsForBean("communicator", null, ConnectionsCloseType.IDLE);
+                                endpoint.closeConnectionsForBean("communicator", null, IDLE);
 
                                 Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
@@ -1034,7 +1035,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).doesNotHaveBean(Communicator.class);
                                 assertThat(context).hasSingleBean(Client.class);
 
-                                endpoint.closeConnectionsForBean("client", null, ConnectionsCloseType.IDLE);
+                                endpoint.closeConnectionsForBean("client", null, IDLE);
 
                                 Client client = context.getBean(ClientProvider.class).client();
 
@@ -1057,7 +1058,7 @@ class ConnectionsEndpointTest {
                                 assertThat(context).hasSingleBean(Communicator.class);
                                 assertThat(context).hasSingleBean(Client.class);
 
-                                endpoint.closeConnectionsForBean("client", null, ConnectionsCloseType.IDLE);
+                                endpoint.closeConnectionsForBean("client", null, IDLE);
 
                                 Connection connection = context.getBean(ConnectionProvider.class).connection();
                                 PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
@@ -1085,7 +1086,7 @@ class ConnectionsEndpointTest {
                             assertThat(context).doesNotHaveBean(Communicator.class);
                             assertThat(context).doesNotHaveBean(Client.class);
 
-                            assertThatThrownBy(() -> endpoint.closeConnectionsForBean("pooledConnection", null, ConnectionsCloseType.EXPIRED))
+                            assertThatThrownBy(() -> endpoint.closeConnectionsForBean("pooledConnection", null, EXPIRED))
                                     .isInstanceOf(NoSuchBeanDefinitionException.class).extracting("beanName", "beanType")
                                     .isEqualTo(Arrays.asList("pooledConnection", null));
                         });
@@ -1105,7 +1106,7 @@ class ConnectionsEndpointTest {
 
                             Connection connection = context.getBean(ConnectionProvider.class).connection();
 
-                            assertThatThrownBy(() -> endpoint.closeConnectionsForBean("connection", null, ConnectionsCloseType.EXPIRED))
+                            assertThatThrownBy(() -> endpoint.closeConnectionsForBean("connection", null, EXPIRED))
                                     .isInstanceOf(BeanNotCloseableException.class).extracting("beanName", "actualType")
                                     .isEqualTo(Arrays.asList("connection", connection.getClass()));
                         });
@@ -1124,7 +1125,7 @@ class ConnectionsEndpointTest {
                             assertThat(context).doesNotHaveBean(Communicator.class);
                             assertThat(context).doesNotHaveBean(Client.class);
 
-                            endpoint.closeConnectionsForBean("pooledConnection", null, ConnectionsCloseType.EXPIRED);
+                            endpoint.closeConnectionsForBean("pooledConnection", null, EXPIRED);
 
                             PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();
 
@@ -1145,7 +1146,7 @@ class ConnectionsEndpointTest {
                             assertThat(context).hasSingleBean(Communicator.class);
                             assertThat(context).doesNotHaveBean(Client.class);
 
-                            endpoint.closeConnectionsForBean("communicator", null, ConnectionsCloseType.EXPIRED);
+                            endpoint.closeConnectionsForBean("communicator", null, EXPIRED);
 
                             Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
 
@@ -1166,7 +1167,7 @@ class ConnectionsEndpointTest {
                             assertThat(context).doesNotHaveBean(Communicator.class);
                             assertThat(context).hasSingleBean(Client.class);
 
-                            endpoint.closeConnectionsForBean("client", null, ConnectionsCloseType.EXPIRED);
+                            endpoint.closeConnectionsForBean("client", null, EXPIRED);
 
                             Client client = context.getBean(ClientProvider.class).client();
 
@@ -1189,7 +1190,7 @@ class ConnectionsEndpointTest {
                             assertThat(context).hasSingleBean(Communicator.class);
                             assertThat(context).hasSingleBean(Client.class);
 
-                            endpoint.closeConnectionsForBean("client", null, ConnectionsCloseType.EXPIRED);
+                            endpoint.closeConnectionsForBean("client", null, EXPIRED);
 
                             Connection connection = context.getBean(ConnectionProvider.class).connection();
                             PooledConnection pooledConnection = context.getBean(PooledConnectionProvider.class).pooledConnection();

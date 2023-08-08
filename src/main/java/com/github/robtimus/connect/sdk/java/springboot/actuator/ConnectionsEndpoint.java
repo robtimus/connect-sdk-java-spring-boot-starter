@@ -69,22 +69,22 @@ public class ConnectionsEndpoint {
     /**
      * Closes all connections that are idle, expired or both for all {@link PooledConnection}, {@link Communicator} and {@link Client} beans.
      *
-     * @param idleTime The idle time; ignored if {@code close} is {@link ConnectionsCloseType#EXPIRED}.
-     * @param close {@link ConnectionsCloseType#IDLE} to close all idle connections,
-     *              {@link ConnectionsCloseType#EXPIRED} to close all expired connections,
+     * @param idleTime The idle time; ignored if {@code close} is {@link CloseableConnectionState#EXPIRED}.
+     * @param state {@link CloseableConnectionState#IDLE} to close all idle connections,
+     *              {@link CloseableConnectionState#EXPIRED} to close all expired connections,
      *              or {@code null} to close all idle and expired connections.
      * @since 3.8
      */
     @DeleteOperation
-    public void closeConnections(@Nullable Duration idleTime, @Nullable ConnectionsCloseType close) {
-        if (close == ConnectionsCloseType.IDLE) {
+    public void closeConnections(@Nullable Duration idleTime, @Nullable CloseableConnectionState state) {
+        if (state == CloseableConnectionState.IDLE) {
             long idleTimeInMillis = toMillis(idleTime);
             TimeUnit timeUnitToUse = TimeUnit.MILLISECONDS;
             closeConnections(
                     connection -> connection.closeIdleConnections(idleTimeInMillis, timeUnitToUse),
                     communicator -> communicator.closeIdleConnections(idleTimeInMillis, timeUnitToUse),
                     client -> client.closeIdleConnections(idleTimeInMillis, timeUnitToUse));
-        } else if (close == ConnectionsCloseType.EXPIRED) {
+        } else if (state == CloseableConnectionState.EXPIRED) {
             closeConnections(
                     PooledConnection::closeExpiredConnections,
                     Communicator::closeExpiredConnections,
@@ -104,22 +104,22 @@ public class ConnectionsEndpoint {
      * Closes all connections that are idle, expired or both for a specific {@link PooledConnection}, {@link Communicator} and {@link Client} bean.
      *
      * @param beanName The name of the {@link PooledConnection}, {@link Communicator} or {@link Client} bean.
-     * @param idleTime The idle time; ignored if {@code close} is {@link ConnectionsCloseType#EXPIRED}.
-     * @param close {@link ConnectionsCloseType#IDLE} to close all idle connections,
-     *              {@link ConnectionsCloseType#EXPIRED} to close all expired connections,
+     * @param idleTime The idle time; ignored if {@code close} is {@link CloseableConnectionState#EXPIRED}.
+     * @param state {@link CloseableConnectionState#IDLE} to close all idle connections,
+     *              {@link CloseableConnectionState#EXPIRED} to close all expired connections,
      *              or {@code null} to close all idle and expired connections.
      * @since 3.8
      */
     @DeleteOperation
-    public void closeConnectionsForBean(@Selector String beanName, @Nullable Duration idleTime, @Nullable ConnectionsCloseType close) {
-        if (close == ConnectionsCloseType.IDLE) {
+    public void closeConnectionsForBean(@Selector String beanName, @Nullable Duration idleTime, @Nullable CloseableConnectionState state) {
+        if (state == CloseableConnectionState.IDLE) {
             long idleTimeInMillis = toMillis(idleTime);
             TimeUnit timeUnitToUse = TimeUnit.MILLISECONDS;
             closeConnectionsForBean(beanName,
                     connection -> connection.closeIdleConnections(idleTimeInMillis, timeUnitToUse),
                     communicator -> communicator.closeIdleConnections(idleTimeInMillis, timeUnitToUse),
                     client -> client.closeIdleConnections(idleTimeInMillis, timeUnitToUse));
-        } else if (close == ConnectionsCloseType.EXPIRED) {
+        } else if (state == CloseableConnectionState.EXPIRED) {
             closeConnectionsForBean(beanName,
                     PooledConnection::closeExpiredConnections,
                     Communicator::closeExpiredConnections,
@@ -161,7 +161,7 @@ public class ConnectionsEndpoint {
      *
      * @param idleTime The idle time.
      * @param timeUnit The time unit.
-     * @deprecated Use {@link #closeConnections(Duration, ConnectionsCloseType)} instead.
+     * @deprecated Use {@link #closeConnections(Duration, CloseableConnectionState)} instead.
      */
     @WriteOperation
     @Deprecated
@@ -178,7 +178,7 @@ public class ConnectionsEndpoint {
      * @param beanName The name of the {@link PooledConnection}, {@link Communicator} or {@link Client} bean.
      * @param idleTime The idle time.
      * @param timeUnit The time unit.
-     * @deprecated Use {@link #closeConnectionsForBean(String, Duration, ConnectionsCloseType)} instead.
+     * @deprecated Use {@link #closeConnectionsForBean(String, Duration, CloseableConnectionState)} instead.
      */
     @WriteOperation
     @Deprecated
@@ -192,7 +192,7 @@ public class ConnectionsEndpoint {
     /**
      * Closes all expired connections for all {@link PooledConnection}, {@link Communicator} and {@link Client} beans.
      *
-     * @deprecated Use {@link #closeConnections(Duration, ConnectionsCloseType)} instead.
+     * @deprecated Use {@link #closeConnections(Duration, CloseableConnectionState)} instead.
      */
     @WriteOperation
     @Deprecated
@@ -207,7 +207,7 @@ public class ConnectionsEndpoint {
      * Closes all expired connections for a specific {@link PooledConnection}, {@link Communicator} or {@link Client} bean.
      *
      * @param beanName The name of the {@link PooledConnection}, {@link Communicator} or {@link Client} bean.
-     * @deprecated Use {@link #closeConnectionsForBean(String, Duration, ConnectionsCloseType)} instead.
+     * @deprecated Use {@link #closeConnectionsForBean(String, Duration, CloseableConnectionState)} instead.
      */
     @WriteOperation
     @Deprecated
@@ -263,7 +263,7 @@ public class ConnectionsEndpoint {
         }
     }
 
-    public enum ConnectionsCloseType {
+    public enum CloseableConnectionState {
         /** Only close idle connections. */
         IDLE,
 

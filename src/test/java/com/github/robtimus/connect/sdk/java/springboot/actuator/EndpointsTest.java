@@ -198,7 +198,7 @@ class EndpointsTest {
                 @SuppressWarnings("resource")
                 void testWithDefaultIdleTime() {
                     RequestEntity<Void> request = RequestEntity
-                            .delete(getActuatorBaseURI().resolve("connectSdkConnections?close=idle"))
+                            .delete(getActuatorBaseURI().resolve("connectSdkConnections?state=idle"))
                             .build();
 
                     ResponseEntity<Void> response = restTemplateBuilder
@@ -216,7 +216,7 @@ class EndpointsTest {
                 @SuppressWarnings("resource")
                 void testWithExplicitIdleTime() {
                     RequestEntity<Void> request = RequestEntity
-                            .delete(getActuatorBaseURI().resolve("connectSdkConnections?close=idle&idleTime=10s"))
+                            .delete(getActuatorBaseURI().resolve("connectSdkConnections?state=idle&idleTime=10s"))
                             .build();
 
                     ResponseEntity<Void> response = restTemplateBuilder
@@ -238,7 +238,7 @@ class EndpointsTest {
                 @SuppressWarnings("resource")
                 void testWithDefaultIdleTime() {
                     RequestEntity<Void> request = RequestEntity
-                            .delete(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection?close=idle"))
+                            .delete(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection?state=idle"))
                             .build();
 
                     ResponseEntity<Void> response = restTemplateBuilder
@@ -255,7 +255,7 @@ class EndpointsTest {
                 @SuppressWarnings("resource")
                 void testWithExplicitIdleTime() {
                     RequestEntity<Void> request = RequestEntity
-                            .delete(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection?close=idle&idleTime=10s"))
+                            .delete(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection?state=idle&idleTime=10s"))
                             .build();
 
                     ResponseEntity<Void> response = restTemplateBuilder
@@ -277,7 +277,7 @@ class EndpointsTest {
             @SuppressWarnings("resource")
             void testForAllBeans() {
                 RequestEntity<Void> request = RequestEntity
-                        .delete(getActuatorBaseURI().resolve("connectSdkConnections?close=expired"))
+                        .delete(getActuatorBaseURI().resolve("connectSdkConnections?state=expired"))
                         .build();
 
                 ResponseEntity<Void> response = restTemplateBuilder
@@ -295,7 +295,7 @@ class EndpointsTest {
             @SuppressWarnings("resource")
             void testForSpecificBean() {
                 RequestEntity<Void> request = RequestEntity
-                        .delete(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection?close=expired"))
+                        .delete(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection?state=expired"))
                         .build();
 
                 ResponseEntity<Void> response = restTemplateBuilder
