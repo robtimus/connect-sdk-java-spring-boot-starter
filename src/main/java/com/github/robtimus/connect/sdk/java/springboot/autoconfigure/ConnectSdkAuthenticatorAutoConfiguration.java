@@ -28,7 +28,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.github.robtimus.connect.sdk.java.springboot.ReconfigurableAuthenticator;
+import com.github.robtimus.connect.sdk.java.springboot.ConfigurableAuthenticator;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.ApiKeyEndpoint;
 import com.ingenico.connect.gateway.sdk.java.Authenticator;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
@@ -54,17 +54,17 @@ public class ConnectSdkAuthenticatorAutoConfiguration {
     }
 
     @Bean
-    public ReconfigurableAuthenticator connectSdkAuthenticator() {
+    public ConfigurableAuthenticator connectSdkAuthenticator() {
         AuthorizationType authorizationType = properties.getAuthorizationType();
         String apiKeyId = properties.getApiKeyId();
         String secretApiKey = properties.getSecretApiKey();
-        return new ReconfigurableAuthenticator(authorizationType, apiKeyId, secretApiKey);
+        return new ConfigurableAuthenticator(authorizationType, apiKeyId, secretApiKey);
     }
 
     @Bean
     @ConditionalOnClass(Endpoint.class)
     @ConditionalOnAvailableEndpoint(endpoint = ApiKeyEndpoint.class)
-    public ApiKeyEndpoint connectSdkApiKeyEndpoint(ReconfigurableAuthenticator authenticator) {
+    public ApiKeyEndpoint connectSdkApiKeyEndpoint(ConfigurableAuthenticator authenticator) {
         return new ApiKeyEndpoint(authenticator);
     }
 }

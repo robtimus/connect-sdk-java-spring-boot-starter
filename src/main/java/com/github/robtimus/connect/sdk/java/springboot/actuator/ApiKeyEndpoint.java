@@ -20,7 +20,7 @@ package com.github.robtimus.connect.sdk.java.springboot.actuator;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.lang.Nullable;
-import com.github.robtimus.connect.sdk.java.springboot.ReconfigurableAuthenticator;
+import com.github.robtimus.connect.sdk.java.springboot.ConfigurableAuthenticator;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
 
 /**
@@ -33,9 +33,9 @@ import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
 @SuppressWarnings("javadoc")
 public class ApiKeyEndpoint {
 
-    private final ReconfigurableAuthenticator authenticator;
+    private final ConfigurableAuthenticator authenticator;
 
-    public ApiKeyEndpoint(ReconfigurableAuthenticator authenticator) {
+    public ApiKeyEndpoint(ConfigurableAuthenticator authenticator) {
         this.authenticator = authenticator;
     }
 

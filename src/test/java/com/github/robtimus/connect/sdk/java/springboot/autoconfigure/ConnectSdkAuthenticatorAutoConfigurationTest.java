@@ -27,7 +27,7 @@ import org.springframework.boot.test.context.FilteredClassLoader;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.github.robtimus.connect.sdk.java.springboot.ReconfigurableAuthenticator;
+import com.github.robtimus.connect.sdk.java.springboot.ConfigurableAuthenticator;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.ApiKeyEndpoint;
 import com.ingenico.connect.gateway.sdk.java.Authenticator;
 
@@ -49,7 +49,7 @@ class ConnectSdkAuthenticatorAutoConfigurationTest {
                     assertThat(context).doesNotHaveBean("connectSdkAuthenticator");
                     assertThat(context).hasSingleBean(Authenticator.class);
                     assertThat(context).getBean(Authenticator.class).isSameAs(context.getBean(ExistingBeanProvider.class).authenticator());
-                    assertThat(context).doesNotHaveBean(ReconfigurableAuthenticator.class);
+                    assertThat(context).doesNotHaveBean(ConfigurableAuthenticator.class);
                     assertThat(context).doesNotHaveBean(ApiKeyEndpoint.class);
                 });
     }
@@ -63,7 +63,7 @@ class ConnectSdkAuthenticatorAutoConfigurationTest {
                         "management.endpoints.jmx.exposure.include=connectSdkApiKey")
                 .run(context -> {
                     assertThat(context).doesNotHaveBean(Authenticator.class);
-                    assertThat(context).doesNotHaveBean(ReconfigurableAuthenticator.class);
+                    assertThat(context).doesNotHaveBean(ConfigurableAuthenticator.class);
                     assertThat(context).doesNotHaveBean(ApiKeyEndpoint.class);
                 });
         contextRunner
@@ -73,7 +73,7 @@ class ConnectSdkAuthenticatorAutoConfigurationTest {
                         "management.endpoints.jmx.exposure.include=connectSdkApiKey")
                 .run(context -> {
                     assertThat(context).doesNotHaveBean(Authenticator.class);
-                    assertThat(context).doesNotHaveBean(ReconfigurableAuthenticator.class);
+                    assertThat(context).doesNotHaveBean(ConfigurableAuthenticator.class);
                     assertThat(context).doesNotHaveBean(ApiKeyEndpoint.class);
                 });
     }
@@ -85,8 +85,8 @@ class ConnectSdkAuthenticatorAutoConfigurationTest {
                 .run(context -> {
                     assertThat(context).hasBean("connectSdkAuthenticator");
                     assertThat(context).hasSingleBean(Authenticator.class);
-                    assertThat(context).getBean(Authenticator.class).isExactlyInstanceOf(ReconfigurableAuthenticator.class);
-                    assertThat(context).hasSingleBean(ReconfigurableAuthenticator.class);
+                    assertThat(context).getBean(Authenticator.class).isExactlyInstanceOf(ConfigurableAuthenticator.class);
+                    assertThat(context).hasSingleBean(ConfigurableAuthenticator.class);
                     assertThat(context).doesNotHaveBean(ApiKeyEndpoint.class);
                 });
     }
@@ -99,8 +99,8 @@ class ConnectSdkAuthenticatorAutoConfigurationTest {
                 .run(context -> {
                     assertThat(context).hasBean("connectSdkAuthenticator");
                     assertThat(context).hasSingleBean(Authenticator.class);
-                    assertThat(context).getBean(Authenticator.class).isExactlyInstanceOf(ReconfigurableAuthenticator.class);
-                    assertThat(context).hasSingleBean(ReconfigurableAuthenticator.class);
+                    assertThat(context).getBean(Authenticator.class).isExactlyInstanceOf(ConfigurableAuthenticator.class);
+                    assertThat(context).hasSingleBean(ConfigurableAuthenticator.class);
                     assertThat(context).doesNotHaveBean(ApiKeyEndpoint.class);
                 });
     }
@@ -114,8 +114,8 @@ class ConnectSdkAuthenticatorAutoConfigurationTest {
                 .run(context -> {
                     assertThat(context).hasBean("connectSdkAuthenticator");
                     assertThat(context).hasSingleBean(Authenticator.class);
-                    assertThat(context).getBean(Authenticator.class).isExactlyInstanceOf(ReconfigurableAuthenticator.class);
-                    assertThat(context).hasSingleBean(ReconfigurableAuthenticator.class);
+                    assertThat(context).getBean(Authenticator.class).isExactlyInstanceOf(ConfigurableAuthenticator.class);
+                    assertThat(context).hasSingleBean(ConfigurableAuthenticator.class);
                     assertThat(context).hasSingleBean(ApiKeyEndpoint.class);
                 });
     }
@@ -131,8 +131,8 @@ class ConnectSdkAuthenticatorAutoConfigurationTest {
                     .run(context -> {
                         assertThat(context).hasBean("connectSdkAuthenticator");
                         assertThat(context).hasSingleBean(Authenticator.class);
-                        assertThat(context).getBean(Authenticator.class).isExactlyInstanceOf(ReconfigurableAuthenticator.class);
-                        assertThat(context).hasSingleBean(ReconfigurableAuthenticator.class);
+                        assertThat(context).getBean(Authenticator.class).isExactlyInstanceOf(ConfigurableAuthenticator.class);
+                        assertThat(context).hasSingleBean(ConfigurableAuthenticator.class);
                         assertThat(context).doesNotHaveBean(ApiKeyEndpoint.class);
                     });
         }

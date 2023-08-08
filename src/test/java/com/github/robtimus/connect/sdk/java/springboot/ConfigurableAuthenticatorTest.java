@@ -1,5 +1,5 @@
 /*
- * ReconfigurableAuthenticatorTest.java
+ * ConfigurableAuthenticatorTest.java
  * Copyright 2023 Rob Spoor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,16 +24,16 @@ import com.ingenico.connect.gateway.sdk.java.Authenticator;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
 
 @SuppressWarnings("nls")
-class ReconfigurableAuthenticatorTest {
+class ConfigurableAuthenticatorTest {
 
     @Test
     void testSignatureWithInitialApiKey() {
         String apiKeyId = UUID.randomUUID().toString();
         String secretApiKey = UUID.randomUUID().toString();
 
-        Authenticator reconfigurableAuthenticator = new ReconfigurableAuthenticator(AuthorizationType.V1HMAC, apiKeyId, secretApiKey);
+        Authenticator authenticator = new ConfigurableAuthenticator(AuthorizationType.V1HMAC, apiKeyId, secretApiKey);
 
-        assertSignatureCalculation(reconfigurableAuthenticator, apiKeyId, secretApiKey);
+        assertSignatureCalculation(authenticator, apiKeyId, secretApiKey);
     }
 
     @Test
@@ -41,9 +41,9 @@ class ReconfigurableAuthenticatorTest {
         String apiKeyId = UUID.randomUUID().toString();
         String secretApiKey = UUID.randomUUID().toString();
 
-        ReconfigurableAuthenticator reconfigurableAuthenticator = new ReconfigurableAuthenticator(AuthorizationType.V1HMAC, "x", "x");
-        reconfigurableAuthenticator.setApiKey(AuthorizationType.V1HMAC, apiKeyId, secretApiKey);
+        ConfigurableAuthenticator authenticator = new ConfigurableAuthenticator(AuthorizationType.V1HMAC, "x", "x");
+        authenticator.setApiKey(AuthorizationType.V1HMAC, apiKeyId, secretApiKey);
 
-        assertSignatureCalculation(reconfigurableAuthenticator, apiKeyId, secretApiKey);
+        assertSignatureCalculation(authenticator, apiKeyId, secretApiKey);
     }
 }

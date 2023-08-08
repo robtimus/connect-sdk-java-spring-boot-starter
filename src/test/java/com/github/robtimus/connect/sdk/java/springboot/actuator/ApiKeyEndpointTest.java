@@ -21,7 +21,7 @@ import static com.github.robtimus.connect.sdk.java.springboot.util.Authenticator
 import java.util.UUID;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import com.github.robtimus.connect.sdk.java.springboot.ReconfigurableAuthenticator;
+import com.github.robtimus.connect.sdk.java.springboot.ConfigurableAuthenticator;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
 
 @SuppressWarnings("nls")
@@ -35,13 +35,13 @@ class ApiKeyEndpointTest {
             String apiKeyId = UUID.randomUUID().toString();
             String secretApiKey = UUID.randomUUID().toString();
 
-            ReconfigurableAuthenticator reconfigurableAuthenticator = new ReconfigurableAuthenticator(AuthorizationType.V1HMAC, "x", "x");
+            ConfigurableAuthenticator authenticator = new ConfigurableAuthenticator(AuthorizationType.V1HMAC, "x", "x");
 
-            ApiKeyEndpoint endpoint = new ApiKeyEndpoint(reconfigurableAuthenticator);
+            ApiKeyEndpoint endpoint = new ApiKeyEndpoint(authenticator);
             endpoint.setApiKey(apiKeyId, secretApiKey, null);
-            reconfigurableAuthenticator.setApiKey(AuthorizationType.V1HMAC, apiKeyId, secretApiKey);
+            authenticator.setApiKey(AuthorizationType.V1HMAC, apiKeyId, secretApiKey);
 
-            assertSignatureCalculation(reconfigurableAuthenticator, apiKeyId, secretApiKey);
+            assertSignatureCalculation(authenticator, apiKeyId, secretApiKey);
         }
 
         @Test
@@ -49,12 +49,12 @@ class ApiKeyEndpointTest {
             String apiKeyId = UUID.randomUUID().toString();
             String secretApiKey = UUID.randomUUID().toString();
 
-            ReconfigurableAuthenticator reconfigurableAuthenticator = new ReconfigurableAuthenticator(AuthorizationType.V1HMAC, "x", "x");
+            ConfigurableAuthenticator authenticator = new ConfigurableAuthenticator(AuthorizationType.V1HMAC, "x", "x");
 
-            ApiKeyEndpoint endpoint = new ApiKeyEndpoint(reconfigurableAuthenticator);
+            ApiKeyEndpoint endpoint = new ApiKeyEndpoint(authenticator);
             endpoint.setApiKey(apiKeyId, secretApiKey, AuthorizationType.V1HMAC);
 
-            assertSignatureCalculation(reconfigurableAuthenticator, apiKeyId, secretApiKey);
+            assertSignatureCalculation(authenticator, apiKeyId, secretApiKey);
         }
     }
 }

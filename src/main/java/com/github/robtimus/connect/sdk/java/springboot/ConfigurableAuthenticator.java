@@ -1,5 +1,5 @@
 /*
- * ReconfigurableAuthenticator.java
+ * ConfigurableAuthenticator.java
  * Copyright 2023 Rob Spoor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,18 +32,18 @@ import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultAuthenticator;
  * @author Rob Spoor
  * @since 3.8
  */
-public class ReconfigurableAuthenticator implements Authenticator {
+public class ConfigurableAuthenticator implements Authenticator {
 
     private final AtomicReference<Authenticator> delegate;
 
     /**
-     * Creates a new reconfigurable authenticator.
+     * Creates a new configurable authenticator.
      *
      * @param authorizationType The initial authorization type.
      * @param apiKeyId The initial API key id.
      * @param secretApiKey The initial secret API key.
      */
-    public ReconfigurableAuthenticator(AuthorizationType authorizationType, String apiKeyId, String secretApiKey) {
+    public ConfigurableAuthenticator(AuthorizationType authorizationType, String apiKeyId, String secretApiKey) {
         delegate = new AtomicReference<>(new DefaultAuthenticator(authorizationType, apiKeyId, secretApiKey));
     }
 
