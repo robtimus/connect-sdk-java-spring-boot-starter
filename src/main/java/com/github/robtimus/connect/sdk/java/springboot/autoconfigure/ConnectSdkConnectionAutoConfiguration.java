@@ -34,6 +34,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import com.ingenico.connect.gateway.sdk.java.CommunicatorConfiguration;
 import com.ingenico.connect.gateway.sdk.java.Connection;
 import com.ingenico.connect.gateway.sdk.java.PooledConnection;
 import com.ingenico.connect.gateway.sdk.java.ProxyConfiguration;
@@ -91,7 +92,7 @@ public class ConnectSdkConnectionAutoConfiguration {
                 return new LinkedHashSet<>(protocols);
             }
         }
-        return null;
+        return CommunicatorConfiguration.DEFAULT_HTTPS_PROTOCOLS;
     }
 
     @Service
