@@ -44,6 +44,9 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
@@ -162,6 +165,25 @@ class EndpointsTest {
                 assertNull(response.getBody());
 
                 assertSignatureCalculation(authenticator, apiKeyId, secretApiKey);
+            }
+
+            @ParameterizedTest
+            @ValueSource(strings = {
+                    "{\"apiKeyId\": \"myApiKeyId\", \"secretApiKey\": \"mySecretKeyId\"}",
+                    "{\"apiKeyId\": \"myApiKeyId\", \"secretApiKey\": \"mySecretKeyId\", \"authorizationType\": \"V1HMAC\"}"
+            })
+            void testExample(String requestBody) {
+                RequestEntity<String> request = RequestEntity
+                        .post(getActuatorURI())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(requestBody);
+
+                ResponseEntity<Void> response = restTemplateBuilder
+                        .build()
+                        .exchange(request, Void.class);
+
+                assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+                assertNull(response.getBody());
             }
         }
     }
@@ -394,6 +416,31 @@ class EndpointsTest {
                 }
             }
         }
+
+        @ParameterizedTest
+        @ValueSource(strings = {
+                "connectSdkConnections",
+                "connectSdkConnections?idleTime=10000",
+                "connectSdkConnections?idleTime=10s",
+                "connectSdkConnections?state=idle&idleTime=10000",
+                "connectSdkConnections?state=expired",
+                "connectSdkConnections/mockConnection",
+                "connectSdkConnections/mockConnection?idleTime=10000",
+                "connectSdkConnections/mockConnection?idleTime=10s",
+                "connectSdkConnections/mockConnection?state=idle&idleTime=10000",
+                "connectSdkConnections/mockConnection?state=expired"
+        })
+        void testExample(String path) {
+            RequestEntity<Void> request = RequestEntity
+                    .delete(getActuatorBaseURI().resolve(path))
+                    .build();
+
+            ResponseEntity<Void> response = restTemplateBuilder
+                    .build()
+                    .exchange(request, Void.class);
+
+            assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        }
     }
 
     @Nested
@@ -548,6 +595,28 @@ class EndpointsTest {
                     verifyNoMoreInteractions(connection);
                 }
             }
+
+            @ParameterizedTest
+            @CsvSource({
+                    "connectSdkLogging,",
+                    "connectSdkLogging?logger=mockLogger,",
+                    "connectSdkLogging, {\"logger\": \"mockLogger\"}",
+                    "connectSdkLogging/mockConnection,",
+                    "connectSdkLogging/mockConnection?logger=mockLogger,",
+                    "connectSdkLogging/mockConnection, {\"logger\": \"mockLogger\"}"
+            })
+            void testExample(String path, String requestBody) {
+                RequestEntity<String> request = RequestEntity
+                        .post(getActuatorBaseURI().resolve(path))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(requestBody);
+
+                ResponseEntity<Void> response = restTemplateBuilder
+                        .build()
+                        .exchange(request, Void.class);
+
+                assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+            }
         }
 
         @Nested
@@ -586,6 +655,23 @@ class EndpointsTest {
 
                 verify(connection).disableLogging();
                 verifyNoMoreInteractions(connection);
+            }
+
+            @ParameterizedTest
+            @CsvSource({
+                    "connectSdkLogging",
+                    "connectSdkLogging/mockConnection"
+            })
+            void testExample(String path) {
+                RequestEntity<Void> request = RequestEntity
+                        .delete(getActuatorBaseURI().resolve(path))
+                        .build();
+
+                ResponseEntity<Void> response = restTemplateBuilder
+                        .build()
+                        .exchange(request, Void.class);
+
+                assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
             }
         }
     }
