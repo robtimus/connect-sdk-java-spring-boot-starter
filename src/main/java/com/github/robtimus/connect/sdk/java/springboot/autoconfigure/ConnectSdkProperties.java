@@ -40,6 +40,8 @@ public class ConnectSdkProperties {
     private int socketTimeout = 300_000;
     /** Maximum number of concurrent HTTP connections. */
     private int maxConnections = CommunicatorConfiguration.DEFAULT_MAX_CONNECTIONS;
+    /** Whether or not to reuse connections. */
+    private boolean connectionReuse = true;
 
     /** Authorization type, should only be V1HMAC. */
     private AuthorizationType authorizationType = AuthorizationType.V1HMAC;
@@ -87,6 +89,14 @@ public class ConnectSdkProperties {
 
     public void setMaxConnections(int maxConnections) {
         this.maxConnections = maxConnections;
+    }
+
+    public boolean isConnectionReuse() {
+        return connectionReuse;
+    }
+
+    public void setConnectionReuse(boolean connectionReuse) {
+        this.connectionReuse = connectionReuse;
     }
 
     public AuthorizationType getAuthorizationType() {

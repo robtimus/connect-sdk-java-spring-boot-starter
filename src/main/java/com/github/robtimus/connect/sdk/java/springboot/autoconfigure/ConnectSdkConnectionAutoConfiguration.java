@@ -38,7 +38,7 @@ import com.ingenico.connect.gateway.sdk.java.CommunicatorConfiguration;
 import com.ingenico.connect.gateway.sdk.java.Connection;
 import com.ingenico.connect.gateway.sdk.java.PooledConnection;
 import com.ingenico.connect.gateway.sdk.java.ProxyConfiguration;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultConnection;
+import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultConnectionBuilder;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for <a href="https://github.com/Ingenico-ePayments/connect-sdk-java/">connect-sdk-java</a>'s
@@ -64,11 +64,17 @@ public class ConnectSdkConnectionAutoConfiguration {
         int connectTimeout = properties.getConnectTimeout();
         int socketTimeout = properties.getSocketTimeout();
         int maxConnections = properties.getMaxConnections();
+        boolean connectionReuse = properties.isConnectionReuse();
 
         ProxyConfiguration proxyConfiguration = getProxyConfiguration();
         Set<String> httpsProtocols = getHttpsProtocols();
 
-        return new DefaultConnection(connectTimeout, socketTimeout, maxConnections, proxyConfiguration, httpsProtocols);
+        return new DefaultConnectionBuilder(connectTimeout, socketTimeout)
+                .withMaxConnections(maxConnections)
+                .withConnectionReuse(connectionReuse)
+                .withProxyConfiguration(proxyConfiguration)
+                .withHttpsProtocols(httpsProtocols)
+                .build();
     }
 
     private ProxyConfiguration getProxyConfiguration() {

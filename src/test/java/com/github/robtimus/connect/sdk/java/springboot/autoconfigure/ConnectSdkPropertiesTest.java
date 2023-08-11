@@ -41,6 +41,7 @@ class ConnectSdkPropertiesTest {
                     assertThat(properties.getConnectTimeout()).isEqualTo(5_000);
                     assertThat(properties.getSocketTimeout()).isEqualTo(300_000);
                     assertThat(properties.getMaxConnections()).isEqualTo(10);
+                    assertThat(properties.isConnectionReuse()).isTrue();
                     assertThat(properties.getAuthorizationType()).isEqualTo(AuthorizationType.V1HMAC);
                     assertThat(properties.getApiKeyId()).isNull();
                     assertThat(properties.getSecretApiKey()).isNull();
@@ -54,13 +55,17 @@ class ConnectSdkPropertiesTest {
     @Test
     void testAllPropertiesKebabCase() {
         contextRunner
-                .withPropertyValues("connect.api.merchant-id=myMerchantId", "connect.api.endpoint.host=localhost", "connect.api.endpoint.scheme=http",
-                        "connect.api.endpoint.port=80", "connect.api.connect-timeout=1000", "connect.api.socket-timeout=10000",
-                        "connect.api.max-connections=1", "connect.api.authorization-type=V1HMAC", "connect.api.api-key-id=myKeyId",
-                        "connect.api.secret-api-key=mySecretApiKey", "connect.api.proxy.uri=http://proxy-host",
-                        "connect.api.proxy.username=proxy-user", "connect.api.proxy.password=proxy-pass", "connect.api.https.protocols=TLSv1.2",
-                        "connect.api.integrator=myIntegrator", "connect.api.shopping-cart-extension.creator=myExtensionCreator",
-                        "connect.api.shopping-cart-extension.name=myExtensionName", "connect.api.shopping-cart-extension.version=myExtensionVersion",
+                .withPropertyValues("connect.api.merchant-id=myMerchantId",
+                        "connect.api.endpoint.host=localhost", "connect.api.endpoint.scheme=http", "connect.api.endpoint.port=80",
+                        "connect.api.connect-timeout=1000", "connect.api.socket-timeout=10000",
+                        "connect.api.max-connections=1", "connect.api.connection-reuse=false",
+                        "connect.api.authorization-type=V1HMAC", "connect.api.api-key-id=myKeyId", "connect.api.secret-api-key=mySecretApiKey",
+                        "connect.api.proxy.uri=http://proxy-host", "connect.api.proxy.username=proxy-user", "connect.api.proxy.password=proxy-pass",
+                        "connect.api.https.protocols=TLSv1.2",
+                        "connect.api.integrator=myIntegrator",
+                        "connect.api.shopping-cart-extension.creator=myExtensionCreator",
+                        "connect.api.shopping-cart-extension.name=myExtensionName",
+                        "connect.api.shopping-cart-extension.version=myExtensionVersion",
                         "connect.api.shopping-cart-extension.extension-id=myExtensionId")
                 .run(context -> {
                     ConnectSdkProperties properties = context.getBean(ConnectSdkProperties.class);
@@ -71,6 +76,7 @@ class ConnectSdkPropertiesTest {
                     assertThat(properties.getConnectTimeout()).isEqualTo(1_000);
                     assertThat(properties.getSocketTimeout()).isEqualTo(10_000);
                     assertThat(properties.getMaxConnections()).isEqualTo(1);
+                    assertThat(properties.isConnectionReuse()).isFalse();
                     assertThat(properties.getAuthorizationType()).isEqualTo(AuthorizationType.V1HMAC);
                     assertThat(properties.getApiKeyId()).isEqualTo("myKeyId");
                     assertThat(properties.getSecretApiKey()).isEqualTo("mySecretApiKey");
@@ -92,13 +98,17 @@ class ConnectSdkPropertiesTest {
     @Test
     void testAllPropertiesCamelCase() {
         contextRunner
-                .withPropertyValues("connect.api.merchantId=myMerchantId", "connect.api.endpoint.host=localhost", "connect.api.endpoint.scheme=http",
-                        "connect.api.endpoint.port=80", "connect.api.connectTimeout=1000", "connect.api.socketTimeout=10000",
-                        "connect.api.maxConnections=1", "connect.api.authorizationType=V1HMAC", "connect.api.apiKeyId=myKeyId",
-                        "connect.api.secretApiKey=mySecretApiKey", "connect.api.proxy.uri=http://proxy-host",
-                        "connect.api.proxy.username=proxy-user", "connect.api.proxy.password=proxy-pass", "connect.api.https.protocols=TLSv1.2",
-                        "connect.api.integrator=myIntegrator", "connect.api.shoppingCartExtension.creator=myExtensionCreator",
-                        "connect.api.shoppingCartExtension.name=myExtensionName", "connect.api.shoppingCartExtension.version=myExtensionVersion",
+                .withPropertyValues("connect.api.merchantId=myMerchantId",
+                        "connect.api.endpoint.host=localhost", "connect.api.endpoint.scheme=http", "connect.api.endpoint.port=80",
+                        "connect.api.connectTimeout=1000", "connect.api.socketTimeout=10000",
+                        "connect.api.maxConnections=1", "connect.api.connectionReuse=false",
+                        "connect.api.authorizationType=V1HMAC", "connect.api.apiKeyId=myKeyId", "connect.api.secretApiKey=mySecretApiKey",
+                        "connect.api.proxy.uri=http://proxy-host", "connect.api.proxy.username=proxy-user", "connect.api.proxy.password=proxy-pass",
+                        "connect.api.https.protocols=TLSv1.2",
+                        "connect.api.integrator=myIntegrator",
+                        "connect.api.shoppingCartExtension.creator=myExtensionCreator",
+                        "connect.api.shoppingCartExtension.name=myExtensionName",
+                        "connect.api.shoppingCartExtension.version=myExtensionVersion",
                         "connect.api.shoppingCartExtension.extensionId=myExtensionId")
                 .run(context -> {
                     ConnectSdkProperties properties = context.getBean(ConnectSdkProperties.class);
@@ -109,6 +119,7 @@ class ConnectSdkPropertiesTest {
                     assertThat(properties.getConnectTimeout()).isEqualTo(1_000);
                     assertThat(properties.getSocketTimeout()).isEqualTo(10_000);
                     assertThat(properties.getMaxConnections()).isEqualTo(1);
+                    assertThat(properties.isConnectionReuse()).isFalse();
                     assertThat(properties.getAuthorizationType()).isEqualTo(AuthorizationType.V1HMAC);
                     assertThat(properties.getApiKeyId()).isEqualTo("myKeyId");
                     assertThat(properties.getSecretApiKey()).isEqualTo("mySecretApiKey");
