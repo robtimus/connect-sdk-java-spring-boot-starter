@@ -62,14 +62,14 @@
 
   <properties>
     <version.awaitility>4.2.0</version.awaitility>
-    <version.commons-codec>1.15</version.commons-codec>
-    <version.connect-sdk-java>6.39.0</version.connect-sdk-java>
+    <version.commons-codec>1.16.0</version.commons-codec>
+    <version.connect-sdk-java>6.42.0</version.connect-sdk-java>
     <version.gson>2.10.1</version.gson>
     <version.httpclient>4.5.14</version.httpclient>
     <version.httpmime>4.5.14</version.httpmime>
     <version.powermock>2.0.9</version.powermock>
-    <version.snakeyaml>2.0</version.snakeyaml>
-    <version.spring-boot>2.7.12</version.spring-boot>
+    <version.snakeyaml>2.1</version.snakeyaml>
+    <version.spring-boot>2.7.14</version.spring-boot>
   </properties>
 
   <dependencies>
