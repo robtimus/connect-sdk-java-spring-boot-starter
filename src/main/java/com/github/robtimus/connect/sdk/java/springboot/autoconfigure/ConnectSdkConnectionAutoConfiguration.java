@@ -31,6 +31,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,10 @@ import com.ingenico.connect.gateway.sdk.java.CommunicatorConfiguration;
 import com.ingenico.connect.gateway.sdk.java.Connection;
 import com.ingenico.connect.gateway.sdk.java.PooledConnection;
 import com.ingenico.connect.gateway.sdk.java.ProxyConfiguration;
+import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultConnection;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultConnectionBuilder;
+import com.ingenico.connect.gateway.sdk.java.logging.BodyObfuscator;
+import com.ingenico.connect.gateway.sdk.java.logging.HeaderObfuscator;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for <a href="https://github.com/Ingenico-ePayments/connect-sdk-java/">connect-sdk-java</a>'s
@@ -59,8 +63,19 @@ public class ConnectSdkConnectionAutoConfiguration {
         this.properties = Objects.requireNonNull(properties);
     }
 
-    @Bean(destroyMethod = "close")
+    /**
+     * Creates a new {@link PooledConnection}.
+     *
+     * @return The created {@link PooledConnection}.
+     * @deprecated Use {@link #connectSdkConnection(BodyObfuscator, HeaderObfuscator)} instead.
+     */
+    @Deprecated
     public PooledConnection connectSdkConnection() {
+        return connectSdkConnection(null, null);
+    }
+
+    @Bean(destroyMethod = "close")
+    public PooledConnection connectSdkConnection(@Nullable BodyObfuscator bodyObfuscator, @Nullable HeaderObfuscator headerObfuscator) {
         int connectTimeout = properties.getConnectTimeout();
         int socketTimeout = properties.getSocketTimeout();
         int maxConnections = properties.getMaxConnections();
@@ -69,12 +84,19 @@ public class ConnectSdkConnectionAutoConfiguration {
         ProxyConfiguration proxyConfiguration = getProxyConfiguration();
         Set<String> httpsProtocols = getHttpsProtocols();
 
-        return new DefaultConnectionBuilder(connectTimeout, socketTimeout)
+        DefaultConnection connection = new DefaultConnectionBuilder(connectTimeout, socketTimeout)
                 .withMaxConnections(maxConnections)
                 .withConnectionReuse(connectionReuse)
                 .withProxyConfiguration(proxyConfiguration)
                 .withHttpsProtocols(httpsProtocols)
                 .build();
+        if (bodyObfuscator != null) {
+            connection.setBodyObfuscator(bodyObfuscator);
+        }
+        if (headerObfuscator != null) {
+            connection.setHeaderObfuscator(headerObfuscator);
+        }
+        return connection;
     }
 
     private ProxyConfiguration getProxyConfiguration() {

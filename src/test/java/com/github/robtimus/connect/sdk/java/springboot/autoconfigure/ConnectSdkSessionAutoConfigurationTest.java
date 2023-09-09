@@ -98,7 +98,7 @@ class ConnectSdkSessionAutoConfigurationTest {
     }
 
     @Test
-    @SuppressWarnings("resource")
+    @SuppressWarnings({ "resource", "deprecation" })
     void testAutoConfiguration() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,

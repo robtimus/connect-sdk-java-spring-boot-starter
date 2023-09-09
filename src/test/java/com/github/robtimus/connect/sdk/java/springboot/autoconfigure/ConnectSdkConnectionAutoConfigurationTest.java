@@ -18,7 +18,9 @@
 package com.github.robtimus.connect.sdk.java.springboot.autoconfigure;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.atomicReference;
 import static org.mockito.Mockito.mock;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -27,6 +29,8 @@ import org.springframework.context.annotation.Configuration;
 import com.ingenico.connect.gateway.sdk.java.Connection;
 import com.ingenico.connect.gateway.sdk.java.PooledConnection;
 import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultConnection;
+import com.ingenico.connect.gateway.sdk.java.logging.BodyObfuscator;
+import com.ingenico.connect.gateway.sdk.java.logging.HeaderObfuscator;
 
 @SuppressWarnings("nls")
 class ConnectSdkConnectionAutoConfigurationTest {
@@ -47,40 +51,102 @@ class ConnectSdkConnectionAutoConfigurationTest {
                 });
     }
 
-    @Test
+    @Nested
     @SuppressWarnings("resource")
-    void testAutoConfiguration() {
-        contextRunner
-                .run(context -> {
-                    assertThat(context).hasBean("connectSdkConnection");
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).hasSingleBean(PooledConnection.class);
-                    assertThat(context).getBean(Connection.class).isExactlyInstanceOf(DefaultConnection.class);
-                    assertThat(context).getBean(Connection.class).isSameAs(context.getBean(PooledConnection.class));
-                    assertThat(context).hasSingleBean(ConnectSdkConnectionAutoConfiguration.ConnectionManager.class);
-                });
-        contextRunner
-                .withPropertyValues("connect.api.close-idle-connections.enabled=true", "connect.api.close-idle-connections.idle-time=10",
-                        "connect.api.close-idle-connections.interval=10")
-                .run(context -> {
-                    assertThat(context).hasBean("connectSdkConnection");
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).hasSingleBean(PooledConnection.class);
-                    assertThat(context).getBean(Connection.class).isExactlyInstanceOf(DefaultConnection.class);
-                    assertThat(context).getBean(Connection.class).isSameAs(context.getBean(PooledConnection.class));
-                    assertThat(context).hasSingleBean(ConnectSdkConnectionAutoConfiguration.ConnectionManager.class);
-                    // Note: it's currently not possible to test that idle connections have been closed after 10 seconds
-                });
-        contextRunner
-                .withPropertyValues("connect.api.close-idle-connections.enabled=false")
-                .run(context -> {
-                    assertThat(context).hasBean("connectSdkConnection");
-                    assertThat(context).hasSingleBean(Connection.class);
-                    assertThat(context).hasSingleBean(PooledConnection.class);
-                    assertThat(context).getBean(Connection.class).isExactlyInstanceOf(DefaultConnection.class);
-                    assertThat(context).getBean(Connection.class).isSameAs(context.getBean(PooledConnection.class));
-                    assertThat(context).doesNotHaveBean(ConnectSdkConnectionAutoConfiguration.ConnectionManager.class);
-                });
+    class AutoConfiguration {
+
+        @Test
+        void testMinimal() {
+            contextRunner
+                    .run(context -> {
+                        assertThat(context).hasBean("connectSdkConnection");
+                        assertThat(context).hasSingleBean(Connection.class);
+                        assertThat(context).hasSingleBean(PooledConnection.class);
+                        assertThat(context).getBean(Connection.class).isExactlyInstanceOf(DefaultConnection.class);
+                        assertThat(context).getBean(Connection.class).isSameAs(context.getBean(PooledConnection.class));
+                        assertThat(context).getBean(Connection.class).extracting("bodyObfuscator")
+                                .asInstanceOf(atomicReference(BodyObfuscator.class))
+                                .doesNotHaveValue(null)
+                                .doesNotHaveValue(BodyObfuscatorProvider.BODY_OBFUSCATOR);
+                        assertThat(context).getBean(Connection.class).extracting("headerObfuscator")
+                                .asInstanceOf(atomicReference(HeaderObfuscator.class))
+                                .doesNotHaveValue(null)
+                                .doesNotHaveValue(HeaderObfuscatorProvider.HEADER_OBFUSCATOR);
+                        assertThat(context).hasSingleBean(ConnectSdkConnectionAutoConfiguration.ConnectionManager.class);
+                    });
+        }
+
+        @Test
+        void testWithBodyObfuscator() {
+            contextRunner
+                    .withUserConfiguration(BodyObfuscatorProvider.class)
+                    .run(context -> {
+                        assertThat(context).hasBean("connectSdkConnection");
+                        assertThat(context).hasSingleBean(Connection.class);
+                        assertThat(context).hasSingleBean(PooledConnection.class);
+                        assertThat(context).getBean(Connection.class).isExactlyInstanceOf(DefaultConnection.class);
+                        assertThat(context).getBean(Connection.class).isSameAs(context.getBean(PooledConnection.class));
+                        assertThat(context).getBean(Connection.class).extracting("bodyObfuscator")
+                                .asInstanceOf(atomicReference(BodyObfuscator.class))
+                                .hasValue(BodyObfuscatorProvider.BODY_OBFUSCATOR);
+                        assertThat(context).getBean(Connection.class).extracting("headerObfuscator")
+                                .asInstanceOf(atomicReference(HeaderObfuscator.class))
+                                .doesNotHaveValue(null)
+                                .doesNotHaveValue(HeaderObfuscatorProvider.HEADER_OBFUSCATOR);
+                        assertThat(context).hasSingleBean(ConnectSdkConnectionAutoConfiguration.ConnectionManager.class);
+                    });
+        }
+
+        @Test
+        void testWithHeaderObfuscator() {
+            contextRunner
+                    .withUserConfiguration(HeaderObfuscatorProvider.class)
+                    .run(context -> {
+                        assertThat(context).hasBean("connectSdkConnection");
+                        assertThat(context).hasSingleBean(Connection.class);
+                        assertThat(context).hasSingleBean(PooledConnection.class);
+                        assertThat(context).getBean(Connection.class).isExactlyInstanceOf(DefaultConnection.class);
+                        assertThat(context).getBean(Connection.class).isSameAs(context.getBean(PooledConnection.class));
+                        assertThat(context).getBean(Connection.class).extracting("bodyObfuscator")
+                                .asInstanceOf(atomicReference(BodyObfuscator.class))
+                                .doesNotHaveValue(null)
+                                .doesNotHaveValue(BodyObfuscatorProvider.BODY_OBFUSCATOR);
+                        assertThat(context).getBean(Connection.class).extracting("headerObfuscator")
+                                .asInstanceOf(atomicReference(HeaderObfuscator.class))
+                                .hasValue(HeaderObfuscatorProvider.HEADER_OBFUSCATOR);
+                        assertThat(context).hasSingleBean(ConnectSdkConnectionAutoConfiguration.ConnectionManager.class);
+                    });
+        }
+
+        @Test
+        void testCloseIdleConnectionsEnabled() {
+            contextRunner
+                    .withPropertyValues("connect.api.close-idle-connections.enabled=true", "connect.api.close-idle-connections.idle-time=10",
+                            "connect.api.close-idle-connections.interval=10")
+                    .run(context -> {
+                        assertThat(context).hasBean("connectSdkConnection");
+                        assertThat(context).hasSingleBean(Connection.class);
+                        assertThat(context).hasSingleBean(PooledConnection.class);
+                        assertThat(context).getBean(Connection.class).isExactlyInstanceOf(DefaultConnection.class);
+                        assertThat(context).getBean(Connection.class).isSameAs(context.getBean(PooledConnection.class));
+                        assertThat(context).hasSingleBean(ConnectSdkConnectionAutoConfiguration.ConnectionManager.class);
+                        // Note: it's currently not possible to test that idle connections have been closed after 10 seconds
+                    });
+        }
+
+        @Test
+        void testCloseIdleConnectionsDisabled() {
+            contextRunner
+                    .withPropertyValues("connect.api.close-idle-connections.enabled=false")
+                    .run(context -> {
+                        assertThat(context).hasBean("connectSdkConnection");
+                        assertThat(context).hasSingleBean(Connection.class);
+                        assertThat(context).hasSingleBean(PooledConnection.class);
+                        assertThat(context).getBean(Connection.class).isExactlyInstanceOf(DefaultConnection.class);
+                        assertThat(context).getBean(Connection.class).isSameAs(context.getBean(PooledConnection.class));
+                        assertThat(context).doesNotHaveBean(ConnectSdkConnectionAutoConfiguration.ConnectionManager.class);
+                    });
+        }
     }
 
     @Configuration
@@ -89,6 +155,32 @@ class ConnectSdkConnectionAutoConfigurationTest {
         @Bean
         Connection connection() {
             return mock(Connection.class);
+        }
+    }
+
+    @Configuration
+    static class BodyObfuscatorProvider {
+
+        private static final BodyObfuscator BODY_OBFUSCATOR = BodyObfuscator.custom()
+                    .obfuscateAll("dummy")
+                    .build();
+
+        @Bean
+        BodyObfuscator bodyObfuscator() {
+            return BODY_OBFUSCATOR;
+        }
+    }
+
+    @Configuration
+    static class HeaderObfuscatorProvider {
+
+        private static final HeaderObfuscator HEADER_OBFUSCATOR = HeaderObfuscator.custom()
+                    .obfuscateAll("dummy")
+                    .build();
+
+        @Bean
+        HeaderObfuscator headerObfuscator() {
+            return HEADER_OBFUSCATOR;
         }
     }
 }

@@ -27,6 +27,11 @@
   <p>If a <tt>PooledConnection</tt> is auto-configured, this Spring Boot starter will also auto-configure connection management.
      This will take care of closing idle (and expired) connections, and can be configured using properties <tt>connect.api.close-idle-connections.idle-time</tt> and <tt>connect.api.close-idle-connections.interval</tt>,
      or disabled by setting property <tt>connect.api.close-idle-connections.enabled</tt> to <tt>false</tt>.</p>
+  <h4>Obfuscation</h4>
+  <p>If a <tt>PooledConnection</tt> is auto-configured,
+     any unique bean of type <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/logging/BodyObfuscator.html">BodyObfuscator</a>
+     or <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/logging/HeaderObfuscator.html">HeaderObfuscator</a>
+     will be automatically set on the connection.</p>
 
   <h3><a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/MetaDataProvider.html">MetaDataProvider</a></h3>
   <p>Conditions:</p>
