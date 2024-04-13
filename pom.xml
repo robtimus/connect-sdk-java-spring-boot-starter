@@ -69,6 +69,7 @@
     <version.gson>2.10.1</version.gson>
     <version.httpclient>4.5.14</version.httpclient>
     <version.httpmime>4.5.14</version.httpmime>
+    <version.mockito>5.11.0</version.mockito>
     <version.powermock>2.0.9</version.powermock>
     <version.snakeyaml>2.2</version.snakeyaml>
     <version.spring-boot>3.2.4</version.spring-boot>
@@ -151,6 +152,15 @@
       <version>${version.spring-boot}</version>
       <scope>test</scope>
       <exclusions>
+        <!-- Exclude Mockito and include a newer version instead -->
+        <exclusion>
+          <groupId>org.mockito</groupId>
+          <artifactId>mockito-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.mockito</groupId>
+          <artifactId>mockito-junit-jupiter</artifactId>
+        </exclusion>
         <exclusion>
           <!-- This comes with an older version of SLF4J which causes conflicts -->
           <groupId>com.jayway.jsonpath</groupId>
@@ -170,6 +180,19 @@
       <groupId>org.junit.vintage</groupId>
       <artifactId>junit-vintage-engine</artifactId>
       <version>${version.junit}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>${version.mockito}</version>
       <scope>test</scope>
     </dependency>
 
