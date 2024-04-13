@@ -18,6 +18,7 @@
 package com.github.robtimus.connect.sdk.java.springboot.autoconfigure;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -26,21 +27,22 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import java.lang.reflect.Field;
 import java.net.URI;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.ingenico.connect.gateway.sdk.java.Authenticator;
-import com.ingenico.connect.gateway.sdk.java.Communicator;
-import com.ingenico.connect.gateway.sdk.java.Connection;
-import com.ingenico.connect.gateway.sdk.java.Marshaller;
-import com.ingenico.connect.gateway.sdk.java.MetaDataProvider;
-import com.ingenico.connect.gateway.sdk.java.Session;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultAuthenticator;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultMarshaller;
+import com.worldline.connect.sdk.java.Communicator;
+import com.worldline.connect.sdk.java.authentication.Authenticator;
+import com.worldline.connect.sdk.java.authentication.V1HMACAuthenticator;
+import com.worldline.connect.sdk.java.communication.Connection;
+import com.worldline.connect.sdk.java.communication.MetadataProvider;
+import com.worldline.connect.sdk.java.json.DefaultMarshaller;
+import com.worldline.connect.sdk.java.json.Marshaller;
 
 @SuppressWarnings("nls")
 class ConnectSdkCommunicatorAutoConfigurationTest {
@@ -53,10 +55,10 @@ class ConnectSdkCommunicatorAutoConfigurationTest {
     void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class, ConnectSdkConnectionAutoConfiguration.class,
-                        ConnectSdkAuthenticatorAutoConfiguration.class, ConnectSdkMetaDataProviderAutoConfiguration.class,
-                        ConnectSdkSessionAutoConfiguration.class, ConnectSdkMarshallerAutoConfiguration.class)
-                .withPropertyValues("connect.api.endpoint.host=eu.sandbox.api-ingenico.com",
-                        "connect.api.api-key-id=keyId", "connect.api.secret-api-key=secret", "connect.api.integrator=Integrator")
+                        ConnectSdkAuthenticatorAutoConfiguration.class, ConnectSdkMetadataProviderAutoConfiguration.class,
+                        ConnectSdkMarshallerAutoConfiguration.class)
+                .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com",
+                        "connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret", "connect.api.integrator=Integrator")
                 .run(context -> {
                     assertThat(context).doesNotHaveBean("connectSdkCommunicator");
                     assertThat(context).hasSingleBean(Communicator.class);
@@ -65,24 +67,65 @@ class ConnectSdkCommunicatorAutoConfigurationTest {
     }
 
     @Test
-    void testNoAutoConfigurationWithMissingBeans() {
-        contextRunner
-                .withUserConfiguration(ConnectSdkMarshallerAutoConfiguration.class)
-                .withPropertyValues("connect.api.endpoint.host=eu.sandbox.api-ingenico.com",
-                        "connect.api.api-key-id=keyId", "connect.api.secret-api-key=secret", "connect.api.integrator=Integrator")
-                .run(context -> {
-                    assertThat(context).hasSingleBean(Marshaller.class);
-                    assertThat(context).doesNotHaveBean(Session.class);
-                    assertThat(context).doesNotHaveBean(Communicator.class);
-                });
+    void testNoAutoConfigurationWithMissingProperties() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
-                        ConnectSdkMetaDataProviderAutoConfiguration.class, ConnectSdkSessionAutoConfiguration.class)
-                    .withPropertyValues("connect.api.endpoint.host=eu.sandbox.api-ingenico.com",
-                            "connect.api.api-key-id=keyId", "connect.api.secret-api-key=secret", "connect.api.integrator=Integrator")
+                        ConnectSdkMetadataProviderAutoConfiguration.class, ConnectSdkMarshallerAutoConfiguration.class)
+                .withPropertyValues("connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret",
+                        "connect.api.integrator=Integrator")
+                .run(context -> {
+                    assertThat(context).doesNotHaveBean(Communicator.class);
+                });
+    }
+
+    @Test
+    void testNoAutoConfigurationWithMissingBeans() {
+        contextRunner
+                .withUserConfiguration(ConnectSdkAuthenticatorAutoConfiguration.class, ConnectSdkMetadataProviderAutoConfiguration.class,
+                        ConnectSdkMarshallerAutoConfiguration.class)
+                    .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com",
+                            "connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret", "connect.api.integrator=Integrator")
                     .run(context -> {
+                        assertThat(context).doesNotHaveBean(Connection.class);
+                        assertThat(context).hasSingleBean(Authenticator.class);
+                        assertThat(context).hasSingleBean(MetadataProvider.class);
+                        assertThat(context).hasSingleBean(Marshaller.class);
+                        assertThat(context).doesNotHaveBean(Communicator.class);
+                    });
+        contextRunner
+                .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkMetadataProviderAutoConfiguration.class,
+                        ConnectSdkMarshallerAutoConfiguration.class)
+                    .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com",
+                            "connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret", "connect.api.integrator=Integrator")
+                    .run(context -> {
+                        assertThat(context).hasSingleBean(Connection.class);
+                        assertThat(context).doesNotHaveBean(Authenticator.class);
+                        assertThat(context).hasSingleBean(MetadataProvider.class);
+                        assertThat(context).hasSingleBean(Marshaller.class);
+                        assertThat(context).doesNotHaveBean(Communicator.class);
+                    });
+        contextRunner
+                .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
+                        ConnectSdkMarshallerAutoConfiguration.class)
+                    .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com",
+                            "connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret", "connect.api.integrator=Integrator")
+                    .run(context -> {
+                        assertThat(context).hasSingleBean(Connection.class);
+                        assertThat(context).hasSingleBean(Authenticator.class);
+                        assertThat(context).doesNotHaveBean(MetadataProvider.class);
+                        assertThat(context).hasSingleBean(Marshaller.class);
+                        assertThat(context).doesNotHaveBean(Communicator.class);
+                    });
+        contextRunner
+                .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
+                        ConnectSdkMetadataProviderAutoConfiguration.class)
+                    .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com",
+                            "connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret", "connect.api.integrator=Integrator")
+                    .run(context -> {
+                        assertThat(context).hasSingleBean(Connection.class);
+                        assertThat(context).hasSingleBean(Authenticator.class);
+                        assertThat(context).hasSingleBean(MetadataProvider.class);
                         assertThat(context).doesNotHaveBean(Marshaller.class);
-                        assertThat(context).hasSingleBean(Session.class);
                         assertThat(context).doesNotHaveBean(Communicator.class);
                     });
     }
@@ -92,33 +135,50 @@ class ConnectSdkCommunicatorAutoConfigurationTest {
     void testAutoConfiguration() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
-                        ConnectSdkMetaDataProviderAutoConfiguration.class, ConnectSdkSessionAutoConfiguration.class,
-                        ConnectSdkMarshallerAutoConfiguration.class)
-                .withPropertyValues("connect.api.endpoint.host=eu.sandbox.api-ingenico.com",
-                        "connect.api.api-key-id=keyId", "connect.api.secret-api-key=secret", "connect.api.integrator=Integrator")
+                        ConnectSdkMetadataProviderAutoConfiguration.class, ConnectSdkMarshallerAutoConfiguration.class)
+                .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com",
+                        "connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret", "connect.api.integrator=Integrator")
                 .run(context -> {
                     assertThat(context).hasBean("connectSdkCommunicator");
                     assertThat(context).hasSingleBean(Communicator.class);
                     Communicator communicator = context.getBean(Communicator.class);
                     assertThat(communicator).isExactlyInstanceOf(Communicator.class);
+                    assertThat(getFieldValue(communicator, "apiEndpoint"))
+                            .isEqualTo(URI.create("https://api.preprod.connect.worldline-solutions.com"));
+                    assertThat(getFieldValue(communicator, "authenticator"))
+                            .isSameAs(context.getBean(ConnectSdkAuthenticatorAutoConfiguration.class).connectSdkV1HMACAuthenticator());
+                    assertThat(getFieldValue(communicator, "connection"))
+                            .isSameAs(context.getBean(ConnectSdkConnectionAutoConfiguration.class).connectSdkConnection(null, null));
+                    List<MetadataProviderBuilderCustomizer> customizers = Collections.emptyList();
+                    assertThat(getFieldValue(communicator, "metadataProvider"))
+                            .isSameAs(context.getBean(ConnectSdkMetadataProviderAutoConfiguration.class).connectSdkMetadataProvider(customizers));
                     assertThat(communicator.getMarshaller()).isSameAs(DefaultMarshaller.INSTANCE);
                 });
         contextRunner
-                .withUserConfiguration(SessionProvider.class, ConnectSdkMarshallerAutoConfiguration.class)
+                .withUserConfiguration(CommunicatorComponentProvider.class)
+                .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com")
                 .run(context -> {
                     assertThat(context).hasBean("connectSdkCommunicator");
                     assertThat(context).hasSingleBean(Communicator.class);
                     Communicator communicator = context.getBean(Communicator.class);
                     assertThat(communicator).isExactlyInstanceOf(Communicator.class);
-                    assertThat(communicator.getMarshaller()).isSameAs(DefaultMarshaller.INSTANCE);
+                    assertThat(communicator.getMarshaller()).isSameAs(context.getBean(CommunicatorComponentProvider.class).marshaller());
 
-                    // verify that the session's connection is used
-                    Connection connection = context.getBean(SessionProvider.class).connection();
+                    // verify that the provided connection is used
+                    Connection connection = context.getBean(CommunicatorComponentProvider.class).connection();
                     when(connection.post(any(URI.class), anyList(), anyString(), any())).thenReturn(null);
                     context.getBean(Communicator.class).post("/path", null, null, null, Void.class, null);
                     verify(connection).post(any(URI.class), anyList(), eq((String) null), any());
                     verifyNoMoreInteractions(connection);
                 });
+    }
+
+    private Object getFieldValue(Communicator communicator, String fieldName) {
+        return assertDoesNotThrow(() -> {
+            Field field = Communicator.class.getDeclaredField(fieldName);
+            field.trySetAccessible();
+            return field.get(communicator);
+        });
     }
 
     @Configuration
@@ -131,18 +191,7 @@ class ConnectSdkCommunicatorAutoConfigurationTest {
     }
 
     @Configuration
-    static class SessionProvider {
-
-        @Bean
-        @SuppressWarnings("resource")
-        Session session() {
-            Session session = mock(Session.class);
-            when(session.getApiEndpoint()).thenReturn(URI.create("https://eu.sandbox.api-ingenico.com"));
-            when(session.getConnection()).thenReturn(connection());
-            when(session.getAuthenticator()).thenReturn(authenticator());
-            when(session.getMetaDataProvider()).thenReturn(metaDataProvider());
-            return session;
-        }
+    static class CommunicatorComponentProvider {
 
         @Bean
         Connection connection() {
@@ -151,12 +200,17 @@ class ConnectSdkCommunicatorAutoConfigurationTest {
 
         @Bean
         Authenticator authenticator() {
-            return new DefaultAuthenticator(AuthorizationType.V1HMAC, "apiKeyId", "secretApiKey");
+            return new V1HMACAuthenticator("apiKeyId", "secretApiKey");
         }
 
         @Bean
-        MetaDataProvider metaDataProvider() {
-            return new MetaDataProvider("Integrator");
+        MetadataProvider metadataProvider() {
+            return new MetadataProvider("Integrator");
+        }
+
+        @Bean
+        Marshaller marshaller() {
+            return mock(Marshaller.class);
         }
     }
 }

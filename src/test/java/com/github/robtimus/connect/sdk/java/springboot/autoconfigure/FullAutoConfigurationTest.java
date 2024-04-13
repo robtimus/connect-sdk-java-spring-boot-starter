@@ -31,21 +31,19 @@ import org.springframework.context.annotation.Configuration;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.ConnectSdkHealthIndicator;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.ConnectionsEndpoint;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.LoggingEndpoint;
-import com.ingenico.connect.gateway.sdk.java.Authenticator;
-import com.ingenico.connect.gateway.sdk.java.Client;
-import com.ingenico.connect.gateway.sdk.java.Communicator;
-import com.ingenico.connect.gateway.sdk.java.Connection;
-import com.ingenico.connect.gateway.sdk.java.Marshaller;
-import com.ingenico.connect.gateway.sdk.java.MetaDataProvider;
-import com.ingenico.connect.gateway.sdk.java.RequestHeader;
-import com.ingenico.connect.gateway.sdk.java.Session;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultAuthenticator;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultConnection;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultMarshaller;
-import com.ingenico.connect.gateway.sdk.java.logging.CommunicatorLogger;
-import com.ingenico.connect.gateway.sdk.java.logging.SysOutCommunicatorLogger;
-import com.ingenico.connect.gateway.sdk.java.merchant.MerchantClient;
+import com.worldline.connect.sdk.java.Client;
+import com.worldline.connect.sdk.java.Communicator;
+import com.worldline.connect.sdk.java.authentication.Authenticator;
+import com.worldline.connect.sdk.java.authentication.V1HMACAuthenticator;
+import com.worldline.connect.sdk.java.communication.Connection;
+import com.worldline.connect.sdk.java.communication.DefaultConnection;
+import com.worldline.connect.sdk.java.communication.MetadataProvider;
+import com.worldline.connect.sdk.java.communication.RequestHeader;
+import com.worldline.connect.sdk.java.json.DefaultMarshaller;
+import com.worldline.connect.sdk.java.json.Marshaller;
+import com.worldline.connect.sdk.java.logging.CommunicatorLogger;
+import com.worldline.connect.sdk.java.logging.SysOutCommunicatorLogger;
+import com.worldline.connect.sdk.java.v1.merchant.MerchantClient;
 
 @SuppressWarnings("nls")
 class FullAutoConfigurationTest {
@@ -66,16 +64,15 @@ class FullAutoConfigurationTest {
             assertThat(context).doesNotHaveBean(LoggingEndpoint.class);
             assertThat(context).hasSingleBean(Marshaller.class);
             assertThat(context).doesNotHaveBean(MerchantClient.class);
-            assertThat(context).doesNotHaveBean(MetaDataProvider.class);
-            assertThat(context).doesNotHaveBean(Session.class);
+            assertThat(context).doesNotHaveBean(MetadataProvider.class);
         });
     }
 
     @Test
     void testWithMinimalProperties() {
         contextRunner
-                .withPropertyValues("connect.api.endpoint.host=eu.sandbox.api-ingenico.com", "connect.api.integrator=Integrator",
-                        "connect.api.api-key-id=apiKeyId", "connect.api.secret-api-key=secretApiKey")
+                .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com", "connect.api.integrator=Integrator",
+                        "connect.api.authorization-id=apiKeyId", "connect.api.authorization-secret=secretApiKey")
                 .run(context -> {
                     assertThat(context).hasSingleBean(Authenticator.class);
                     assertThat(context).hasSingleBean(Client.class);
@@ -87,16 +84,16 @@ class FullAutoConfigurationTest {
                     assertThat(context).doesNotHaveBean(LoggingEndpoint.class);
                     assertThat(context).hasSingleBean(Marshaller.class);
                     assertThat(context).doesNotHaveBean(MerchantClient.class);
-                    assertThat(context).hasSingleBean(MetaDataProvider.class);
-                    assertThat(context).hasSingleBean(Session.class);
+                    assertThat(context).hasSingleBean(MetadataProvider.class);
                 });
     }
 
     @Test
     void testWithMinimalPropertiesForHealth() {
         contextRunner
-                .withPropertyValues("connect.api.endpoint.host=eu.sandbox.api-ingenico.com", "connect.api.integrator=Integrator",
-                        "connect.api.api-key-id=apiKeyId", "connect.api.secret-api-key=secretApiKey", "connect.api.merchant-id=merchantId")
+                .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com", "connect.api.integrator=Integrator",
+                        "connect.api.authorization-id=apiKeyId", "connect.api.authorization-secret=secretApiKey",
+                        "connect.api.merchant-id=merchantId")
                 .run(context -> {
                     assertThat(context).hasSingleBean(Authenticator.class);
                     assertThat(context).hasSingleBean(Client.class);
@@ -108,8 +105,7 @@ class FullAutoConfigurationTest {
                     assertThat(context).doesNotHaveBean(LoggingEndpoint.class);
                     assertThat(context).hasSingleBean(Marshaller.class);
                     assertThat(context).hasSingleBean(MerchantClient.class);
-                    assertThat(context).hasSingleBean(MetaDataProvider.class);
-                    assertThat(context).hasSingleBean(Session.class);
+                    assertThat(context).hasSingleBean(MetadataProvider.class);
                 });
     }
 
@@ -130,23 +126,23 @@ class FullAutoConfigurationTest {
                     assertThat(context).hasSingleBean(LoggingEndpoint.class);
                     assertThat(context).hasSingleBean(Marshaller.class);
                     assertThat(context).doesNotHaveBean(MerchantClient.class);
-                    assertThat(context).doesNotHaveBean(MetaDataProvider.class);
-                    assertThat(context).doesNotHaveBean(Session.class);
+                    assertThat(context).doesNotHaveBean(MetadataProvider.class);
                 });
     }
 
     @Test
     void testWithAllPropertiesButShoppingCartExtensionExtensionId() {
         contextRunner
-                .withPropertyValues("connect.api.merchant-id=merchantId", "connect.api.endpoint.host=eu.sandbox.api-ingenico.com",
+                .withPropertyValues("connect.api.merchant-id=merchantId", "connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com",
                         "connect.api.endpoint.scheme=https", "connect.api.endpoint.port=443", "connect.api.connect-timeout=1000",
                         "connect.api.socket-timeout=10000", "connect.api.max-connections=10", "connect.api.authorization-type=V1HMAC",
-                        "connect.api.api-key-id=apiKeyId", "connect.api.secret-api-key=secretApiKey", "connect.api.proxy.uri=http://localhost",
-                        "connect.api.proxy.username=user", "connect.api.proxy.password=pass", "connect.api.https.protocols=TLSv1.2",
-                        "connect.api.integrator=Integrator", "connect.api.shopping-cart-extension.creator=Creator",
-                        "connect.api.shopping-cart-extension.name=name", "connect.api.shopping-cart-extension.version=version",
-                        "management.endpoint.connectSdkConnections.enabled=true", "management.endpoint.connectSdkLogging.enabled=true",
-                        "spring.jmx.enabled=true", "management.endpoints.jmx.exposure.include=connectSdkConnections,connectSdkLogging")
+                        "connect.api.authorization-id=apiKeyId", "connect.api.authorization-secret=secretApiKey",
+                        "connect.api.proxy.uri=http://localhost", "connect.api.proxy.username=user", "connect.api.proxy.password=pass",
+                        "connect.api.https.protocols=TLSv1.2", "connect.api.integrator=Integrator",
+                        "connect.api.shopping-cart-extension.creator=Creator", "connect.api.shopping-cart-extension.name=name",
+                        "connect.api.shopping-cart-extension.version=version", "management.endpoint.connectSdkConnections.enabled=true",
+                        "management.endpoint.connectSdkLogging.enabled=true", "spring.jmx.enabled=true",
+                        "management.endpoints.jmx.exposure.include=connectSdkConnections,connectSdkLogging")
                 .run(context -> {
                     assertThat(context).hasSingleBean(Authenticator.class);
                     assertThat(context).hasSingleBean(Client.class);
@@ -158,22 +154,21 @@ class FullAutoConfigurationTest {
                     assertThat(context).hasSingleBean(LoggingEndpoint.class);
                     assertThat(context).hasSingleBean(Marshaller.class);
                     assertThat(context).hasSingleBean(MerchantClient.class);
-                    assertThat(context).hasSingleBean(MetaDataProvider.class);
-                    assertThat(context).hasSingleBean(Session.class);
+                    assertThat(context).hasSingleBean(MetadataProvider.class);
                 });
     }
 
     @Test
     void testWithAllProperties() {
         contextRunner
-                .withPropertyValues("connect.api.merchant-id=merchantId", "connect.api.endpoint.host=eu.sandbox.api-ingenico.com",
+                .withPropertyValues("connect.api.merchant-id=merchantId", "connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com",
                         "connect.api.endpoint.scheme=https", "connect.api.endpoint.port=443", "connect.api.connect-timeout=1000",
                         "connect.api.socket-timeout=10000", "connect.api.max-connections=10", "connect.api.authorization-type=V1HMAC",
-                        "connect.api.api-key-id=apiKeyId", "connect.api.secret-api-key=secretApiKey", "connect.api.proxy.uri=http://localhost",
-                        "connect.api.proxy.username=user", "connect.api.proxy.password=pass", "connect.api.https.protocols=TLSv1.2",
-                        "connect.api.integrator=Integrator", "connect.api.shopping-cart-extension.creator=Creator",
-                        "connect.api.shopping-cart-extension.name=name", "connect.api.shopping-cart-extension.version=version",
-                        "connect.api.shopping-cart-extension.extension-id=extensionId",
+                        "connect.api.authorization-id=apiKeyId", "connect.api.authorization-secret=secretApiKey",
+                        "connect.api.proxy.uri=http://localhost", "connect.api.proxy.username=user", "connect.api.proxy.password=pass",
+                        "connect.api.https.protocols=TLSv1.2", "connect.api.integrator=Integrator",
+                        "connect.api.shopping-cart-extension.creator=Creator", "connect.api.shopping-cart-extension.name=name",
+                        "connect.api.shopping-cart-extension.version=version", "connect.api.shopping-cart-extension.extension-id=extensionId",
                         "management.endpoint.connectSdkConnections.enabled=true", "management.endpoint.connectSdkLogging.enabled=true",
                         "spring.jmx.enabled=true", "management.endpoints.jmx.exposure.include=connectSdkConnections,connectSdkLogging")
                 .run(context -> {
@@ -187,8 +182,7 @@ class FullAutoConfigurationTest {
                     assertThat(context).hasSingleBean(LoggingEndpoint.class);
                     assertThat(context).hasSingleBean(Marshaller.class);
                     assertThat(context).hasSingleBean(MerchantClient.class);
-                    assertThat(context).hasSingleBean(MetaDataProvider.class);
-                    assertThat(context).hasSingleBean(Session.class);
+                    assertThat(context).hasSingleBean(MetadataProvider.class);
                 });
     }
 
@@ -196,11 +190,12 @@ class FullAutoConfigurationTest {
     void testWithAllPropertiesAndAdditionalBeans() {
         contextRunner
                 .withUserConfiguration(AdditionalBeanProvider.class)
-                .withPropertyValues("connect.api.merchant-id=merchantId", "connect.api.endpoint.host=eu.sandbox.api-ingenico.com",
+                .withPropertyValues("connect.api.merchant-id=merchantId", "connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com",
                         "connect.api.endpoint.scheme=https", "connect.api.endpoint.port=443", "connect.api.connect-timeout=1000",
                         "connect.api.socket-timeout=10000", "connect.api.max-connections=10", "connect.api.authorization-type=V1HMAC",
-                        "connect.api.api-key-id=apiKeyId", "connect.api.secret-api-key=secretApiKey", "connect.api.proxy.uri=http://localhost",
-                        "connect.api.proxy.username=user", "connect.api.proxy.password=pass", "connect.api.https.protocols=TLSv1.2",
+                        "connect.api.authorization-id=apiKeyId", "connect.api.authorization-secret=secretApiKey",
+                        "connect.api.proxy.uri=http://localhost", "connect.api.proxy.username=user", "connect.api.proxy.password=pass",
+                        "connect.api.https.protocols=TLSv1.2",
                         "connect.api.integrator=Integrator", "connect.api.shopping-cart-extension.creator=Creator",
                         "connect.api.shopping-cart-extension.name=name", "connect.api.shopping-cart-extension.version=version",
                         "connect.api.shopping-cart-extension.extension-id=extensionId",
@@ -217,16 +212,15 @@ class FullAutoConfigurationTest {
                     assertThat(context).hasSingleBean(LoggingEndpoint.class);
                     assertThat(context).hasSingleBean(Marshaller.class);
                     assertThat(context).hasSingleBean(MerchantClient.class);
-                    assertThat(context).hasSingleBean(MetaDataProvider.class);
-                    assertThat(context).hasSingleBean(Session.class);
+                    assertThat(context).hasSingleBean(MetadataProvider.class);
                 });
     }
 
     @Test
     void testWithInvalidEndpointHost() {
         contextRunner
-                .withPropertyValues("connect.api.endpoint.host=https://eu.sandbox.api-ingenico.com", "connect.api.integrator=Integrator",
-                        "connect.api.api-key-id=apiKeyId", "connect.api.secret-api-key=secretApiKey")
+                .withPropertyValues("connect.api.endpoint.host=https://api.preprod.connect.worldline-solutions.com",
+                        "connect.api.integrator=Integrator", "connect.api.authorization-id=apiKeyId", "connect.api.authorization-secret=secretApiKey")
                 .run(context -> {
                     assertThat(context).hasFailed();
                 });
@@ -244,16 +238,16 @@ class FullAutoConfigurationTest {
                 c -> c.getBean(HealthIndicatorProvider.class).healthIndicator());
         testWithProvidedBean(MarshallerProvider.class, Marshaller.class, c -> c.getBean(MarshallerProvider.class).marshaller());
         testWithProvidedBean(MerchantClientProvider.class, MerchantClient.class, c -> c.getBean(MerchantClientProvider.class).merchantClient());
-        testWithProvidedBean(MetaDataProviderProvider.class, MetaDataProvider.class,
-                c -> c.getBean(MetaDataProviderProvider.class).metaDataProvider());
-        testWithProvidedBean(SessionProvider.class, Session.class, c -> c.getBean(SessionProvider.class).session());
+        testWithProvidedBean(MetadataProviderProvider.class, MetadataProvider.class,
+                c -> c.getBean(MetadataProviderProvider.class).metadataProvider());
     }
 
     private <P, B> void testWithProvidedBean(Class<P> providerClass, Class<B> beanClass, Function<ApplicationContext, B> beanGetter) {
         contextRunner
                 .withUserConfiguration(providerClass)
-                .withPropertyValues("connect.api.endpoint.host=eu.sandbox.api-ingenico.com", "connect.api.integrator=Integrator",
-                        "connect.api.api-key-id=apiKeyId", "connect.api.secret-api-key=secretApiKey", "connect.api.merchant-id=merchantId")
+                .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com", "connect.api.integrator=Integrator",
+                        "connect.api.authorization-id=apiKeyId", "connect.api.authorization-secret=secretApiKey",
+                        "connect.api.merchant-id=merchantId")
                 .run(context -> {
                     assertThat(context).hasSingleBean(Authenticator.class);
                     assertThat(context).hasSingleBean(Client.class);
@@ -263,8 +257,7 @@ class FullAutoConfigurationTest {
                     assertThat(context).hasSingleBean(ConnectSdkHealthIndicator.class);
                     assertThat(context).hasSingleBean(Marshaller.class);
                     assertThat(context).hasSingleBean(MerchantClient.class);
-                    assertThat(context).hasSingleBean(MetaDataProvider.class);
-                    assertThat(context).hasSingleBean(Session.class);
+                    assertThat(context).hasSingleBean(MetadataProvider.class);
 
                     assertThat(context).getBean(beanClass).isSameAs(beanGetter.apply(context));
                 });
@@ -275,7 +268,7 @@ class FullAutoConfigurationTest {
 
         @Bean
         Authenticator authenticator() {
-            return new DefaultAuthenticator(AuthorizationType.V1HMAC, "apiKeyId", "secretApiKey");
+            return new V1HMACAuthenticator("apiKeyId", "secretApiKey");
         }
     }
 
@@ -295,13 +288,18 @@ class FullAutoConfigurationTest {
     static class CommunicatorProvider {
 
         @Autowired
-        private Session session;
+        private Connection connection;
+        @Autowired
+        private Authenticator authenticator;
+        @Autowired
+        private MetadataProvider metadataProvider;
         @Autowired
         private Marshaller marshaller;
 
         @Bean
         Communicator communicator() {
-            return new Communicator(session, marshaller);
+            URI apiEndpoint = URI.create("https://api.preprod.connect.worldline-solutions.com");
+            return new Communicator(apiEndpoint, connection, authenticator, metadataProvider, marshaller);
         }
     }
 
@@ -352,32 +350,16 @@ class FullAutoConfigurationTest {
 
         @Bean
         MerchantClient merchantClient() {
-            return client.merchant("merchantId");
+            return client.v1().merchant("merchantId");
         }
     }
 
     @Configuration
-    static class MetaDataProviderProvider {
+    static class MetadataProviderProvider {
 
         @Bean
-        MetaDataProvider metaDataProvider() {
-            return new MetaDataProvider("Integrator");
-        }
-    }
-
-    @Configuration
-    static class SessionProvider {
-
-        @Autowired
-        private Connection connection;
-        @Autowired
-        private Authenticator authenticator;
-        @Autowired
-        private MetaDataProvider metaDataProvider;
-
-        @Bean
-        Session session() {
-            return new Session(URI.create("https://eu.sandbox.api-ingenico.com"), connection, authenticator, metaDataProvider);
+        MetadataProvider metadataProvider() {
+            return new MetadataProvider("Integrator");
         }
     }
 
@@ -385,7 +367,7 @@ class FullAutoConfigurationTest {
     static class AdditionalBeanProvider {
 
         @Bean
-        MetaDataProviderBuilderCustomizer metaDataProviderBuilderCustomizer() {
+        MetadataProviderBuilderCustomizer metadataProviderBuilderCustomizer() {
             return builder -> builder.withAdditionalRequestHeader(new RequestHeader("custom-name", "custom-value"));
         }
     }

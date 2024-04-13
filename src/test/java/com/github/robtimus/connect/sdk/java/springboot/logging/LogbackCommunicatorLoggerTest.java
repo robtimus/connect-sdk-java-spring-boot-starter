@@ -26,7 +26,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.slf4j.LoggerFactory;
-import com.ingenico.connect.gateway.sdk.java.logging.CommunicatorLogger;
+import com.worldline.connect.sdk.java.logging.CommunicatorLogger;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;

@@ -37,12 +37,12 @@ import com.github.robtimus.connect.sdk.java.springboot.actuator.BeanProviders.Co
 import com.github.robtimus.connect.sdk.java.springboot.actuator.BeanProviders.LoggerProvider;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.LoggingEndpoint.CompoundCommunicatorLogger;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.LoggingEndpoint.LoggingCapableAndLoggerBeans;
-import com.ingenico.connect.gateway.sdk.java.Client;
-import com.ingenico.connect.gateway.sdk.java.Communicator;
-import com.ingenico.connect.gateway.sdk.java.Connection;
-import com.ingenico.connect.gateway.sdk.java.Marshaller;
-import com.ingenico.connect.gateway.sdk.java.logging.CommunicatorLogger;
-import com.ingenico.connect.gateway.sdk.java.logging.LoggingCapable;
+import com.worldline.connect.sdk.java.Client;
+import com.worldline.connect.sdk.java.Communicator;
+import com.worldline.connect.sdk.java.communication.Connection;
+import com.worldline.connect.sdk.java.json.Marshaller;
+import com.worldline.connect.sdk.java.logging.CommunicatorLogger;
+import com.worldline.connect.sdk.java.logging.LoggingCapable;
 
 @SuppressWarnings("nls")
 class LoggingEndpointTest {

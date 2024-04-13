@@ -19,11 +19,11 @@ package com.github.robtimus.connect.sdk.java.springboot.autoconfigure;
 
 import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import com.ingenico.connect.gateway.sdk.java.CommunicatorConfiguration;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
+import com.worldline.connect.sdk.java.CommunicatorConfiguration;
+import com.worldline.connect.sdk.java.authentication.AuthorizationType;
 
 /**
- * Properties for <a href="https://github.com/Ingenico-ePayments/connect-sdk-java/">connect-sdk-java</a>.
+ * Properties for <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>.
  * These match the properties available in {@link CommunicatorConfiguration}.
  *
  * @author Rob Spoor
@@ -45,10 +45,10 @@ public class ConnectSdkProperties {
 
     /** Authorization type, should only be V1HMAC. */
     private AuthorizationType authorizationType = AuthorizationType.V1HMAC;
-    /** Your API key id. */
-    private String apiKeyId;
-    /** Your secret API key. */
-    private String secretApiKey;
+    /** Your authorization id. */
+    private String authorizationId;
+    /** Your authorization secret. */
+    private String authorizationSecret;
 
     private Proxy proxy;
 
@@ -107,20 +107,20 @@ public class ConnectSdkProperties {
         this.authorizationType = authorizationType;
     }
 
-    public String getApiKeyId() {
-        return apiKeyId;
+    public String getAuthorizationId() {
+        return authorizationId;
     }
 
-    public void setApiKeyId(String apiKeyId) {
-        this.apiKeyId = apiKeyId;
+    public void setAuthorizationId(String authorizationId) {
+        this.authorizationId = authorizationId;
     }
 
-    public String getSecretApiKey() {
-        return secretApiKey;
+    public String getAuthorizationSecret() {
+        return authorizationSecret;
     }
 
-    public void setSecretApiKey(String secretApiKey) {
-        this.secretApiKey = secretApiKey;
+    public void setAuthorizationSecret(String authorizationSecret) {
+        this.authorizationSecret = authorizationSecret;
     }
 
     public Proxy getProxy() {

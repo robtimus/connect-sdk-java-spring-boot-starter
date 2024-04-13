@@ -1,6 +1,6 @@
 /*
- * ConnectSdkClientAutoConfigurationTest.java
- * Copyright 2019 Rob Spoor
+ * ConnectSdkVersionClientAutoConfigurationTest.java
+ * Copyright 2024 Rob Spoor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,49 +18,49 @@
 package com.github.robtimus.connect.sdk.java.springboot.autoconfigure;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.worldline.connect.sdk.java.Client;
-import com.worldline.connect.sdk.java.Communicator;
-import com.worldline.connect.sdk.java.json.DefaultMarshaller;
+import com.worldline.connect.sdk.java.v1.V1Client;
 
 @SuppressWarnings("nls")
-class ConnectSdkClientAutoConfigurationTest {
+class ConnectSdkVersionClientAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-            .withConfiguration(AutoConfigurations.of(ConnectSdkClientAutoConfiguration.class));
+            .withConfiguration(AutoConfigurations.of(ConnectSdkVersionClientAutoConfiguration.class));
 
     @Test
-    @SuppressWarnings("resource")
     void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class, ConnectSdkConnectionAutoConfiguration.class,
                         ConnectSdkAuthenticatorAutoConfiguration.class, ConnectSdkMetadataProviderAutoConfiguration.class,
-                        ConnectSdkMarshallerAutoConfiguration.class, ConnectSdkCommunicatorAutoConfiguration.class)
+                        ConnectSdkMarshallerAutoConfiguration.class, ConnectSdkCommunicatorAutoConfiguration.class,
+                        ConnectSdkClientAutoConfiguration.class)
                 .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com",
                         "connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret", "connect.api.integrator=Integrator")
                 .run(context -> {
-                    assertThat(context).doesNotHaveBean("connectSdkClient");
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).getBean(Client.class).isSameAs(context.getBean(ExistingBeanProvider.class).client());
+                    assertThat(context).doesNotHaveBean("connectSdkV1Client");
+                    assertThat(context).hasSingleBean(V1Client.class);
+                    assertThat(context).getBean(V1Client.class).isSameAs(context.getBean(ExistingBeanProvider.class).v1Client());
                 });
     }
 
     @Test
     void testNoAutoConfigurationWithMissingBeans() {
         contextRunner
+                .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
+                        ConnectSdkMetadataProviderAutoConfiguration.class, ConnectSdkMarshallerAutoConfiguration.class,
+                        ConnectSdkCommunicatorAutoConfiguration.class)
+                .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com",
+                        "connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret", "connect.api.integrator=Integrator")
                 .run(context -> {
-                    assertThat(context).doesNotHaveBean(Client.class);
+                    assertThat(context).doesNotHaveBean(V1Client.class);
                 });
     }
 
@@ -70,27 +70,23 @@ class ConnectSdkClientAutoConfigurationTest {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
                         ConnectSdkMetadataProviderAutoConfiguration.class, ConnectSdkMarshallerAutoConfiguration.class,
-                        ConnectSdkCommunicatorAutoConfiguration.class)
+                        ConnectSdkCommunicatorAutoConfiguration.class, ConnectSdkClientAutoConfiguration.class)
                 .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com",
                         "connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret", "connect.api.integrator=Integrator")
                 .run(context -> {
-                    assertThat(context).hasBean("connectSdkClient");
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).getBean(Client.class).isExactlyInstanceOf(Client.class);
+                    assertThat(context).hasBean("connectSdkV1Client");
+                    assertThat(context).hasSingleBean(V1Client.class);
                 });
         contextRunner
-                .withUserConfiguration(CommunicatorProvider.class)
+                .withUserConfiguration(ClientProvider.class)
                 .run(context -> {
-                    assertThat(context).hasBean("connectSdkClient");
-                    assertThat(context).hasSingleBean(Client.class);
-                    assertThat(context).getBean(Client.class).isExactlyInstanceOf(Client.class);
+                    assertThat(context).hasBean("connectSdkV1Client");
+                    assertThat(context).hasSingleBean(V1Client.class);
 
-                    // verify that the communicator is used
-                    Communicator communicator = context.getBean(CommunicatorProvider.class).communicator();
-                    // no need to setup a null return value
-                    context.getBean(Client.class).v1().merchant("merchantId").payouts().cancel("payoutId", null);
-                    verify(communicator).post(anyString(), eq(List.of()), eq(null), eq(null), eq(void.class), eq(null));
-                    verifyNoMoreInteractions(communicator);
+                    // verify that the client is used
+                    Client client = context.getBean(ClientProvider.class).client();
+                    verify(client).v1();
+                    verifyNoMoreInteractions(client);
                 });
     }
 
@@ -98,19 +94,17 @@ class ConnectSdkClientAutoConfigurationTest {
     static class ExistingBeanProvider {
 
         @Bean
-        Client client() {
-            return mock(Client.class);
+        V1Client v1Client() {
+            return mock(V1Client.class);
         }
     }
 
     @Configuration
-    static class CommunicatorProvider {
+    static class ClientProvider {
 
         @Bean
-        Communicator communicator() {
-            Communicator communicator = mock(Communicator.class);
-            when(communicator.getMarshaller()).thenReturn(DefaultMarshaller.INSTANCE);
-            return communicator;
+        Client client() {
+            return mock(Client.class);
         }
     }
 }

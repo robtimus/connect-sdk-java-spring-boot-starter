@@ -8,5 +8,5 @@ com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkHealthIn
 com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkLoggingEndpointAutoConfiguration
 com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkMarshallerAutoConfiguration
 com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkMerchantClientAutoConfiguration
-com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkMetaDataProviderAutoConfiguration
-com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkSessionAutoConfiguration
+com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkMetadataProviderAutoConfiguration
+com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkVersionClientAutoConfiguration

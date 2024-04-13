@@ -22,15 +22,15 @@
   <parent>
     <groupId>com.github.robtimus</groupId>
     <artifactId>robtimus-parent</artifactId>
-    <version>1.10</version>
+    <version>1.11</version>
     <relativePath />
   </parent>
 
   <artifactId>connect-sdk-java-spring-boot-starter</artifactId>
-  <version>3.9-SNAPSHOT</version>
+  <version>4.0-SNAPSHOT</version>
 
   <name>connect-sdk-java-spring-boot-starter</name>
-  <description>Spring Boot starter for connect-sdk-java (https://github.com/Ingenico-ePayments/connect-sdk-java/)</description>
+  <description>Spring Boot starter for connect-sdk-java (https://github.com/Worldline-Global-Collectconnect-sdk-java/)</description>
   <url>https://robtimus.github.io/connect-sdk-java-spring-boot-starter/</url>
   <inceptionYear>2019</inceptionYear>
 
@@ -61,20 +61,22 @@
   </issueManagement>
 
   <properties>
-    <version.awaitility>4.2.0</version.awaitility>
-    <version.commons-codec>1.16.0</version.commons-codec>
-    <version.connect-sdk-java>6.42.0</version.connect-sdk-java>
+    <version.java>17</version.java>
+
+    <version.awaitility>4.2.1</version.awaitility>
+    <version.commons-codec>1.16.1</version.commons-codec>
+    <version.connect-sdk-java>7.0.0</version.connect-sdk-java>
     <version.gson>2.10.1</version.gson>
     <version.httpclient>4.5.14</version.httpclient>
     <version.httpmime>4.5.14</version.httpmime>
     <version.powermock>2.0.9</version.powermock>
     <version.snakeyaml>2.2</version.snakeyaml>
-    <version.spring-boot>2.7.16</version.spring-boot>
+    <version.spring-boot>3.2.4</version.spring-boot>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>com.ingenico.connect.gateway</groupId>
+      <groupId>com.worldline-solutions.connect</groupId>
       <artifactId>connect-sdk-java</artifactId>
       <version>${version.connect-sdk-java}</version>
     </dependency>
@@ -208,16 +210,11 @@
           <configuration>
             <sourcepath>${project.basedir}/src/main/java</sourcepath>
             <links>
-              <link>https://docs.spring.io/spring-boot/docs/2.7.x/api</link>
-              <link>https://docs.spring.io/spring-framework/docs/5.3.x/javadoc-api</link>
-              <link>https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest</link>
+              <link>https://docs.spring.io/spring-boot/docs/3.2.x/api</link>
+              <link>https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api</link>
+              <link>https://logback.qos.ch/apidocs/</link>
+              <link>https://worldline-global-collect.github.io/connect-sdk-java/apidocs/7.x</link>
             </links>
-            <offlineLinks>
-              <offlineLink>
-                <url>https://logback.qos.ch/apidocs/</url>
-                <location>${project.basedir}/src/main/apidocs/ch.qos.logback/logback-classic</location>
-              </offlineLink>
-            </offlineLinks>
           </configuration>
         </plugin>
       </plugins>
@@ -322,18 +319,10 @@
       <id>min-versions</id>
       <properties>
         <version.commons-codec>1.10</version.commons-codec>
-        <version.connect-sdk-java>6.42.0</version.connect-sdk-java>
+        <version.connect-sdk-java>7.0.0</version.connect-sdk-java>
         <version.gson>2.6</version.gson>
         <version.httpclient>4.4</version.httpclient>
         <version.httpmime>4.4</version.httpmime>
-        <version.spring-boot>2.2.0.RELEASE</version.spring-boot>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>spring-boot-3</id>
-      <properties>
-        <version.java>17</version.java>
         <version.spring-boot>3.0.0</version.spring-boot>
       </properties>
     </profile>

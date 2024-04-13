@@ -26,26 +26,26 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.ingenico.connect.gateway.sdk.java.Client;
-import com.ingenico.connect.gateway.sdk.java.merchant.MerchantClient;
+import com.worldline.connect.sdk.java.v1.V1Client;
+import com.worldline.connect.sdk.java.v1.merchant.MerchantClient;
 
 /**
- * {@link EnableAutoConfiguration Auto-configuration} for <a href="https://github.com/Ingenico-ePayments/connect-sdk-java/">connect-sdk-java</a>'s
- * {@link MerchantClient}.
+ * {@link EnableAutoConfiguration Auto-configuration} for
+ * <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>'s {@link MerchantClient}.
  *
  * @author Rob Spoor
  */
 @Configuration
-@AutoConfigureAfter(ConnectSdkClientAutoConfiguration.class)
+@AutoConfigureAfter(ConnectSdkVersionClientAutoConfiguration.class)
 @ConditionalOnMissingBean(MerchantClient.class)
-@ConditionalOnBean(Client.class)
+@ConditionalOnBean(V1Client.class)
 @ConditionalOnProperty(name = "connect.api.merchant-id")
 @EnableConfigurationProperties(ConnectSdkProperties.class)
 @SuppressWarnings("javadoc")
 public class ConnectSdkMerchantClientAutoConfiguration {
 
     @Bean
-    public MerchantClient connectSdkMerchantClient(Client client, @Value("${connect.api.merchant-id}") String merchantId) {
-        return client.merchant(merchantId);
+    public MerchantClient connectSdkV1MerchantClient(V1Client v1Client, @Value("${connect.api.merchant-id}") String merchantId) {
+        return v1Client.merchant(merchantId);
     }
 }

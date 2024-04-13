@@ -30,11 +30,11 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.Status;
-import com.ingenico.connect.gateway.sdk.java.ApiException;
-import com.ingenico.connect.gateway.sdk.java.domain.errors.definitions.APIError;
-import com.ingenico.connect.gateway.sdk.java.domain.services.TestConnection;
-import com.ingenico.connect.gateway.sdk.java.merchant.MerchantClient;
-import com.ingenico.connect.gateway.sdk.java.merchant.services.ServicesClient;
+import com.worldline.connect.sdk.java.v1.ApiException;
+import com.worldline.connect.sdk.java.v1.domain.APIError;
+import com.worldline.connect.sdk.java.v1.domain.TestConnection;
+import com.worldline.connect.sdk.java.v1.merchant.MerchantClient;
+import com.worldline.connect.sdk.java.v1.merchant.services.ServicesClient;
 
 @SuppressWarnings("nls")
 class ConnectSdkHealthIndicatorTest {

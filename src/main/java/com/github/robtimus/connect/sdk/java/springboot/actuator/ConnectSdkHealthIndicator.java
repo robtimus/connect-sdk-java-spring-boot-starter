@@ -22,16 +22,16 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health.Builder;
 import org.springframework.boot.actuate.health.HealthIndicator;
-import com.ingenico.connect.gateway.sdk.java.ApiException;
-import com.ingenico.connect.gateway.sdk.java.domain.services.TestConnection;
-import com.ingenico.connect.gateway.sdk.java.merchant.MerchantClient;
-import com.ingenico.connect.gateway.sdk.java.merchant.services.ServicesClient;
+import com.worldline.connect.sdk.java.v1.ApiException;
+import com.worldline.connect.sdk.java.v1.domain.TestConnection;
+import com.worldline.connect.sdk.java.v1.merchant.MerchantClient;
+import com.worldline.connect.sdk.java.v1.merchant.services.ServicesClient;
 
 /**
- * {@link HealthIndicator} for <a href="https://github.com/Ingenico-ePayments/connect-sdk-java/">connect-sdk-java</a>.
+ * {@link HealthIndicator} for <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>.
  * This {@code HealthIndicator} uses
  * {@link MerchantClient#services() merchantClient.services()}{@code .}{@link ServicesClient#testconnection() testconnection()}
- * to check the connectivity to the Ingenico Server API.
+ * to check the connectivity to the Worldline Connect Server API.
  *
  * @author Rob Spoor
  */

@@ -35,18 +35,18 @@ import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import com.ingenico.connect.gateway.sdk.java.CommunicatorConfiguration;
-import com.ingenico.connect.gateway.sdk.java.Connection;
-import com.ingenico.connect.gateway.sdk.java.PooledConnection;
-import com.ingenico.connect.gateway.sdk.java.ProxyConfiguration;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultConnection;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultConnectionBuilder;
-import com.ingenico.connect.gateway.sdk.java.logging.BodyObfuscator;
-import com.ingenico.connect.gateway.sdk.java.logging.HeaderObfuscator;
+import com.worldline.connect.sdk.java.CommunicatorConfiguration;
+import com.worldline.connect.sdk.java.ProxyConfiguration;
+import com.worldline.connect.sdk.java.communication.Connection;
+import com.worldline.connect.sdk.java.communication.DefaultConnection;
+import com.worldline.connect.sdk.java.communication.DefaultConnectionBuilder;
+import com.worldline.connect.sdk.java.communication.PooledConnection;
+import com.worldline.connect.sdk.java.logging.BodyObfuscator;
+import com.worldline.connect.sdk.java.logging.HeaderObfuscator;
 
 /**
- * {@link EnableAutoConfiguration Auto-configuration} for <a href="https://github.com/Ingenico-ePayments/connect-sdk-java/">connect-sdk-java</a>'s
- * {@link PooledConnection}.
+ * {@link EnableAutoConfiguration Auto-configuration} for
+ * <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>'s {@link PooledConnection}.
  *
  * @author Rob Spoor
  */
@@ -61,17 +61,6 @@ public class ConnectSdkConnectionAutoConfiguration {
     @Autowired
     public ConnectSdkConnectionAutoConfiguration(ConnectSdkProperties properties) {
         this.properties = Objects.requireNonNull(properties);
-    }
-
-    /**
-     * Creates a new {@link PooledConnection}.
-     *
-     * @return The created {@link PooledConnection}.
-     * @deprecated Use {@link #connectSdkConnection(BodyObfuscator, HeaderObfuscator)} instead.
-     */
-    @Deprecated
-    public PooledConnection connectSdkConnection() {
-        return connectSdkConnection(null, null);
     }
 
     @Bean(destroyMethod = "close")

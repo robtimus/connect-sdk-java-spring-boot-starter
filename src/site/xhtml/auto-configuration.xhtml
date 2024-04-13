@@ -10,82 +10,82 @@
   <p>Although it is possible to auto-configure all of these beans, each of them can be replaced by an application-provided bean.
      This allows you to provide only those beans that you want, and have this Spring Boot starter auto-configure the rest.</p>
 
-  <h3><a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Marshaller.html">Marshaller</a></h3>
+  <h3><a href="https://worldline-global-collect.github.io/connect-sdk-java/apidocs/latest/com/worldline/connect/sdk/java/json/Marshaller.html">Marshaller</a></h3>
   <p>Conditions: none.</p>
 
-  <h3><a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Authenticator.html">Authenticator</a></h3>
+  <h3><a href="https://worldline-global-collect.github.io/connect-sdk-java/apidocs/latest/com/worldline/connect/sdk/java/authentication/Authenticator.html">Authenticator</a></h3>
   <p>Conditions:</p>
   <ul>
-    <li>Properties <tt>connect.api.api-key-id</tt> and <tt>connect.api.secret-api-key</tt> are set.</li>
+    <li>Properties <code>connect.api.authorization-id</code> and <code>connect.api.authorization-secret</code> are set.</li>
   </ul>
-  <p>This <tt>Authenticator</tt> can be further auto-configured with the authorization type.</p>
+  <p>This <code>Authenticator</code> can be further auto-configured with the authorization type.</p>
 
-  <h3><a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/PooledConnection.html">PooledConnection</a></h3>
+  <h3><a href="https://worldline-global-collect.github.io/connect-sdk-java/apidocs/latest/com/worldline/connect/sdk/java/communication/PooledConnection.html">PooledConnection</a></h3>
   <p>Conditions: none.</p>
-  <p>This <tt>PooledConnection</tt> can be further auto-configured with timeouts, the max connection count, HTTPS protocols and a proxy.</p>
+  <p>This <code>PooledConnection</code> can be further auto-configured with timeouts, the max connection count, HTTPS protocols and a proxy.</p>
   <h4>Connection management</h4>
-  <p>If a <tt>PooledConnection</tt> is auto-configured, this Spring Boot starter will also auto-configure connection management.
-     This will take care of closing idle (and expired) connections, and can be configured using properties <tt>connect.api.close-idle-connections.idle-time</tt> and <tt>connect.api.close-idle-connections.interval</tt>,
-     or disabled by setting property <tt>connect.api.close-idle-connections.enabled</tt> to <tt>false</tt>.</p>
+  <p>If a <code>PooledConnection</code> is auto-configured, this Spring Boot starter will also auto-configure connection management.
+     This will take care of closing idle (and expired) connections, and can be configured using properties <code>connect.api.close-idle-connections.idle-time</code> and <code>connect.api.close-idle-connections.interval</code>,
+     or disabled by setting property <code>connect.api.close-idle-connections.enabled</code> to <code>false</code>.</p>
   <h4>Obfuscation</h4>
-  <p>If a <tt>PooledConnection</tt> is auto-configured,
-     any unique bean of type <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/logging/BodyObfuscator.html">BodyObfuscator</a>
-     or <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/logging/HeaderObfuscator.html">HeaderObfuscator</a>
+  <p>If a <code>PooledConnection</code> is auto-configured,
+     any unique bean of type <a href="https://worldline-global-collect.github.io/connect-sdk-java/apidocs/latest/com/worldline/connect/sdk/java/logging/BodyObfuscator.html">BodyObfuscator</a>
+     or <a href="https://worldline-global-collect.github.io/connect-sdk-java/apidocs/latest/com/worldline/connect/sdk/java/logging/HeaderObfuscator.html">HeaderObfuscator</a>
      will be automatically set on the connection.</p>
 
-  <h3><a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/MetaDataProvider.html">MetaDataProvider</a></h3>
+  <h3><a href="https://worldline-global-collect.github.io/connect-sdk-java/apidocs/latest/com/worldline/connect/sdk/java/communication/MetadataProvider.html">MetadataProvider</a></h3>
   <p>Conditions:</p>
   <ul>
-    <li>Property <tt>connect.api.integrator</tt> is set.</li>
+    <li>Property <code>connect.api.integrator</code> is set.</li>
   </ul>
-  <p>This <tt>MetaDataProvider</tt> can be further auto-configured with the shopping cart extension.</p>
-  <p>In addition, the <tt>MetaDataProvider</tt> can be further configured by providing beans of type <a href="apidocs/com/github/robtimus/connect/sdk/java/springboot/autoconfigure/MetaDataProviderBuilderCustomizer.html">MetaDataProviderBuilderCustomizer</a>.
+  <p>This <code>MetadataProvider</code> can be further auto-configured with the shopping cart extension.</p>
+  <p>In addition, the <code>MetadataProvider</code> can be further configured by providing beans of type <a href="apidocs/com/github/robtimus/connect/sdk/java/springboot/autoconfigure/MetadataProviderBuilderCustomizer.html">MetadataProviderBuilderCustomizer</a>.
      This allows you to provide additional headers.</p>
 
-  <h3><a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Session.html">Session</a></h3>
+  <h3><a href="https://worldline-global-collect.github.io/connect-sdk-java/apidocs/latest/com/worldline/connect/sdk/java/Communicator.html">Communicator</a></h3>
   <p>Conditions:</p>
   <ul>
-    <li>Property <tt>connect.api.endpoint.host</tt> is set.</li>
-    <li>Beans of type <tt>Connection</tt>, <tt>Authenticator</tt> and <tt>MetaDataProvider</tt> are available.</li>
+    <li>Property <code>connect.api.endpoint.host</code> is set.</li>
+    <li>Beans of type <code>Connection</code>, <code>Authenticator</code>, <code>MetadataProvider</code> and <code>Marshaller</code> are available.</li>
   </ul>
-  <p>The <tt>Session</tt>'s endpoint can be further auto-configured with the scheme and port. These default to <tt>https</tt> and <tt>-1</tt>.</p>
+  <p>The <code>Communicator</code>'s endpoint can be further auto-configured with the scheme and port. These default to <code>https</code> and <code>-1</code>.</p>
 
-  <h3><a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Communicator.html">Communicator</a></h3>
+  <h3><a href="https://worldline-global-collect.github.io/connect-sdk-java/apidocs/latest/com/worldline/connect/sdk/java/Client.html">Client</a></h3>
   <p>Conditions:</p>
   <ul>
-    <li>Beans of type <tt>Marshaller</tt> and <tt>Session</tt> are available.</li>
+    <li>A bean of type <code>Communicator</code> is available.</li>
   </ul>
 
-  <h3><a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a></h3>
+  <h3><a href="https://worldline-global-collect.github.io/connect-sdk-java/apidocs/latest/com/worldline/connect/sdk/java/v1/V1Client.html">V1Client</a></h3>
   <p>Conditions:</p>
   <ul>
-    <li>A bean of type <tt>Communicator</tt> is available.</li>
+    <li>A bean of type <code>Client</code> is available.</li>
   </ul>
 
-  <h3><a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/merchant/MerchantClient.html">MerchantClient</a></h3>
+  <h3><a href="https://worldline-global-collect.github.io/connect-sdk-java/apidocs/latest/com/worldline/connect/sdk/java/v1/merchant/MerchantClient.html">MerchantClient</a></h3>
   <p>Conditions:</p>
   <ul>
-    <li>Property <tt>connect.api.merchant-id</tt> is set.</li>
-    <li>A bean of type <tt>Client</tt> is available.</li>
+    <li>Property <code>connect.api.merchant-id</code> is set.</li>
+    <li>A bean of type <code>V1Client</code> is available.</li>
   </ul>
 
-  <h3><a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/logging/CommunicatorLogger.html">CommunicatorLogger</a></h3>
+  <h3><a href="https://worldline-global-collect.github.io/connect-sdk-java/apidocs/latest/com/worldline/connect/sdk/java/logging/CommunicatorLogger.html">CommunicatorLogger</a></h3>
   <p>Conditions:</p>
   <ul>
     <li>Logback is the configured logging system.</li>
   </ul>
-  <p>This <tt>CommunicatorLogger</tt> can be further auto-configured with the logger name, log level and error log level.</p>
+  <p>This <code>CommunicatorLogger</code> can be further auto-configured with the logger name, log level and error log level.</p>
 
   <h3><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-health">Health indicator</a></h3>
   <p>Conditions:</p>
   <ul>
-    <li>Your project includes the <tt>org.springframework.boot:spring-boot-starter-actuator</tt> dependency.</li>
-    <li>A bean of type <tt>MerchantClient</tt> is available.</li>
+    <li>Your project includes the <code>org.springframework.boot:spring-boot-starter-actuator</code> dependency.</li>
+    <li>A bean of type <code>MerchantClient</code> is available.</li>
   </ul>
-  <p>This health indicator will use the <a href="https://epayments-api.developer-ingenico.com/s2sapi/v1/en_US/java/services/testconnection.html?paymentPlatform=ALL#services-testconnection">test connection</a> functionality to check your connectivity to the Ingenico Server API.
-     To prevent too many requests to the Ingenico Server API this is throttled to at most 1 request every minute. This can be changed by setting property <tt>connect.api.health.min-interval</tt> to the desired number of seconds between calls.</p>
-  <p>If you want to have a bean of type <tt>MerchantClient</tt> (auto-configured or not) but you don't want this auto-configured health indicator,
-     you can disable it by setting property <tt>management.health.connect-sdk.enabled</tt> to <tt>false</tt>.</p>
+  <p>This health indicator will use the <a href="https://apireference.connect.worldline-solutions.com/s2sapi/v1/en_US/java/services/testconnection.html?paymentPlatform=ALL">test connection</a> functionality to check your connectivity to the Worldline Connect Server API.
+     To prevent too many requests to the Worldline Connect Server API this is throttled to at most 1 request every minute. This can be changed by setting property <code>connect.api.health.min-interval</code> to the desired number of seconds between calls.</p>
+  <p>If you want to have a bean of type <code>MerchantClient</code> (auto-configured or not) but you don't want this auto-configured health indicator,
+     you can disable it by setting property <code>management.health.connect-sdk.enabled</code> to <code>false</code>.</p>
 </div>
 </body>
 </html>

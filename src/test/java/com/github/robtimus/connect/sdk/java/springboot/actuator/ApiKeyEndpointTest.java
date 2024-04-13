@@ -19,42 +19,23 @@ package com.github.robtimus.connect.sdk.java.springboot.actuator;
 
 import static com.github.robtimus.connect.sdk.java.springboot.util.AuthenticatorTestUtil.assertSignatureCalculation;
 import java.util.UUID;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import com.github.robtimus.connect.sdk.java.springboot.ConfigurableAuthenticator;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
+import com.github.robtimus.connect.sdk.java.springboot.ConfigurableV1HMACAuthenticator;
 
 @SuppressWarnings("nls")
 class ApiKeyEndpointTest {
 
-    @Nested
-    class SetApiKey {
+    @Test
+    void testSetApiKey() {
+        String apiKeyId = UUID.randomUUID().toString();
+        String secretApiKey = UUID.randomUUID().toString();
 
-        @Test
-        void testWithoutAuthorizationType() {
-            String apiKeyId = UUID.randomUUID().toString();
-            String secretApiKey = UUID.randomUUID().toString();
+        ConfigurableV1HMACAuthenticator authenticator = new ConfigurableV1HMACAuthenticator("x", "x");
 
-            ConfigurableAuthenticator authenticator = new ConfigurableAuthenticator(AuthorizationType.V1HMAC, "x", "x");
+        ApiKeyEndpoint endpoint = new ApiKeyEndpoint(authenticator);
+        endpoint.setApiKey(apiKeyId, secretApiKey);
+        authenticator.setApiKey(apiKeyId, secretApiKey);
 
-            ApiKeyEndpoint endpoint = new ApiKeyEndpoint(authenticator);
-            endpoint.setApiKey(apiKeyId, secretApiKey, null);
-            authenticator.setApiKey(AuthorizationType.V1HMAC, apiKeyId, secretApiKey);
-
-            assertSignatureCalculation(authenticator, apiKeyId, secretApiKey);
-        }
-
-        @Test
-        void testWithAuthorizationType() {
-            String apiKeyId = UUID.randomUUID().toString();
-            String secretApiKey = UUID.randomUUID().toString();
-
-            ConfigurableAuthenticator authenticator = new ConfigurableAuthenticator(AuthorizationType.V1HMAC, "x", "x");
-
-            ApiKeyEndpoint endpoint = new ApiKeyEndpoint(authenticator);
-            endpoint.setApiKey(apiKeyId, secretApiKey, AuthorizationType.V1HMAC);
-
-            assertSignatureCalculation(authenticator, apiKeyId, secretApiKey);
-        }
+        assertSignatureCalculation(authenticator, apiKeyId, secretApiKey);
     }
 }

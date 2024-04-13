@@ -1,5 +1,5 @@
 /*
- * ConnectSdkMetaDataProviderAutoConfigurationTest.java
+ * ConnectSdkMetadataProviderAutoConfigurationTest.java
  * Copyright 2019 Rob Spoor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,15 +25,15 @@ import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.ingenico.connect.gateway.sdk.java.MetaDataProvider;
-import com.ingenico.connect.gateway.sdk.java.MetaDataProviderBuilder;
-import com.ingenico.connect.gateway.sdk.java.RequestHeader;
+import com.worldline.connect.sdk.java.communication.MetadataProvider;
+import com.worldline.connect.sdk.java.communication.MetadataProviderBuilder;
+import com.worldline.connect.sdk.java.communication.RequestHeader;
 
 @SuppressWarnings("nls")
-class ConnectSdkMetaDataProviderAutoConfigurationTest {
+class ConnectSdkMetadataProviderAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-            .withConfiguration(AutoConfigurations.of(ConnectSdkMetaDataProviderAutoConfiguration.class));
+            .withConfiguration(AutoConfigurations.of(ConnectSdkMetadataProviderAutoConfiguration.class));
 
     @Test
     void testNoAutoConfigurationWithExistingBean() {
@@ -41,9 +41,9 @@ class ConnectSdkMetaDataProviderAutoConfigurationTest {
                 .withUserConfiguration(ExistingBeanProvider.class, CustomizerConfiguration.class)
                 .withPropertyValues("connect.api.integrator=Integrator")
                 .run(context -> {
-                    assertThat(context).doesNotHaveBean("connectSdkMetaDataProvider");
-                    assertThat(context).hasSingleBean(MetaDataProvider.class);
-                    assertThat(context).getBean(MetaDataProvider.class).isSameAs(context.getBean(ExistingBeanProvider.class).metaDataProvider());
+                    assertThat(context).doesNotHaveBean("connectSdkMetadataProvider");
+                    assertThat(context).hasSingleBean(MetadataProvider.class);
+                    assertThat(context).getBean(MetadataProvider.class).isSameAs(context.getBean(ExistingBeanProvider.class).metadataProvider());
                 });
     }
 
@@ -51,7 +51,7 @@ class ConnectSdkMetaDataProviderAutoConfigurationTest {
     void testNoAutoConfigurationWithMissingProperties() {
         contextRunner
                 .run(context -> {
-                    assertThat(context).doesNotHaveBean(MetaDataProvider.class);
+                    assertThat(context).doesNotHaveBean(MetadataProvider.class);
                 });
     }
 
@@ -60,26 +60,26 @@ class ConnectSdkMetaDataProviderAutoConfigurationTest {
         contextRunner
                 .withPropertyValues("connect.api.integrator=Integrator")
                 .run(context -> {
-                    assertThat(context).hasBean("connectSdkMetaDataProvider");
-                    assertThat(context).hasSingleBean(MetaDataProvider.class);
-                    MetaDataProvider metaDataProvider = context.getBean(MetaDataProvider.class);
-                    assertThat(metaDataProvider).isExactlyInstanceOf(MetaDataProvider.class);
-                    Collection<RequestHeader> exectedMetaDataHeaders = new MetaDataProvider("Integrator").getServerMetaDataHeaders();
-                    assertThat((Object) metaDataProvider.getServerMetaDataHeaders()).hasToString(exectedMetaDataHeaders.toString());
+                    assertThat(context).hasBean("connectSdkMetadataProvider");
+                    assertThat(context).hasSingleBean(MetadataProvider.class);
+                    MetadataProvider metadataProvider = context.getBean(MetadataProvider.class);
+                    assertThat(metadataProvider).isExactlyInstanceOf(MetadataProvider.class);
+                    Collection<RequestHeader> exectedMetadataHeaders = new MetadataProvider("Integrator").getServerMetadataHeaders();
+                    assertThat((Object) metadataProvider.getServerMetadataHeaders()).hasToString(exectedMetadataHeaders.toString());
                 });
         contextRunner
                 .withUserConfiguration(CustomizerConfiguration.class)
                 .withPropertyValues("connect.api.integrator=Integrator")
                 .run(context -> {
-                    assertThat(context).hasBean("connectSdkMetaDataProvider");
-                    assertThat(context).hasSingleBean(MetaDataProvider.class);
-                    MetaDataProvider metaDataProvider = context.getBean(MetaDataProvider.class);
-                    assertThat(metaDataProvider).isExactlyInstanceOf(MetaDataProvider.class);
-                    Collection<RequestHeader> expectedMetaDataHeaders = new MetaDataProviderBuilder("Integrator")
+                    assertThat(context).hasBean("connectSdkMetadataProvider");
+                    assertThat(context).hasSingleBean(MetadataProvider.class);
+                    MetadataProvider metadataProvider = context.getBean(MetadataProvider.class);
+                    assertThat(metadataProvider).isExactlyInstanceOf(MetadataProvider.class);
+                    Collection<RequestHeader> expectedMetadataHeaders = new MetadataProviderBuilder("Integrator")
                             .withAdditionalRequestHeader(new RequestHeader("custom-name", "custom-value"))
                             .build()
-                            .getServerMetaDataHeaders();
-                    assertThat((Object) metaDataProvider.getServerMetaDataHeaders()).hasToString(expectedMetaDataHeaders.toString());
+                            .getServerMetadataHeaders();
+                    assertThat((Object) metadataProvider.getServerMetadataHeaders()).hasToString(expectedMetadataHeaders.toString());
                 });
     }
 
@@ -87,8 +87,8 @@ class ConnectSdkMetaDataProviderAutoConfigurationTest {
     static class ExistingBeanProvider {
 
         @Bean
-        MetaDataProvider metaDataProvider() {
-            return mock(MetaDataProvider.class);
+        MetadataProvider metadataProvider() {
+            return mock(MetadataProvider.class);
         }
     }
 
@@ -96,7 +96,7 @@ class ConnectSdkMetaDataProviderAutoConfigurationTest {
     static class CustomizerConfiguration {
 
         @Bean
-        MetaDataProviderBuilderCustomizer customizer() {
+        MetadataProviderBuilderCustomizer customizer() {
             return builder -> builder.withAdditionalRequestHeader(new RequestHeader("custom-name", "custom-value"));
         }
     }

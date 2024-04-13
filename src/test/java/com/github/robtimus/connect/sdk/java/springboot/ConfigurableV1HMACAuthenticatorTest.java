@@ -1,5 +1,5 @@
 /*
- * ConfigurableAuthenticatorTest.java
+ * ConfigurableV1HMACAuthenticatorTest.java
  * Copyright 2023 Rob Spoor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,18 +20,17 @@ package com.github.robtimus.connect.sdk.java.springboot;
 import static com.github.robtimus.connect.sdk.java.springboot.util.AuthenticatorTestUtil.assertSignatureCalculation;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import com.ingenico.connect.gateway.sdk.java.Authenticator;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
+import com.worldline.connect.sdk.java.authentication.Authenticator;
 
 @SuppressWarnings("nls")
-class ConfigurableAuthenticatorTest {
+class ConfigurableV1HMACAuthenticatorTest {
 
     @Test
     void testSignatureWithInitialApiKey() {
         String apiKeyId = UUID.randomUUID().toString();
         String secretApiKey = UUID.randomUUID().toString();
 
-        Authenticator authenticator = new ConfigurableAuthenticator(AuthorizationType.V1HMAC, apiKeyId, secretApiKey);
+        Authenticator authenticator = new ConfigurableV1HMACAuthenticator(apiKeyId, secretApiKey);
 
         assertSignatureCalculation(authenticator, apiKeyId, secretApiKey);
     }
@@ -41,8 +40,8 @@ class ConfigurableAuthenticatorTest {
         String apiKeyId = UUID.randomUUID().toString();
         String secretApiKey = UUID.randomUUID().toString();
 
-        ConfigurableAuthenticator authenticator = new ConfigurableAuthenticator(AuthorizationType.V1HMAC, "x", "x");
-        authenticator.setApiKey(AuthorizationType.V1HMAC, apiKeyId, secretApiKey);
+        ConfigurableV1HMACAuthenticator authenticator = new ConfigurableV1HMACAuthenticator("x", "x");
+        authenticator.setApiKey(apiKeyId, secretApiKey);
 
         assertSignatureCalculation(authenticator, apiKeyId, secretApiKey);
     }

@@ -19,12 +19,10 @@ package com.github.robtimus.connect.sdk.java.springboot.actuator;
 
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
-import org.springframework.lang.Nullable;
-import com.github.robtimus.connect.sdk.java.springboot.ConfigurableAuthenticator;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
+import com.github.robtimus.connect.sdk.java.springboot.ConfigurableV1HMACAuthenticator;
 
 /**
- * An {@link Endpoint} for managing API keys in <a href="https://github.com/Ingenico-ePayments/connect-sdk-java/">connect-sdk-java</a>.
+ * An {@link Endpoint} for managing API keys in <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>.
  *
  * @author Rob Spoor
  * @since 3.8
@@ -33,9 +31,9 @@ import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
 @SuppressWarnings("javadoc")
 public class ApiKeyEndpoint {
 
-    private final ConfigurableAuthenticator authenticator;
+    private final ConfigurableV1HMACAuthenticator authenticator;
 
-    public ApiKeyEndpoint(ConfigurableAuthenticator authenticator) {
+    public ApiKeyEndpoint(ConfigurableV1HMACAuthenticator authenticator) {
         this.authenticator = authenticator;
     }
 
@@ -44,16 +42,9 @@ public class ApiKeyEndpoint {
      *
      * @param apiKeyId The new API key id.
      * @param secretApiKey The new secret API key.
-     * @param authorizationType The new authorization type. If not given, the current authorization type is used.
      */
     @WriteOperation
-    public void setApiKey(String apiKeyId, String secretApiKey, @Nullable AuthorizationType authorizationType) {
-        authenticator.setApiKey(getAuthorizationType(authorizationType), apiKeyId, secretApiKey);
-    }
-
-    private AuthorizationType getAuthorizationType(AuthorizationType authorizationType) {
-        return authorizationType != null
-                ? authorizationType
-                : AuthorizationType.V1HMAC;
+    public void setApiKey(String apiKeyId, String secretApiKey) {
+        authenticator.setApiKey(apiKeyId, secretApiKey);
     }
 }

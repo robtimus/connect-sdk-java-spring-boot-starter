@@ -24,11 +24,10 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import com.ingenico.connect.gateway.sdk.java.Authenticator;
-import com.ingenico.connect.gateway.sdk.java.MetaDataProvider;
-import com.ingenico.connect.gateway.sdk.java.RequestHeader;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultAuthenticator;
+import com.worldline.connect.sdk.java.authentication.Authenticator;
+import com.worldline.connect.sdk.java.authentication.V1HMACAuthenticator;
+import com.worldline.connect.sdk.java.communication.MetadataProvider;
+import com.worldline.connect.sdk.java.communication.RequestHeader;
 
 @SuppressWarnings({ "nls", "javadoc" })
 public final class AuthenticatorTestUtil {
@@ -41,10 +40,9 @@ public final class AuthenticatorTestUtil {
         URI uri = URI.create("http://localhost/v1/test/services/testconnection");
         List<RequestHeader> headers = getRequestHeaders();
 
-        Authenticator defaultAuthenticator = new DefaultAuthenticator(AuthorizationType.V1HMAC, apiKeyId, secretApiKey);
+        Authenticator defaultAuthenticator = new V1HMACAuthenticator(apiKeyId, secretApiKey);
 
-        assertEquals(defaultAuthenticator.createSimpleAuthenticationSignature(method, uri, headers),
-                authenticator.createSimpleAuthenticationSignature(method, uri, headers));
+        assertEquals(defaultAuthenticator.getAuthorization(method, uri, headers), authenticator.getAuthorization(method, uri, headers));
     }
 
     public static void assertDifferentSignatureCalculation(Authenticator authenticator, String apiKeyId, String secretApiKey) {
@@ -52,15 +50,14 @@ public final class AuthenticatorTestUtil {
         URI uri = URI.create("http://localhost/v1/test/services/testconnection");
         List<RequestHeader> headers = getRequestHeaders();
 
-        Authenticator defaultAuthenticator = new DefaultAuthenticator(AuthorizationType.V1HMAC, apiKeyId, secretApiKey);
+        Authenticator defaultAuthenticator = new V1HMACAuthenticator(apiKeyId, secretApiKey);
 
-        assertNotEquals(defaultAuthenticator.createSimpleAuthenticationSignature(method, uri, headers),
-                authenticator.createSimpleAuthenticationSignature(method, uri, headers));
+        assertNotEquals(defaultAuthenticator.getAuthorization(method, uri, headers), authenticator.getAuthorization(method, uri, headers));
     }
 
     private static List<RequestHeader> getRequestHeaders() {
         List<RequestHeader> headers = new ArrayList<>();
-        headers.addAll(new MetaDataProvider("robtimus").getServerMetaDataHeaders());
+        headers.addAll(new MetadataProvider("robtimus").getServerMetadataHeaders());
         headers.add(new RequestHeader("Date", getDate()));
         headers.add(new RequestHeader("Content-Type", "application/json"));
         return headers;

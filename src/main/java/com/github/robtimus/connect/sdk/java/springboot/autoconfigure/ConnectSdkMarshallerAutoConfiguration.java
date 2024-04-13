@@ -21,12 +21,12 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.ingenico.connect.gateway.sdk.java.Marshaller;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultMarshaller;
+import com.worldline.connect.sdk.java.json.DefaultMarshaller;
+import com.worldline.connect.sdk.java.json.Marshaller;
 
 /**
- * {@link EnableAutoConfiguration Auto-configuration} for <a href="https://github.com/Ingenico-ePayments/connect-sdk-java/">connect-sdk-java</a>'s
- * {@link Marshaller}.
+ * {@link EnableAutoConfiguration Auto-configuration} for
+ * <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>'s {@link Marshaller}.
  *
  * @author Rob Spoor
  */

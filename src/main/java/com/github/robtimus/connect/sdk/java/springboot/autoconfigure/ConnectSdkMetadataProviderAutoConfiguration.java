@@ -1,5 +1,5 @@
 /*
- * ConnectSdkMetaDataProviderAutoConfiguration.java
+ * ConnectSdkMetadataProviderAutoConfiguration.java
  * Copyright 2019 Rob Spoor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,33 +26,33 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.ingenico.connect.gateway.sdk.java.MetaDataProvider;
-import com.ingenico.connect.gateway.sdk.java.MetaDataProviderBuilder;
-import com.ingenico.connect.gateway.sdk.java.domain.metadata.ShoppingCartExtension;
+import com.worldline.connect.sdk.java.communication.MetadataProvider;
+import com.worldline.connect.sdk.java.communication.MetadataProviderBuilder;
+import com.worldline.connect.sdk.java.domain.ShoppingCartExtension;
 
 /**
- * {@link EnableAutoConfiguration Auto-configuration} for <a href="https://github.com/Ingenico-ePayments/connect-sdk-java/">connect-sdk-java</a>'s
- * {@link MetaDataProvider}.
+ * {@link EnableAutoConfiguration Auto-configuration} for
+ * <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>'s {@link MetadataProvider}.
  *
  * @author Rob Spoor
  */
 @Configuration
-@ConditionalOnMissingBean(MetaDataProvider.class)
+@ConditionalOnMissingBean(MetadataProvider.class)
 @ConditionalOnProperty(name = "connect.api.integrator")
 @EnableConfigurationProperties(ConnectSdkProperties.class)
 @SuppressWarnings("javadoc")
-public class ConnectSdkMetaDataProviderAutoConfiguration {
+public class ConnectSdkMetadataProviderAutoConfiguration {
 
     private final ConnectSdkProperties properties;
 
     @Autowired
-    public ConnectSdkMetaDataProviderAutoConfiguration(ConnectSdkProperties properties) {
+    public ConnectSdkMetadataProviderAutoConfiguration(ConnectSdkProperties properties) {
         this.properties = Objects.requireNonNull(properties);
     }
 
     @Bean
-    public MetaDataProvider connectSdkMetaDataProvider(List<MetaDataProviderBuilderCustomizer> customizers) {
-        MetaDataProviderBuilder builder = new MetaDataProviderBuilder(properties.getIntegrator());
+    public MetadataProvider connectSdkMetadataProvider(List<MetadataProviderBuilderCustomizer> customizers) {
+        MetadataProviderBuilder builder = new MetadataProviderBuilder(properties.getIntegrator());
 
         ConnectSdkProperties.ShoppingCartExtension shoppingCartExtension = properties.getShoppingCartExtension();
         if (shoppingCartExtension != null) {
@@ -72,8 +72,8 @@ public class ConnectSdkMetaDataProviderAutoConfiguration {
         return builder.build();
     }
 
-    private void customize(MetaDataProviderBuilder builder, List<MetaDataProviderBuilderCustomizer> customizers) {
-        for (MetaDataProviderBuilderCustomizer customizer : customizers) {
+    private void customize(MetadataProviderBuilder builder, List<MetadataProviderBuilderCustomizer> customizers) {
+        for (MetadataProviderBuilderCustomizer customizer : customizers) {
             customizer.customize(builder);
         }
     }

@@ -29,14 +29,15 @@ import org.springframework.boot.actuate.endpoint.annotation.Selector;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.context.ApplicationContext;
 import org.springframework.lang.Nullable;
-import com.ingenico.connect.gateway.sdk.java.Client;
-import com.ingenico.connect.gateway.sdk.java.Communicator;
-import com.ingenico.connect.gateway.sdk.java.Connection;
-import com.ingenico.connect.gateway.sdk.java.logging.CommunicatorLogger;
-import com.ingenico.connect.gateway.sdk.java.logging.LoggingCapable;
+import com.worldline.connect.sdk.java.Client;
+import com.worldline.connect.sdk.java.Communicator;
+import com.worldline.connect.sdk.java.communication.Connection;
+import com.worldline.connect.sdk.java.logging.CommunicatorLogger;
+import com.worldline.connect.sdk.java.logging.LoggingCapable;
 
 /**
- * An {@link Endpoint} for enabling and disabling logging in <a href="https://github.com/Ingenico-ePayments/connect-sdk-java/">connect-sdk-java</a>.
+ * An {@link Endpoint} for enabling and disabling logging in
+ * <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>.
  *
  * @author Rob Spoor
  */

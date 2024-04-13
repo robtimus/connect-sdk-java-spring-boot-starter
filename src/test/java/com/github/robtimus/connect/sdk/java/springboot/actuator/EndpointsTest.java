@@ -62,18 +62,18 @@ import org.springframework.http.ResponseEntity;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.ConnectionsEndpoint.CloseableBeans;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.EndpointsTest.TestApplication;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.LoggingEndpoint.LoggingCapableAndLoggerBeans;
-import com.ingenico.connect.gateway.sdk.java.Authenticator;
-import com.ingenico.connect.gateway.sdk.java.PooledConnection;
-import com.ingenico.connect.gateway.sdk.java.ResponseHandler;
-import com.ingenico.connect.gateway.sdk.java.ResponseHeader;
-import com.ingenico.connect.gateway.sdk.java.domain.services.TestConnection;
-import com.ingenico.connect.gateway.sdk.java.logging.CommunicatorLogger;
+import com.worldline.connect.sdk.java.authentication.Authenticator;
+import com.worldline.connect.sdk.java.communication.PooledConnection;
+import com.worldline.connect.sdk.java.communication.ResponseHandler;
+import com.worldline.connect.sdk.java.communication.ResponseHeader;
+import com.worldline.connect.sdk.java.logging.CommunicatorLogger;
+import com.worldline.connect.sdk.java.v1.domain.TestConnection;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = TestApplication.class, properties = {
         "connect.api.endpoint.host=localhost",
         "connect.api.integrator=robtimus",
-        "connect.api.api-key-id=keyId",
-        "connect.api.secret-api-key=secret",
+        "connect.api.authorization-id=keyId",
+        "connect.api.authorization-secret=secret",
         "connect.api.merchant-id=123",
         "management.endpoint.health.show-details=always",
         "management.endpoint.connectSdkApiKey.enabled=true",
@@ -111,80 +111,48 @@ class EndpointsTest {
     @Nested
     class ApiKey {
 
-        @Nested
-        class SetApiKey {
+        private URI getActuatorURI() {
+            return getActuatorBaseURI().resolve("connectSdkApiKey");
+        }
 
-            private URI getActuatorURI() {
-                return getActuatorBaseURI().resolve("connectSdkApiKey");
-            }
+        @Test
+        void testSetApiKey() {
+            String apiKeyId = UUID.randomUUID().toString();
+            String secretApiKey = UUID.randomUUID().toString();
 
-            @Test
-            void testWithoutAuthorizationType() {
-                String apiKeyId = UUID.randomUUID().toString();
-                String secretApiKey = UUID.randomUUID().toString();
+            assertDifferentSignatureCalculation(authenticator, apiKeyId, secretApiKey);
 
-                assertDifferentSignatureCalculation(authenticator, apiKeyId, secretApiKey);
+            String requestBody = String.format("{\"apiKeyId\": \"%s\", \"secretApiKey\": \"%s\"}", apiKeyId, secretApiKey);
 
-                String requestBody = String.format("{\"apiKeyId\": \"%s\", \"secretApiKey\": \"%s\"}", apiKeyId, secretApiKey);
+            RequestEntity<String> request = RequestEntity
+                    .post(getActuatorURI())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(requestBody);
 
-                RequestEntity<String> request = RequestEntity
-                        .post(getActuatorURI())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(requestBody);
+            ResponseEntity<Void> response = restTemplateBuilder
+                    .build()
+                    .exchange(request, Void.class);
 
-                ResponseEntity<Void> response = restTemplateBuilder
-                        .build()
-                        .exchange(request, Void.class);
+            assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+            assertNull(response.getBody());
 
-                assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-                assertNull(response.getBody());
+            assertSignatureCalculation(authenticator, apiKeyId, secretApiKey);
+        }
 
-                assertSignatureCalculation(authenticator, apiKeyId, secretApiKey);
-            }
+        @ParameterizedTest
+        @ValueSource(strings = "{\"apiKeyId\": \"myApiKeyId\", \"secretApiKey\": \"mySecretKeyId\"}")
+        void testExample(String requestBody) {
+            RequestEntity<String> request = RequestEntity
+                    .post(getActuatorURI())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(requestBody);
 
-            @Test
-            void testWithAuthorizationType() {
-                String apiKeyId = UUID.randomUUID().toString();
-                String secretApiKey = UUID.randomUUID().toString();
+            ResponseEntity<Void> response = restTemplateBuilder
+                    .build()
+                    .exchange(request, Void.class);
 
-                assertDifferentSignatureCalculation(authenticator, apiKeyId, secretApiKey);
-
-                String requestBody = String.format("{\"apiKeyId\": \"%s\", \"secretApiKey\": \"%s\", \"authorizationType\": \"V1HMAC\"}",
-                        apiKeyId, secretApiKey);
-
-                RequestEntity<String> request = RequestEntity
-                        .post(getActuatorURI())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(requestBody);
-
-                ResponseEntity<Void> response = restTemplateBuilder
-                        .build()
-                        .exchange(request, Void.class);
-
-                assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-                assertNull(response.getBody());
-
-                assertSignatureCalculation(authenticator, apiKeyId, secretApiKey);
-            }
-
-            @ParameterizedTest
-            @ValueSource(strings = {
-                    "{\"apiKeyId\": \"myApiKeyId\", \"secretApiKey\": \"mySecretKeyId\"}",
-                    "{\"apiKeyId\": \"myApiKeyId\", \"secretApiKey\": \"mySecretKeyId\", \"authorizationType\": \"V1HMAC\"}"
-            })
-            void testExample(String requestBody) {
-                RequestEntity<String> request = RequestEntity
-                        .post(getActuatorURI())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(requestBody);
-
-                ResponseEntity<Void> response = restTemplateBuilder
-                        .build()
-                        .exchange(request, Void.class);
-
-                assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-                assertNull(response.getBody());
-            }
+            assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+            assertNull(response.getBody());
         }
     }
 
@@ -702,9 +670,7 @@ class EndpointsTest {
         assertThat(responseMap, hasEntry("status", "UP"));
 
         // Support both older format (connectSdk directly in the root of the response) and the newer one (with nested components entry)
-        Map<?, ?> componentsMap = responseMap.containsKey("components")
-                ? (Map<?, ?>) responseMap.get("components")
-                : responseMap;
+        Map<?, ?> componentsMap = (Map<?, ?>) responseMap.get("components");
 
         Map<String, Object> expectedSdkComponent = new HashMap<>();
         expectedSdkComponent.put("status", "UP");

@@ -26,11 +26,11 @@ import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.ingenico.connect.gateway.sdk.java.Connection;
-import com.ingenico.connect.gateway.sdk.java.PooledConnection;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultConnection;
-import com.ingenico.connect.gateway.sdk.java.logging.BodyObfuscator;
-import com.ingenico.connect.gateway.sdk.java.logging.HeaderObfuscator;
+import com.worldline.connect.sdk.java.communication.Connection;
+import com.worldline.connect.sdk.java.communication.DefaultConnection;
+import com.worldline.connect.sdk.java.communication.PooledConnection;
+import com.worldline.connect.sdk.java.logging.BodyObfuscator;
+import com.worldline.connect.sdk.java.logging.HeaderObfuscator;
 
 @SuppressWarnings("nls")
 class ConnectSdkConnectionAutoConfigurationTest {

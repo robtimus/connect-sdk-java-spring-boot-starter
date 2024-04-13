@@ -1,5 +1,5 @@
 /*
- * MetaDataProviderBuilderCustomizer.java
+ * MetadataProviderBuilderCustomizer.java
  * Copyright 2019 Rob Spoor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,21 +17,21 @@
 
 package com.github.robtimus.connect.sdk.java.springboot.autoconfigure;
 
-import com.ingenico.connect.gateway.sdk.java.MetaDataProvider;
-import com.ingenico.connect.gateway.sdk.java.MetaDataProviderBuilder;
+import com.worldline.connect.sdk.java.communication.MetadataProvider;
+import com.worldline.connect.sdk.java.communication.MetadataProviderBuilder;
 
 /**
- * Callback interface that can be implemented by beans wishing to customize the {@link MetaDataProvider} whilst retaining default auto-configuration.
+ * Callback interface that can be implemented by beans wishing to customize the {@link MetadataProvider} whilst retaining default auto-configuration.
  *
  * @author Rob Spoor
  */
 @FunctionalInterface
-public interface MetaDataProviderBuilderCustomizer {
+public interface MetadataProviderBuilderCustomizer {
 
     /**
-     * Customizes the {@link MetaDataProviderBuilder}.
+     * Customizes the {@link MetadataProviderBuilder}.
      *
      * @param builder The builder to customize.
      */
-    void customize(MetaDataProviderBuilder builder);
+    void customize(MetadataProviderBuilder builder);
 }

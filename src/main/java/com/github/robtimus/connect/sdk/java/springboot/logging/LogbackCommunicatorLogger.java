@@ -18,7 +18,7 @@
 package com.github.robtimus.connect.sdk.java.springboot.logging;
 
 import java.util.Objects;
-import com.ingenico.connect.gateway.sdk.java.logging.CommunicatorLogger;
+import com.worldline.connect.sdk.java.logging.CommunicatorLogger;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 

@@ -16,6 +16,6 @@
  */
 
 /**
- * Spring Boot logging support for <a href="https://github.com/Ingenico-ePayments/connect-sdk-java/">connect-sdk-java</a>.
+ * Spring Boot logging support for <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>.
  */
 package com.github.robtimus.connect.sdk.java.springboot.logging;

@@ -6,7 +6,7 @@
 <body>
 <div class="section">
   <h2>Properties</h2>
-  <p>The following properties can be defined in your <tt>application.properties</tt> file, in your <tt>application.yml</tt> file, or as command line switches.</p>
+  <p>The following properties can be defined in your <code>application.properties</code> file, in your <code>application.yml</code> file, or as command line switches.</p>
   <pre class="source">
 <span class="hl-comment"># GENERAL</span>
 <span class="hl-attribute">connect.api.merchant-id</span>= <span class="hl-comment"># Your merchant id</span>
@@ -17,9 +17,9 @@
 <span class="hl-attribute">connect.api.endpoint.port</span>=-1 <span class="hl-comment"># Port of the API endpoint to use</span>
 
 <span class="hl-comment"># AUTHENTICATION</span>
-<span class="hl-attribute">connect.api.api-key-id</span>= <span class="hl-comment"># Your API key id</span>
+<span class="hl-attribute">connect.api.authorization-id</span>= <span class="hl-comment"># Your authorization id</span>
+<span class="hl-attribute">connect.api.authorization-secret</span>= <span class="hl-comment"># Your authorization secret</span>
 <span class="hl-attribute">connect.api.authorization-type</span>=V1HMAC <span class="hl-comment"># Authorization type, should only be V1HMAC</span>
-<span class="hl-attribute">connect.api.secret-api-key</span>= <span class="hl-comment"># Your secret API key</span>
 
 <span class="hl-comment"># CONNECTION</span>
 <span class="hl-attribute">connect.api.connect-timeout</span>=5000 <span class="hl-comment"># Connect timeout for HTTP requests</span>
@@ -46,7 +46,7 @@
 <span class="hl-comment"># LOGGING</span>
 <span class="hl-attribute">connect.api.logger.errorLevel</span>=ERROR <span class="hl-comment"># Error log level for the default communicator logger</span>
 <span class="hl-attribute">connect.api.logger.level</span>=INFO <span class="hl-comment"># Log level for the default communicator logger</span>
-<span class="hl-attribute">connect.api.logger.name</span>=com.ingenico.connect.gateway.sdk.java.Communicator <span class="hl-comment"># Name for the default communicator logger</span>
+<span class="hl-attribute">connect.api.logger.name</span>=com.worldline.connect.sdk.java.Communicator <span class="hl-comment"># Name for the default communicator logger</span>
 
 <span class="hl-comment"># HEALTH</span>
 <span class="hl-attribute">connect.api.health.min-interval</span>=60 <span class="hl-comment"># For health checks, the minimum interval in seconds between calls</span>

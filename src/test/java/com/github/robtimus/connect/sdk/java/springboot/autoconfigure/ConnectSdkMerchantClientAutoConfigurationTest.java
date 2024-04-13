@@ -26,8 +26,8 @@ import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.ingenico.connect.gateway.sdk.java.Client;
-import com.ingenico.connect.gateway.sdk.java.merchant.MerchantClient;
+import com.worldline.connect.sdk.java.v1.V1Client;
+import com.worldline.connect.sdk.java.v1.merchant.MerchantClient;
 
 @SuppressWarnings("nls")
 class ConnectSdkMerchantClientAutoConfigurationTest {
@@ -39,14 +39,14 @@ class ConnectSdkMerchantClientAutoConfigurationTest {
     void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class, ConnectSdkConnectionAutoConfiguration.class,
-                        ConnectSdkAuthenticatorAutoConfiguration.class, ConnectSdkMetaDataProviderAutoConfiguration.class,
-                        ConnectSdkSessionAutoConfiguration.class, ConnectSdkMarshallerAutoConfiguration.class,
-                        ConnectSdkCommunicatorAutoConfiguration.class, ConnectSdkClientAutoConfiguration.class)
-                .withPropertyValues("connect.api.endpoint.host=eu.sandbox.api-ingenico.com",
-                        "connect.api.api-key-id=keyId", "connect.api.secret-api-key=secret", "connect.api.integrator=Integrator",
+                        ConnectSdkAuthenticatorAutoConfiguration.class, ConnectSdkMetadataProviderAutoConfiguration.class,
+                        ConnectSdkMarshallerAutoConfiguration.class, ConnectSdkCommunicatorAutoConfiguration.class,
+                        ConnectSdkClientAutoConfiguration.class, ConnectSdkVersionClientAutoConfiguration.class)
+                .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com",
+                        "connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret", "connect.api.integrator=Integrator",
                         "connect.api.merchant-id=merchantId")
                 .run(context -> {
-                    assertThat(context).doesNotHaveBean("connectSdkMerchantClient");
+                    assertThat(context).doesNotHaveBean("connectSdkV1MerchantClient");
                     assertThat(context).hasSingleBean(MerchantClient.class);
                     assertThat(context).getBean(MerchantClient.class).isSameAs(context.getBean(ExistingBeanProvider.class).merchantClient());
                 });
@@ -56,11 +56,11 @@ class ConnectSdkMerchantClientAutoConfigurationTest {
     void testNoAutoConfigurationWithMissingProperties() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
-                        ConnectSdkMetaDataProviderAutoConfiguration.class, ConnectSdkSessionAutoConfiguration.class,
-                        ConnectSdkMarshallerAutoConfiguration.class, ConnectSdkCommunicatorAutoConfiguration.class,
-                        ConnectSdkClientAutoConfiguration.class)
-                .withPropertyValues("connect.api.endpoint.host=eu.sandbox.api-ingenico.com",
-                        "connect.api.api-key-id=keyId", "connect.api.secret-api-key=secret", "connect.api.integrator=Integrator")
+                        ConnectSdkMetadataProviderAutoConfiguration.class, ConnectSdkMarshallerAutoConfiguration.class,
+                        ConnectSdkCommunicatorAutoConfiguration.class, ConnectSdkClientAutoConfiguration.class,
+                        ConnectSdkVersionClientAutoConfiguration.class)
+                .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com",
+                        "connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret", "connect.api.integrator=Integrator")
                 .run(context -> {
                     assertThat(context).doesNotHaveBean(MerchantClient.class);
                 });
@@ -70,10 +70,10 @@ class ConnectSdkMerchantClientAutoConfigurationTest {
     void testNoAutoConfigurationWithMissingBeans() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
-                        ConnectSdkMetaDataProviderAutoConfiguration.class, ConnectSdkSessionAutoConfiguration.class,
-                        ConnectSdkMarshallerAutoConfiguration.class, ConnectSdkCommunicatorAutoConfiguration.class)
-                .withPropertyValues("connect.api.endpoint.host=eu.sandbox.api-ingenico.com",
-                        "connect.api.api-key-id=keyId", "connect.api.secret-api-key=secret", "connect.api.integrator=Integrator",
+                        ConnectSdkMetadataProviderAutoConfiguration.class, ConnectSdkMarshallerAutoConfiguration.class,
+                        ConnectSdkCommunicatorAutoConfiguration.class, ConnectSdkClientAutoConfiguration.class)
+                .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com",
+                        "connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret", "connect.api.integrator=Integrator",
                         "connect.api.merchant-id=merchantId")
                 .run(context -> {
                     assertThat(context).doesNotHaveBean(MerchantClient.class);
@@ -81,31 +81,30 @@ class ConnectSdkMerchantClientAutoConfigurationTest {
     }
 
     @Test
-    @SuppressWarnings("resource")
     void testAutoConfiguration() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
-                        ConnectSdkMetaDataProviderAutoConfiguration.class, ConnectSdkSessionAutoConfiguration.class,
-                        ConnectSdkMarshallerAutoConfiguration.class, ConnectSdkCommunicatorAutoConfiguration.class,
-                        ConnectSdkClientAutoConfiguration.class)
-                .withPropertyValues("connect.api.endpoint.host=eu.sandbox.api-ingenico.com",
-                        "connect.api.api-key-id=keyId", "connect.api.secret-api-key=secret", "connect.api.integrator=Integrator",
+                        ConnectSdkMetadataProviderAutoConfiguration.class, ConnectSdkMarshallerAutoConfiguration.class,
+                        ConnectSdkCommunicatorAutoConfiguration.class, ConnectSdkClientAutoConfiguration.class,
+                        ConnectSdkVersionClientAutoConfiguration.class)
+                .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com",
+                        "connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret", "connect.api.integrator=Integrator",
                         "connect.api.merchant-id=merchantId")
                 .run(context -> {
-                    assertThat(context).hasBean("connectSdkMerchantClient");
+                    assertThat(context).hasBean("connectSdkV1MerchantClient");
                     assertThat(context).hasSingleBean(MerchantClient.class);
                 });
         contextRunner
                 .withUserConfiguration(ClientProvider.class)
                 .withPropertyValues("connect.api.merchant-id=merchantId")
                 .run(context -> {
-                    assertThat(context).hasBean("connectSdkMerchantClient");
+                    assertThat(context).hasBean("connectSdkV1MerchantClient");
                     assertThat(context).hasSingleBean(MerchantClient.class);
 
                     // verify that the client is used
-                    Client client = context.getBean(ClientProvider.class).client();
-                    verify(client).merchant("merchantId");
-                    verifyNoMoreInteractions(client);
+                    V1Client v1Client = context.getBean(ClientProvider.class).v1Client();
+                    verify(v1Client).merchant("merchantId");
+                    verifyNoMoreInteractions(v1Client);
                 });
     }
 
@@ -122,8 +121,8 @@ class ConnectSdkMerchantClientAutoConfigurationTest {
     static class ClientProvider {
 
         @Bean
-        Client client() {
-            return mock(Client.class);
+        V1Client v1Client() {
+            return mock(V1Client.class);
         }
     }
 }

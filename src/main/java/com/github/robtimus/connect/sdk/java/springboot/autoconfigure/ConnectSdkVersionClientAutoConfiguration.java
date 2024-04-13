@@ -1,6 +1,6 @@
 /*
- * ConnectSdkClientAutoConfiguration.java
- * Copyright 2019 Rob Spoor
+ * ConnectSdkVersionClientAutoConfiguration.java
+ * Copyright 2024 Rob Spoor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,24 +24,24 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.worldline.connect.sdk.java.Client;
-import com.worldline.connect.sdk.java.Communicator;
+import com.worldline.connect.sdk.java.v1.V1Client;
 
 /**
- * {@link EnableAutoConfiguration Auto-configuration} for
- * <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>'s {@link Client}.
+ * {@link EnableAutoConfiguration Auto-configuration} for version-specific clients for
+ * <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>.
  *
  * @author Rob Spoor
+ * @since 4.0
  */
 @Configuration
-@AutoConfigureAfter(ConnectSdkCommunicatorAutoConfiguration.class)
-@ConditionalOnMissingBean(Client.class)
-@ConditionalOnBean(Communicator.class)
+@AutoConfigureAfter(ConnectSdkClientAutoConfiguration.class)
+@ConditionalOnBean(Client.class)
 @SuppressWarnings("javadoc")
-public class ConnectSdkClientAutoConfiguration {
+public class ConnectSdkVersionClientAutoConfiguration {
 
-    // don't close the client when the bean is destroyed, let the communicator or its connection be closed directly
-    @Bean(destroyMethod = "")
-    public Client connectSdkClient(Communicator communicator) {
-        return new Client(communicator);
+    @Bean
+    @ConditionalOnMissingBean(V1Client.class)
+    public V1Client connectSdkV1Client(Client client) {
+        return client.v1();
     }
 }

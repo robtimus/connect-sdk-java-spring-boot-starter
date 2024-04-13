@@ -30,7 +30,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.ConnectSdkHealthIndicator;
-import com.ingenico.connect.gateway.sdk.java.merchant.MerchantClient;
+import com.worldline.connect.sdk.java.v1.merchant.MerchantClient;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for {@link ConnectSdkHealthIndicator}.

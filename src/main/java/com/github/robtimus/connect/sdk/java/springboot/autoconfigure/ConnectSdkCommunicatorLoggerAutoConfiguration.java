@@ -31,14 +31,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import com.github.robtimus.connect.sdk.java.springboot.autoconfigure.ConnectSdkCommunicatorLoggerAutoConfiguration.OnUsesLogbackCondition;
 import com.github.robtimus.connect.sdk.java.springboot.logging.LogbackCommunicatorLogger;
-import com.ingenico.connect.gateway.sdk.java.Communicator;
-import com.ingenico.connect.gateway.sdk.java.logging.CommunicatorLogger;
+import com.worldline.connect.sdk.java.Communicator;
+import com.worldline.connect.sdk.java.logging.CommunicatorLogger;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 
 /**
- * {@link EnableAutoConfiguration Auto-configuration} for <a href="https://github.com/Ingenico-ePayments/connect-sdk-java/">connect-sdk-java</a>'s
- * {@link CommunicatorLogger}.
+ * {@link EnableAutoConfiguration Auto-configuration} for
+ * <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>'s {@link CommunicatorLogger}.
  *
  * @author Rob Spoor
  */
@@ -53,7 +53,7 @@ public class ConnectSdkCommunicatorLoggerAutoConfiguration {
 
     @Bean
     public CommunicatorLogger connectSdkCommunicatorLogger(
-            @Value("${connect.api.logger.name:com.ingenico.connect.gateway.sdk.java.Communicator}") String loggerName,
+            @Value("${connect.api.logger.name:com.worldline.connect.sdk.java.Communicator}") String loggerName,
             @Value("${connect.api.logger.level:INFO}") String logLevel,
             @Value("${connect.api.logger.errorLevel:ERROR}") String errorLogLevel) {
 

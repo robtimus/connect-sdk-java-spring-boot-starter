@@ -34,9 +34,9 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.ConnectSdkHealthIndicator;
-import com.ingenico.connect.gateway.sdk.java.domain.services.TestConnection;
-import com.ingenico.connect.gateway.sdk.java.merchant.MerchantClient;
-import com.ingenico.connect.gateway.sdk.java.merchant.services.ServicesClient;
+import com.worldline.connect.sdk.java.v1.domain.TestConnection;
+import com.worldline.connect.sdk.java.v1.merchant.MerchantClient;
+import com.worldline.connect.sdk.java.v1.merchant.services.ServicesClient;
 
 @SuppressWarnings("nls")
 class ConnectSdkHealthIndicatorAutoConfigurationTest {
@@ -79,11 +79,11 @@ class ConnectSdkHealthIndicatorAutoConfigurationTest {
     void testNoAutoConfigurationWithDisabledHealthIndicator() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
-                        ConnectSdkMetaDataProviderAutoConfiguration.class, ConnectSdkSessionAutoConfiguration.class,
-                        ConnectSdkMarshallerAutoConfiguration.class, ConnectSdkCommunicatorAutoConfiguration.class,
-                        ConnectSdkClientAutoConfiguration.class, ConnectSdkMerchantClientAutoConfiguration.class)
-                .withPropertyValues("connect.api.endpoint.host=eu.sandbox.api-ingenico.com",
-                        "connect.api.api-key-id=keyId", "connect.api.secret-api-key=secret", "connect.api.integrator=Integrator",
+                        ConnectSdkMetadataProviderAutoConfiguration.class, ConnectSdkMarshallerAutoConfiguration.class,
+                        ConnectSdkCommunicatorAutoConfiguration.class, ConnectSdkClientAutoConfiguration.class,
+                        ConnectSdkVersionClientAutoConfiguration.class, ConnectSdkMerchantClientAutoConfiguration.class)
+                .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com",
+                        "connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret", "connect.api.integrator=Integrator",
                         "connect.api.merchant-id=merchantId", "management.health.connect-sdk.enabled=false")
                 .run(context -> {
                     assertThat(context).doesNotHaveBean(ConnectSdkHealthIndicator.class);
@@ -95,11 +95,11 @@ class ConnectSdkHealthIndicatorAutoConfigurationTest {
     void testAutoConfiguration() {
         contextRunner
                 .withUserConfiguration(ConnectSdkConnectionAutoConfiguration.class, ConnectSdkAuthenticatorAutoConfiguration.class,
-                        ConnectSdkMetaDataProviderAutoConfiguration.class, ConnectSdkSessionAutoConfiguration.class,
-                        ConnectSdkMarshallerAutoConfiguration.class, ConnectSdkCommunicatorAutoConfiguration.class,
-                        ConnectSdkClientAutoConfiguration.class, ConnectSdkMerchantClientAutoConfiguration.class)
-                .withPropertyValues("connect.api.endpoint.host=eu.sandbox.api-ingenico.com",
-                        "connect.api.api-key-id=keyId", "connect.api.secret-api-key=secret", "connect.api.integrator=Integrator",
+                        ConnectSdkMetadataProviderAutoConfiguration.class, ConnectSdkMarshallerAutoConfiguration.class,
+                        ConnectSdkCommunicatorAutoConfiguration.class, ConnectSdkClientAutoConfiguration.class,
+                        ConnectSdkVersionClientAutoConfiguration.class, ConnectSdkMerchantClientAutoConfiguration.class)
+                .withPropertyValues("connect.api.endpoint.host=api.preprod.connect.worldline-solutions.com",
+                        "connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret", "connect.api.integrator=Integrator",
                         "connect.api.merchant-id=merchantId")
                 .run(context -> {
                     assertThat(context).hasBean("connectSdkHealthIndicator");

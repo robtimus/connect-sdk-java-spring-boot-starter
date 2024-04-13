@@ -28,15 +28,14 @@ import org.springframework.boot.actuate.endpoint.annotation.DeleteOperation;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.Selector;
-import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.context.ApplicationContext;
 import org.springframework.lang.Nullable;
-import com.ingenico.connect.gateway.sdk.java.Client;
-import com.ingenico.connect.gateway.sdk.java.Communicator;
-import com.ingenico.connect.gateway.sdk.java.PooledConnection;
+import com.worldline.connect.sdk.java.Client;
+import com.worldline.connect.sdk.java.Communicator;
+import com.worldline.connect.sdk.java.communication.PooledConnection;
 
 /**
- * An {@link Endpoint} for managing connections in <a href="https://github.com/Ingenico-ePayments/connect-sdk-java/">connect-sdk-java</a>.
+ * An {@link Endpoint} for managing connections in <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>.
  *
  * @author Rob Spoor
  */
@@ -156,68 +155,6 @@ public class ConnectionsEndpoint {
         client.closeExpiredConnections();
     }
 
-    /**
-     * Closes all idle connections for all {@link PooledConnection}, {@link Communicator} and {@link Client} beans.
-     *
-     * @param idleTime The idle time.
-     * @param timeUnit The time unit.
-     * @deprecated Use {@link #closeConnections(Duration, CloseableConnectionState)} instead.
-     */
-    @WriteOperation
-    @Deprecated
-    public void closeIdleConnections(Long idleTime, TimeUnit timeUnit) {
-        closeConnections(
-                connection -> connection.closeIdleConnections(idleTime, timeUnit),
-                communicator -> communicator.closeIdleConnections(idleTime, timeUnit),
-                client -> client.closeIdleConnections(idleTime, timeUnit));
-    }
-
-    /**
-     * Closes all idle connections for a specific {@link PooledConnection}, {@link Communicator} or {@link Client} bean.
-     *
-     * @param beanName The name of the {@link PooledConnection}, {@link Communicator} or {@link Client} bean.
-     * @param idleTime The idle time.
-     * @param timeUnit The time unit.
-     * @deprecated Use {@link #closeConnectionsForBean(String, Duration, CloseableConnectionState)} instead.
-     */
-    @WriteOperation
-    @Deprecated
-    public void closeIdleConnectionsForBean(@Selector String beanName, Long idleTime, TimeUnit timeUnit) {
-        closeConnectionsForBean(beanName,
-                connection -> connection.closeIdleConnections(idleTime, timeUnit),
-                communicator -> communicator.closeIdleConnections(idleTime, timeUnit),
-                client -> client.closeIdleConnections(idleTime, timeUnit));
-    }
-
-    /**
-     * Closes all expired connections for all {@link PooledConnection}, {@link Communicator} and {@link Client} beans.
-     *
-     * @deprecated Use {@link #closeConnections(Duration, CloseableConnectionState)} instead.
-     */
-    @WriteOperation
-    @Deprecated
-    public void closeExpiredConnections() {
-        closeConnections(
-                PooledConnection::closeExpiredConnections,
-                Communicator::closeExpiredConnections,
-                Client::closeExpiredConnections);
-    }
-
-    /**
-     * Closes all expired connections for a specific {@link PooledConnection}, {@link Communicator} or {@link Client} bean.
-     *
-     * @param beanName The name of the {@link PooledConnection}, {@link Communicator} or {@link Client} bean.
-     * @deprecated Use {@link #closeConnectionsForBean(String, Duration, CloseableConnectionState)} instead.
-     */
-    @WriteOperation
-    @Deprecated
-    public void closeExpiredConnectionsForBean(@Selector String beanName) {
-        closeConnectionsForBean(beanName,
-                PooledConnection::closeExpiredConnections,
-                Communicator::closeExpiredConnections,
-                Client::closeExpiredConnections);
-    }
-
     private void closeConnections(Consumer<PooledConnection> connectionAction,
             Consumer<Communicator> communicatorAction,
             Consumer<Client> clientAction) {
@@ -233,12 +170,12 @@ public class ConnectionsEndpoint {
             Consumer<Client> clientAction) {
 
         Object bean = context.getBean(beanName);
-        if (bean instanceof PooledConnection) {
-            connectionAction.accept((PooledConnection) bean);
-        } else if (bean instanceof Communicator) {
-            communicatorAction.accept((Communicator) bean);
-        } else if (bean instanceof Client) {
-            clientAction.accept((Client) bean);
+        if (bean instanceof PooledConnection pooledConnection) {
+            connectionAction.accept(pooledConnection);
+        } else if (bean instanceof Communicator communicator) {
+            communicatorAction.accept(communicator);
+        } else if (bean instanceof Client client) {
+            clientAction.accept(client);
         } else {
             throw new BeanNotCloseableException(beanName, bean.getClass());
         }

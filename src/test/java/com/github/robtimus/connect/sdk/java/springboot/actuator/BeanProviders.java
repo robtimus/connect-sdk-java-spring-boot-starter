@@ -21,13 +21,13 @@ import static org.mockito.Mockito.mock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import com.ingenico.connect.gateway.sdk.java.Client;
-import com.ingenico.connect.gateway.sdk.java.Communicator;
-import com.ingenico.connect.gateway.sdk.java.Connection;
-import com.ingenico.connect.gateway.sdk.java.Marshaller;
-import com.ingenico.connect.gateway.sdk.java.PooledConnection;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.DefaultMarshaller;
-import com.ingenico.connect.gateway.sdk.java.logging.CommunicatorLogger;
+import com.worldline.connect.sdk.java.Client;
+import com.worldline.connect.sdk.java.Communicator;
+import com.worldline.connect.sdk.java.communication.Connection;
+import com.worldline.connect.sdk.java.communication.PooledConnection;
+import com.worldline.connect.sdk.java.json.DefaultMarshaller;
+import com.worldline.connect.sdk.java.json.Marshaller;
+import com.worldline.connect.sdk.java.logging.CommunicatorLogger;
 
 final class BeanProviders {
 

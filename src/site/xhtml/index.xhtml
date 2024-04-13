@@ -7,28 +7,28 @@
 <div class="section">
   <h2>Quick Start</h2>
   <p>First, add this Spring Boot starter as a <a href="dependency-info.html">dependency</a> to your project.</p>
-  <p>Next, add the following properties to your <tt>application.properties</tt> or <tt>application.yml</tt> file:</p>
+  <p>Next, add the following properties to your <code>application.properties</code> or <code>application.yml</code> file:</p>
   <pre class="source">
 <span class="hl-attribute">connect.api.endpoint.host</span>=&lt;API endpoint hostname&gt;
 <span class="hl-attribute">connect.api.integrator</span>=&lt;your company name&gt;
-<span class="hl-attribute">connect.api.api-key-id</span>=&lt;your API key id&gt;
-<span class="hl-attribute">connect.api.secret-api-key</span>=&lt;your secret API key&gt;
+<span class="hl-attribute">connect.api.authorization-id</span>=&lt;your authorization id&gt;
+<span class="hl-attribute">connect.api.authorization-secret</span>=&lt;your authorization secret&gt;
 </pre>
-  <p>With these simple steps a <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/Client.html">Client</a> will be auto-configured.</p>
-  <p>To also have a <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/merchant/MerchantClient.html">MerchantClient</a> auto-configured, add the following property as well:</p>
+  <p>With these simple steps a <a href="https://worldline-global-collect.github.io/connect-sdk-java/apidocs/latest/com/worldline/connect/sdk/java/Client.html">Client</a> and <a href="https://worldline-global-collect.github.io/connect-sdk-java/apidocs/latest/com/worldline/connect/sdk/java/v1/V1Client.html">V1Client</a> will be auto-configured.</p>
+  <p>To also have a <a href="https://worldline-global-collect.github.io/connect-sdk-java/apidocs/latest/com/worldline/connect/sdk/java/v1/merchant/MerchantClient.html">MerchantClient</a> auto-configured, add the following property as well:</p>
   <pre class="source">
 <span class="hl-attribute">connect.api.merchant-id</span>=&lt;your merchand id&gt;
 </pre>
   <h3>Actuators</h3>
-  <p>If you have the <tt>org.springframework.boot:spring-boot-starter-actuator</tt> dependency in your project and have provided all of the above properties, including <tt>connect.api.merchant-id</tt>,
-     then a <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-health">health indicator</a> will be auto-configured.
-     This will use the <a href="https://epayments-api.developer-ingenico.com/s2sapi/v1/en_US/java/services/testconnection.html?paymentPlatform=ALL#services-testconnection">test connection</a> functionality to check your connectivity to the Ingenico Server API.
-     To prevent too many requests to the Ingenico Server API this is throttled to at most 1 request every minute. This can be changed by adding the following property to your project:</p>
+  <p>If you have the <code>org.springframework.boot:spring-boot-starter-actuator</code> dependency in your project and have provided all of the above properties, including <code>connect.api.merchant-id</code>,
+     then a <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints">health indicator</a> will be auto-configured.
+     This will use the <a href="https://apireference.connect.worldline-solutions.com/s2sapi/v1/en_US/java/services/testconnection.html?paymentPlatform=ALL">test connection</a> functionality to check your connectivity to the Worldline Connect Server API.
+     To prevent too many requests to the Worldline Connect Server API this is throttled to at most 1 request every minute. This can be changed by adding the following property to your project:</p>
   <pre class="source">
 <span class="hl-comment"># Every 5 minutes</span>
 <span class="hl-attribute">connect.api.health.min-interval</span>=300
 </pre>
-  <p>If you want to have an auto-configured <a href="https://ingenico-epayments.github.io/connect-sdk-java/apidocs/latest/com/ingenico/connect/gateway/sdk/java/merchant/MerchantClient.html">MerchantClient</a> but you don't want this health indicator,
+  <p>If you want to have an auto-configured <a href="https://worldline-global-collect.github.io/connect-sdk-java/apidocs/latest/com/worldline/connect/sdk/java/v1/merchant/MerchantClient.html">MerchantClient</a> but you don't want this health indicator,
      you can disable it by adding the following property to your project:</p>
   <pre class="source">
 <span class="hl-attribute">management.health.connect-sdk.enabled</span>=false

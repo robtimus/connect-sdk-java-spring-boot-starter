@@ -28,20 +28,19 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.github.robtimus.connect.sdk.java.springboot.ConfigurableAuthenticator;
+import com.github.robtimus.connect.sdk.java.springboot.ConfigurableV1HMACAuthenticator;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.ApiKeyEndpoint;
-import com.ingenico.connect.gateway.sdk.java.Authenticator;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
+import com.worldline.connect.sdk.java.authentication.Authenticator;
 
 /**
- * {@link EnableAutoConfiguration Auto-configuration} for <a href="https://github.com/Ingenico-ePayments/connect-sdk-java/">connect-sdk-java</a>'s
- * {@link Authenticator}.
+ * {@link EnableAutoConfiguration Auto-configuration} for
+ * <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>'s {@link Authenticator}.
  *
  * @author Rob Spoor
  */
 @Configuration
 @ConditionalOnMissingBean(Authenticator.class)
-@ConditionalOnProperty(prefix = "connect.api", name = { "api-key-id", "secret-api-key" })
+@ConditionalOnProperty(prefix = "connect.api", name = { "authorization-id", "authorization-secret" })
 @EnableConfigurationProperties(ConnectSdkProperties.class)
 @SuppressWarnings("javadoc")
 public class ConnectSdkAuthenticatorAutoConfiguration {
@@ -54,17 +53,16 @@ public class ConnectSdkAuthenticatorAutoConfiguration {
     }
 
     @Bean
-    public ConfigurableAuthenticator connectSdkAuthenticator() {
-        AuthorizationType authorizationType = properties.getAuthorizationType();
-        String apiKeyId = properties.getApiKeyId();
-        String secretApiKey = properties.getSecretApiKey();
-        return new ConfigurableAuthenticator(authorizationType, apiKeyId, secretApiKey);
+    public ConfigurableV1HMACAuthenticator connectSdkV1HMACAuthenticator() {
+        String authorizationId = properties.getAuthorizationId();
+        String authorizationSecret = properties.getAuthorizationSecret();
+        return new ConfigurableV1HMACAuthenticator(authorizationId, authorizationSecret);
     }
 
     @Bean
     @ConditionalOnClass(Endpoint.class)
     @ConditionalOnAvailableEndpoint(endpoint = ApiKeyEndpoint.class)
-    public ApiKeyEndpoint connectSdkApiKeyEndpoint(ConfigurableAuthenticator authenticator) {
+    public ApiKeyEndpoint connectSdkApiKeyEndpoint(ConfigurableV1HMACAuthenticator authenticator) {
         return new ApiKeyEndpoint(authenticator);
     }
 }

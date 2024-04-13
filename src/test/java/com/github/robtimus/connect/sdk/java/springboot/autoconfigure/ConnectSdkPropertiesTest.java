@@ -24,7 +24,7 @@ import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Configuration;
-import com.ingenico.connect.gateway.sdk.java.defaultimpl.AuthorizationType;
+import com.worldline.connect.sdk.java.authentication.AuthorizationType;
 
 @SuppressWarnings("nls")
 class ConnectSdkPropertiesTest {
@@ -43,8 +43,8 @@ class ConnectSdkPropertiesTest {
                     assertThat(properties.getMaxConnections()).isEqualTo(10);
                     assertThat(properties.isConnectionReuse()).isTrue();
                     assertThat(properties.getAuthorizationType()).isEqualTo(AuthorizationType.V1HMAC);
-                    assertThat(properties.getApiKeyId()).isNull();
-                    assertThat(properties.getSecretApiKey()).isNull();
+                    assertThat(properties.getAuthorizationId()).isNull();
+                    assertThat(properties.getAuthorizationSecret()).isNull();
                     assertThat(properties.getProxy()).isNull();
                     assertThat(properties.getHttps()).isNull();
                     assertThat(properties.getIntegrator()).isNull();
@@ -59,7 +59,8 @@ class ConnectSdkPropertiesTest {
                         "connect.api.endpoint.host=localhost", "connect.api.endpoint.scheme=http", "connect.api.endpoint.port=80",
                         "connect.api.connect-timeout=1000", "connect.api.socket-timeout=10000",
                         "connect.api.max-connections=1", "connect.api.connection-reuse=false",
-                        "connect.api.authorization-type=V1HMAC", "connect.api.api-key-id=myKeyId", "connect.api.secret-api-key=mySecretApiKey",
+                        "connect.api.authorization-type=V1HMAC",
+                        "connect.api.authorization-id=myKeyId", "connect.api.authorization-secret=mySecretApiKey",
                         "connect.api.proxy.uri=http://proxy-host", "connect.api.proxy.username=proxy-user", "connect.api.proxy.password=proxy-pass",
                         "connect.api.https.protocols=TLSv1.2",
                         "connect.api.integrator=myIntegrator",
@@ -78,8 +79,8 @@ class ConnectSdkPropertiesTest {
                     assertThat(properties.getMaxConnections()).isEqualTo(1);
                     assertThat(properties.isConnectionReuse()).isFalse();
                     assertThat(properties.getAuthorizationType()).isEqualTo(AuthorizationType.V1HMAC);
-                    assertThat(properties.getApiKeyId()).isEqualTo("myKeyId");
-                    assertThat(properties.getSecretApiKey()).isEqualTo("mySecretApiKey");
+                    assertThat(properties.getAuthorizationId()).isEqualTo("myKeyId");
+                    assertThat(properties.getAuthorizationSecret()).isEqualTo("mySecretApiKey");
                     assertThat(properties.getProxy()).isNotNull();
                     assertThat(properties.getProxy().getUri()).isEqualTo("http://proxy-host");
                     assertThat(properties.getProxy().getUsername()).isEqualTo("proxy-user");
@@ -102,7 +103,8 @@ class ConnectSdkPropertiesTest {
                         "connect.api.endpoint.host=localhost", "connect.api.endpoint.scheme=http", "connect.api.endpoint.port=80",
                         "connect.api.connectTimeout=1000", "connect.api.socketTimeout=10000",
                         "connect.api.maxConnections=1", "connect.api.connectionReuse=false",
-                        "connect.api.authorizationType=V1HMAC", "connect.api.apiKeyId=myKeyId", "connect.api.secretApiKey=mySecretApiKey",
+                        "connect.api.authorizationType=V1HMAC",
+                        "connect.api.authorizationId=myKeyId", "connect.api.authorizationSecret=mySecretApiKey",
                         "connect.api.proxy.uri=http://proxy-host", "connect.api.proxy.username=proxy-user", "connect.api.proxy.password=proxy-pass",
                         "connect.api.https.protocols=TLSv1.2",
                         "connect.api.integrator=myIntegrator",
@@ -121,8 +123,8 @@ class ConnectSdkPropertiesTest {
                     assertThat(properties.getMaxConnections()).isEqualTo(1);
                     assertThat(properties.isConnectionReuse()).isFalse();
                     assertThat(properties.getAuthorizationType()).isEqualTo(AuthorizationType.V1HMAC);
-                    assertThat(properties.getApiKeyId()).isEqualTo("myKeyId");
-                    assertThat(properties.getSecretApiKey()).isEqualTo("mySecretApiKey");
+                    assertThat(properties.getAuthorizationId()).isEqualTo("myKeyId");
+                    assertThat(properties.getAuthorizationSecret()).isEqualTo("mySecretApiKey");
                     assertThat(properties.getProxy()).isNotNull();
                     assertThat(properties.getProxy().getUri()).isEqualTo("http://proxy-host");
                     assertThat(properties.getProxy().getUsername()).isEqualTo("proxy-user");
