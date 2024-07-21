@@ -20,12 +20,10 @@ package com.github.robtimus.connect.sdk.java.springboot.autoconfigure;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
@@ -35,9 +33,6 @@ import org.springframework.context.annotation.Configuration;
 import com.github.robtimus.connect.sdk.java.springboot.logging.LogbackCommunicatorLogger;
 import com.worldline.connect.sdk.java.logging.CommunicatorLogger;
 
-// PowerMock doesn't work well with JUnit5 yet, so use JUnit4 for just this test class
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(LoggerFactory.class)
 @SuppressWarnings("nls")
 class ConnectSdkCommunicatorLoggerAutoConfigurationTest {
 
@@ -57,18 +52,19 @@ class ConnectSdkCommunicatorLoggerAutoConfigurationTest {
 
     @Test
     void testNoAutoConfigurationWithNoLogbackLoggers() {
-        mockStatic(LoggerFactory.class);
-        when(LoggerFactory.getLogger(anyString())).thenAnswer(context -> {
-            String name = context.getArgument(0);
-            Logger logger = mock(Logger.class);
-            when(logger.getName()).thenReturn(name);
-            return logger;
-        });
-        contextRunner
-                .run(context -> {
-                    assertThat(context).doesNotHaveBean("connectSdkCommunicatorLogger");
-                    assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
-                });
+        try (MockedStatic<LoggerFactory> loggerFactory = mockStatic(LoggerFactory.class)) {
+            loggerFactory.when(() -> LoggerFactory.getLogger(anyString())).thenAnswer(context -> {
+                String name = context.getArgument(0);
+                Logger logger = mock(Logger.class);
+                when(logger.getName()).thenReturn(name);
+                return logger;
+            });
+            contextRunner
+                    .run(context -> {
+                        assertThat(context).doesNotHaveBean("connectSdkCommunicatorLogger");
+                        assertThat(context).doesNotHaveBean(CommunicatorLogger.class);
+                    });
+        }
     }
 
     @Test
