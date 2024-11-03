@@ -22,7 +22,7 @@
   <parent>
     <groupId>com.github.robtimus</groupId>
     <artifactId>robtimus-parent</artifactId>
-    <version>1.11</version>
+    <version>1.13</version>
     <relativePath />
   </parent>
 
@@ -63,15 +63,14 @@
   <properties>
     <version.java>17</version.java>
 
-    <version.awaitility>4.2.1</version.awaitility>
-    <version.commons-codec>1.16.1</version.commons-codec>
-    <version.connect-sdk-java>7.0.0</version.connect-sdk-java>
-    <version.gson>2.10.1</version.gson>
+    <version.awaitility>4.2.2</version.awaitility>
+    <version.commons-codec>1.17.1</version.commons-codec>
+    <version.connect-sdk-java>7.2.0</version.connect-sdk-java>
+    <version.gson>2.11.0</version.gson>
     <version.httpclient>4.5.14</version.httpclient>
     <version.httpmime>4.5.14</version.httpmime>
-    <version.mockito>5.11.0</version.mockito>
-    <version.snakeyaml>2.2</version.snakeyaml>
-    <version.spring-boot>3.2.4</version.spring-boot>
+    <version.snakeyaml>2.3</version.snakeyaml>
+    <version.spring-boot>3.3.5</version.spring-boot>
   </properties>
 
   <dependencies>
