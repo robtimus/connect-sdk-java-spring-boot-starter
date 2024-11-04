@@ -41,7 +41,7 @@ class LogbackCommunicatorLoggerTest {
         Appender<ILoggingEvent> appender = mock(Appender.class);
 
         Logger logger = (Logger) LoggerFactory.getLogger(getClass());
-        logger.setLevel(Level.ALL);
+        logger.setLevel(Level.TRACE);
         logger.addAppender(appender);
 
         Throwable error = new AssertionError("assertion failed");
@@ -82,7 +82,7 @@ class LogbackCommunicatorLoggerTest {
         Appender<ILoggingEvent> appender = mock(Appender.class);
 
         Logger logger = (Logger) LoggerFactory.getLogger(getClass());
-        logger.setLevel(Level.ALL);
+        logger.setLevel(Level.TRACE);
         logger.addAppender(appender);
 
         Throwable error = new AssertionError("assertion failed");
