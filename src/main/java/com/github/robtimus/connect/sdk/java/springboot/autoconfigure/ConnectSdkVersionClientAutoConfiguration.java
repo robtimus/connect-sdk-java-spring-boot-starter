@@ -28,7 +28,7 @@ import com.worldline.connect.sdk.java.v1.V1Client;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for version-specific clients for
- * <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>.
+ * <a href="https://github.com/Worldline-Global-Collect/connect-sdk-java/">connect-sdk-java</a>.
  *
  * @author Rob Spoor
  * @since 4.0

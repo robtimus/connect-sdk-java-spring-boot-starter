@@ -31,7 +31,7 @@ import com.worldline.connect.sdk.java.v1.merchant.MerchantClient;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for
- * <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>'s {@link MerchantClient}.
+ * <a href="https://github.com/Worldline-Global-Collect/connect-sdk-java/">connect-sdk-java</a>'s {@link MerchantClient}.
  *
  * @author Rob Spoor
  */

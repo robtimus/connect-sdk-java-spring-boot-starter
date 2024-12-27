@@ -38,7 +38,7 @@ import ch.qos.logback.classic.Logger;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for
- * <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>'s {@link CommunicatorLogger}.
+ * <a href="https://github.com/Worldline-Global-Collect/connect-sdk-java/">connect-sdk-java</a>'s {@link CommunicatorLogger}.
  *
  * @author Rob Spoor
  */

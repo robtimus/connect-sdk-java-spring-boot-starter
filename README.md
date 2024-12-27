@@ -5,7 +5,7 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=com.github.robtimus%3Aconnect-sdk-java-spring-boot-starter&metric=coverage)](https://sonarcloud.io/summary/overall?id=com.github.robtimus%3Aconnect-sdk-java-spring-boot-starter)
 [![Known Vulnerabilities](https://snyk.io/test/github/robtimus/connect-sdk-java-spring-boot-starter/badge.svg)](https://snyk.io/test/github/robtimus/connect-sdk-java-spring-boot-starter)
 
-A Spring Boot starter project for [connect-sdk-java](https://github.com/Worldline-Global-Collectconnect-sdk-java).
+A Spring Boot starter project for [connect-sdk-java](https://github.com/Worldline-Global-Collect/connect-sdk-java).
 
 For more details, see https://robtimus.github.io/connect-sdk-java-spring-boot-starter/.
 

@@ -23,7 +23,7 @@ import com.worldline.connect.sdk.java.CommunicatorConfiguration;
 import com.worldline.connect.sdk.java.authentication.AuthorizationType;
 
 /**
- * Properties for <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>.
+ * Properties for <a href="https://github.com/Worldline-Global-Collect/connect-sdk-java/">connect-sdk-java</a>.
  * These match the properties available in {@link CommunicatorConfiguration}.
  *
  * @author Rob Spoor

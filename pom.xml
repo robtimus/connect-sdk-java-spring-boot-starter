@@ -30,7 +30,7 @@
   <version>4.2-SNAPSHOT</version>
 
   <name>connect-sdk-java-spring-boot-starter</name>
-  <description>Spring Boot starter for connect-sdk-java (https://github.com/Worldline-Global-Collectconnect-sdk-java/)</description>
+  <description>Spring Boot starter for connect-sdk-java (https://github.com/Worldline-Global-Collect/connect-sdk-java/)</description>
   <url>https://robtimus.github.io/connect-sdk-java-spring-boot-starter/</url>
   <inceptionYear>2019</inceptionYear>
 

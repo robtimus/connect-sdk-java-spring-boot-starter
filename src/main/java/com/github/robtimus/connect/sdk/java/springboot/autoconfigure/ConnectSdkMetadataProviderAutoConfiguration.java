@@ -32,7 +32,7 @@ import com.worldline.connect.sdk.java.domain.ShoppingCartExtension;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for
- * <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>'s {@link MetadataProvider}.
+ * <a href="https://github.com/Worldline-Global-Collect/connect-sdk-java/">connect-sdk-java</a>'s {@link MetadataProvider}.
  *
  * @author Rob Spoor
  */

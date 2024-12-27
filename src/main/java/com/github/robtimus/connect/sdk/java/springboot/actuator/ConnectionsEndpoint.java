@@ -35,7 +35,7 @@ import com.worldline.connect.sdk.java.Communicator;
 import com.worldline.connect.sdk.java.communication.PooledConnection;
 
 /**
- * An {@link Endpoint} for managing connections in <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>.
+ * An {@link Endpoint} for managing connections in <a href="https://github.com/Worldline-Global-Collect/connect-sdk-java/">connect-sdk-java</a>.
  *
  * @author Rob Spoor
  */

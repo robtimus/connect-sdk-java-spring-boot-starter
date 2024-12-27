@@ -22,7 +22,7 @@ import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import com.github.robtimus.connect.sdk.java.springboot.ConfigurableV1HMACAuthenticator;
 
 /**
- * An {@link Endpoint} for managing API keys in <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>.
+ * An {@link Endpoint} for managing API keys in <a href="https://github.com/Worldline-Global-Collect/connect-sdk-java/">connect-sdk-java</a>.
  *
  * @author Rob Spoor
  * @since 3.8

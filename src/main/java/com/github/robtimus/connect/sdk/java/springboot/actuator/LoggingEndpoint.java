@@ -37,7 +37,7 @@ import com.worldline.connect.sdk.java.logging.LoggingCapable;
 
 /**
  * An {@link Endpoint} for enabling and disabling logging in
- * <a href="https://github.com/Worldline-Global-Collectconnect-sdk-java/">connect-sdk-java</a>.
+ * <a href="https://github.com/Worldline-Global-Collect/connect-sdk-java/">connect-sdk-java</a>.
  *
  * @author Rob Spoor
  */
