@@ -6,7 +6,7 @@
 <div class="section">
   <h2>Actuator endpoints</h2>
   <p>The following custom actuator endpoints are provided. These are disabled by default for both JMX and web.
-     To enable these you need to set property <code>management.endpoint.&lt;id&gt;.enabled</code> to <code>true</code>.</p>
+     To enable these you need to set property <code>management.endpoint.&lt;id&gt;.access</code> to <code>unrestricted</code>.</p>
   <p>By default all endpoints are exposed over JMX, but only the <code>info</code> and <code>health</code> endpoints are exposed over HTTP.
      To expose these custom endpoints over HTTP as well you need to set property <code>management.endpoints.web.exposure.include</code> with all endpoints you want enabled.
      See <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints">Exposing Endpoints</a> for more information.</p>

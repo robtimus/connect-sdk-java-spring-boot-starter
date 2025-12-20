@@ -45,7 +45,7 @@ class ConnectSdkConnectionsEndpointAutoConfigurationTest {
             try (FilteredClassLoader classLoader = new FilteredClassLoader(Endpoint.class)) {
                 contextRunner
                         .withClassLoader(classLoader)
-                        .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true", "spring.jmx.enabled=true",
+                        .withPropertyValues("management.endpoint.connectSdkConnections.access=UNRESTRICTED", "spring.jmx.enabled=true",
                                 "management.endpoints.jmx.exposure.include=connectSdkConnections")
                         .run(context -> {
                             assertThat(context).doesNotHaveBean(ConnectionsEndpoint.class);
@@ -57,7 +57,7 @@ class ConnectSdkConnectionsEndpointAutoConfigurationTest {
         void testNoAutoConfigurationWithExistingBean() {
             contextRunner
                     .withUserConfiguration(ExistingBeanProvider.class)
-                    .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true", "spring.jmx.enabled=true",
+                    .withPropertyValues("management.endpoint.connectSdkConnections.access=UNRESTRICTED", "spring.jmx.enabled=true",
                             "management.endpoints.jmx.exposure.include=connectSdkConnections")
                     .run(context -> {
                         assertThat(context).doesNotHaveBean("connectSdkConnectionsEndpoint");
@@ -78,7 +78,7 @@ class ConnectSdkConnectionsEndpointAutoConfigurationTest {
         @Test
         void testAutoConfigurationWithEnabledEndpoint() {
             contextRunner
-                    .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true")
+                    .withPropertyValues("management.endpoint.connectSdkConnections.access=UNRESTRICTED")
                     .run(context -> {
                         assertThat(context).doesNotHaveBean(ConnectionsEndpoint.class);
                     });
@@ -87,14 +87,14 @@ class ConnectSdkConnectionsEndpointAutoConfigurationTest {
         @Test
         void testAutoConfigurationWithAvailableEndpoint() {
             contextRunner
-                    .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true", "spring.jmx.enabled=true",
+                    .withPropertyValues("management.endpoint.connectSdkConnections.access=UNRESTRICTED", "spring.jmx.enabled=true",
                             "management.endpoints.jmx.exposure.include=connectSdkConnections")
                     .run(context -> {
                         assertThat(context).hasBean("connectSdkConnectionsEndpoint");
                         assertThat(context).hasSingleBean(ConnectionsEndpoint.class);
                     });
             contextRunner
-                    .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true",
+                    .withPropertyValues("management.endpoint.connectSdkConnections.access=UNRESTRICTED",
                             "management.endpoints.web.exposure.include=connectSdkConnections")
                     .run(context -> {
                         assertThat(context).hasBean("connectSdkConnectionsEndpoint");

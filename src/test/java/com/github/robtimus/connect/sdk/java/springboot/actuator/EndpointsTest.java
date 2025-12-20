@@ -51,9 +51,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -76,9 +76,9 @@ import com.worldline.connect.sdk.java.v1.domain.TestConnection;
         "connect.api.authorization-secret=secret",
         "connect.api.merchant-id=123",
         "management.endpoint.health.show-details=always",
-        "management.endpoint.connectSdkApiKey.enabled=true",
-        "management.endpoint.connectSdkConnections.enabled=true",
-        "management.endpoint.connectSdkLogging.enabled=true",
+        "management.endpoint.connectSdkApiKey.access=UNRESTRICTED",
+        "management.endpoint.connectSdkConnections.access=UNRESTRICTED",
+        "management.endpoint.connectSdkLogging.access=UNRESTRICTED",
         "management.endpoints.web.exposure.include=health,connectSdkApiKey,connectSdkConnections,connectSdkLogging"
 })
 @SuppressWarnings("nls")
