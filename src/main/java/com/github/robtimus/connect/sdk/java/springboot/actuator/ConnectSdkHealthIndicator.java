@@ -19,9 +19,9 @@ package com.github.robtimus.connect.sdk.java.springboot.actuator;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import org.springframework.boot.actuate.health.AbstractHealthIndicator;
-import org.springframework.boot.actuate.health.Health.Builder;
-import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.boot.health.contributor.AbstractHealthIndicator;
+import org.springframework.boot.health.contributor.Health.Builder;
+import org.springframework.boot.health.contributor.HealthIndicator;
 import com.worldline.connect.sdk.java.v1.ApiException;
 import com.worldline.connect.sdk.java.v1.domain.TestConnection;
 import com.worldline.connect.sdk.java.v1.merchant.MerchantClient;

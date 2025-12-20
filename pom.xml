@@ -69,8 +69,9 @@
     <version.gson>2.11.0</version.gson>
     <version.httpclient>4.5.14</version.httpclient>
     <version.httpmime>4.5.14</version.httpmime>
-    <version.snakeyaml>2.3</version.snakeyaml>
-    <version.spring-boot>3.3.5</version.spring-boot>
+    <!-- The version provided by the parent is not compatible with Spring Boot 4. Remove once the parent provides 6.x -->
+    <version.junit>6.0.1</version.junit>
+    <version.spring-boot>4.0.1</version.spring-boot>
   </properties>
 
   <dependencies>
@@ -130,13 +131,6 @@
       <version>${version.spring-boot}</version>
     </dependency>
 
-    <!-- Override version provided by spring-boot-starter until it uses a more secure version itself -->
-    <dependency>
-      <groupId>org.yaml</groupId>
-      <artifactId>snakeyaml</artifactId>
-      <version>${version.snakeyaml}</version>
-    </dependency>
-
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
@@ -159,17 +153,19 @@
           <groupId>org.mockito</groupId>
           <artifactId>mockito-junit-jupiter</artifactId>
         </exclusion>
-        <exclusion>
-          <!-- This comes with an older version of SLF4J which causes conflicts -->
-          <groupId>com.jayway.jsonpath</groupId>
-          <artifactId>json-path</artifactId>
-        </exclusion>
       </exclusions>
     </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
+      <artifactId>spring-boot-starter-webmvc</artifactId>
+      <version>${version.spring-boot}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-restclient</artifactId>
       <version>${version.spring-boot}</version>
       <scope>test</scope>
     </dependency>
@@ -217,8 +213,8 @@
           <configuration>
             <sourcepath>${project.basedir}/src/main/java</sourcepath>
             <links>
-              <link>https://docs.spring.io/spring-boot/docs/3.2.x/api</link>
-              <link>https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api</link>
+              <link>https://docs.spring.io/spring-boot/api/java/</link>
+              <link>https://docs.spring.io/spring-framework/docs/7.0.x/javadoc-api/</link>
               <link>https://logback.qos.ch/apidocs/</link>
               <link>https://worldline-global-collect.github.io/connect-sdk-java/apidocs/7.x</link>
             </links>
@@ -343,7 +339,7 @@
         <version.gson>2.6</version.gson>
         <version.httpclient>4.4</version.httpclient>
         <version.httpmime>4.4</version.httpmime>
-        <version.spring-boot>3.0.0</version.spring-boot>
+        <version.spring-boot>4.0.0</version.spring-boot>
       </properties>
     </profile>
   </profiles>

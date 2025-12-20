@@ -112,8 +112,8 @@ class FullAutoConfigurationTest {
     @Test
     void testWithMinimalPropertiesForEndpoints() {
         contextRunner
-                .withPropertyValues("management.endpoint.connectSdkConnections.enabled=true",
-                        "management.endpoint.connectSdkLogging.enabled=true", "spring.jmx.enabled=true",
+                .withPropertyValues("management.endpoint.connectSdkConnections.access=UNRESTRICTED",
+                        "management.endpoint.connectSdkLogging.access=UNRESTRICTED", "spring.jmx.enabled=true",
                         "management.endpoints.jmx.exposure.include=connectSdkConnections,connectSdkLogging")
                 .run(context -> {
                     assertThat(context).doesNotHaveBean(Authenticator.class);
@@ -140,8 +140,8 @@ class FullAutoConfigurationTest {
                         "connect.api.proxy.uri=http://localhost", "connect.api.proxy.username=user", "connect.api.proxy.password=pass",
                         "connect.api.https.protocols=TLSv1.2", "connect.api.integrator=Integrator",
                         "connect.api.shopping-cart-extension.creator=Creator", "connect.api.shopping-cart-extension.name=name",
-                        "connect.api.shopping-cart-extension.version=version", "management.endpoint.connectSdkConnections.enabled=true",
-                        "management.endpoint.connectSdkLogging.enabled=true", "spring.jmx.enabled=true",
+                        "connect.api.shopping-cart-extension.version=version", "management.endpoint.connectSdkConnections.access=UNRESTRICTED",
+                        "management.endpoint.connectSdkLogging.access=UNRESTRICTED", "spring.jmx.enabled=true",
                         "management.endpoints.jmx.exposure.include=connectSdkConnections,connectSdkLogging")
                 .run(context -> {
                     assertThat(context).hasSingleBean(Authenticator.class);
@@ -169,7 +169,7 @@ class FullAutoConfigurationTest {
                         "connect.api.https.protocols=TLSv1.2", "connect.api.integrator=Integrator",
                         "connect.api.shopping-cart-extension.creator=Creator", "connect.api.shopping-cart-extension.name=name",
                         "connect.api.shopping-cart-extension.version=version", "connect.api.shopping-cart-extension.extension-id=extensionId",
-                        "management.endpoint.connectSdkConnections.enabled=true", "management.endpoint.connectSdkLogging.enabled=true",
+                        "management.endpoint.connectSdkConnections.access=UNRESTRICTED", "management.endpoint.connectSdkLogging.access=UNRESTRICTED",
                         "spring.jmx.enabled=true", "management.endpoints.jmx.exposure.include=connectSdkConnections,connectSdkLogging")
                 .run(context -> {
                     assertThat(context).hasSingleBean(Authenticator.class);
@@ -199,7 +199,7 @@ class FullAutoConfigurationTest {
                         "connect.api.integrator=Integrator", "connect.api.shopping-cart-extension.creator=Creator",
                         "connect.api.shopping-cart-extension.name=name", "connect.api.shopping-cart-extension.version=version",
                         "connect.api.shopping-cart-extension.extension-id=extensionId",
-                        "management.endpoint.connectSdkConnections.enabled=true", "management.endpoint.connectSdkLogging.enabled=true",
+                        "management.endpoint.connectSdkConnections.access=UNRESTRICTED", "management.endpoint.connectSdkLogging.access=UNRESTRICTED",
                         "spring.jmx.enabled=true", "management.endpoints.jmx.exposure.include=connectSdkConnections,connectSdkLogging")
                 .run(context -> {
                     assertThat(context).hasSingleBean(Authenticator.class);
@@ -235,7 +235,7 @@ class FullAutoConfigurationTest {
                 c -> c.getBean(CommunicatorLoggerProvider.class).communicatorLogger());
         testWithProvidedBean(ConnectionProvider.class, Connection.class, c -> c.getBean(ConnectionProvider.class).connection());
         testWithProvidedBean(HealthIndicatorProvider.class, ConnectSdkHealthIndicator.class,
-                c -> c.getBean(HealthIndicatorProvider.class).healthIndicator());
+                c -> c.getBean(HealthIndicatorProvider.class).customHealthIndicator());
         testWithProvidedBean(MarshallerProvider.class, Marshaller.class, c -> c.getBean(MarshallerProvider.class).marshaller());
         testWithProvidedBean(MerchantClientProvider.class, MerchantClient.class, c -> c.getBean(MerchantClientProvider.class).merchantClient());
         testWithProvidedBean(MetadataProviderProvider.class, MetadataProvider.class,
@@ -328,7 +328,7 @@ class FullAutoConfigurationTest {
         private MerchantClient merchantClient;
 
         @Bean
-        ConnectSdkHealthIndicator healthIndicator() {
+        ConnectSdkHealthIndicator customHealthIndicator() {
             return new ConnectSdkHealthIndicator(merchantClient, 1);
         }
     }
