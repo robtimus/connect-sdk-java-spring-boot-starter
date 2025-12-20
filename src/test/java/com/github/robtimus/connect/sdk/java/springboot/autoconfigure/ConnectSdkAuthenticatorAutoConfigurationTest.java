@@ -43,7 +43,7 @@ class ConnectSdkAuthenticatorAutoConfigurationTest {
                 .withUserConfiguration(ExistingBeanProvider.class)
                 .withPropertyValues("connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret",
                         // enable the API key endpoint as well - it won't be available though
-                        "management.endpoint.connectSdkApiKey.enabled=true", "spring.jmx.enabled=true",
+                        "management.endpoint.connectSdkApiKey.access=UNRESTRICTED", "spring.jmx.enabled=true",
                         "management.endpoints.jmx.exposure.include=connectSdkApiKey")
                 .run(context -> {
                     assertThat(context).doesNotHaveBean("connectSdkV1HMACAuthenticator");
@@ -59,7 +59,7 @@ class ConnectSdkAuthenticatorAutoConfigurationTest {
         contextRunner
                 .withPropertyValues("connect.api.authorization-id=keyId",
                         // enable the API key endpoint as well - it won't be available though
-                        "management.endpoint.connectSdkApiKey.enabled=true", "spring.jmx.enabled=true",
+                        "management.endpoint.connectSdkApiKey.access=UNRESTRICTED", "spring.jmx.enabled=true",
                         "management.endpoints.jmx.exposure.include=connectSdkApiKey")
                 .run(context -> {
                     assertThat(context).doesNotHaveBean(Authenticator.class);
@@ -69,7 +69,7 @@ class ConnectSdkAuthenticatorAutoConfigurationTest {
         contextRunner
                 .withPropertyValues("connect.api.authorization-secret=secret",
                         // enable the API key endpoint as well - it won't be available though
-                        "management.endpoint.connectSdkApiKey.enabled=true", "spring.jmx.enabled=true",
+                        "management.endpoint.connectSdkApiKey.access=UNRESTRICTED", "spring.jmx.enabled=true",
                         "management.endpoints.jmx.exposure.include=connectSdkApiKey")
                 .run(context -> {
                     assertThat(context).doesNotHaveBean(Authenticator.class);
@@ -95,7 +95,7 @@ class ConnectSdkAuthenticatorAutoConfigurationTest {
     void testAutoConfigurationWithEnabledEndpoint() {
         contextRunner
                 .withPropertyValues("connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret",
-                        "management.endpoint.connectSdkApiKey.enabled=true")
+                        "management.endpoint.connectSdkApiKey.access=UNRESTRICTED")
                 .run(context -> {
                     assertThat(context).hasBean("connectSdkV1HMACAuthenticator");
                     assertThat(context).hasSingleBean(Authenticator.class);
@@ -109,7 +109,7 @@ class ConnectSdkAuthenticatorAutoConfigurationTest {
     void testAutoConfigurationWithAvailableEndpoint() {
         contextRunner
                 .withPropertyValues("connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret",
-                        "management.endpoint.connectSdkApiKey.enabled=true", "spring.jmx.enabled=true",
+                        "management.endpoint.connectSdkApiKey.access=UNRESTRICTED", "spring.jmx.enabled=true",
                         "management.endpoints.jmx.exposure.include=connectSdkApiKey")
                 .run(context -> {
                     assertThat(context).hasBean("connectSdkV1HMACAuthenticator");
@@ -126,7 +126,7 @@ class ConnectSdkAuthenticatorAutoConfigurationTest {
             contextRunner
                     .withClassLoader(classLoader)
                     .withPropertyValues("connect.api.authorization-id=keyId", "connect.api.authorization-secret=secret",
-                            "management.endpoint.connectSdkApiKey.enabled=true", "spring.jmx.enabled=true",
+                            "management.endpoint.connectSdkApiKey.access=UNRESTRICTED", "spring.jmx.enabled=true",
                             "management.endpoints.jmx.exposure.include=connectSdkApiKey")
                     .run(context -> {
                         assertThat(context).hasBean("connectSdkV1HMACAuthenticator");

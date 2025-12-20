@@ -41,7 +41,7 @@ class ConnectSdkLoggingEndpointAutoConfigurationTest {
         try (FilteredClassLoader classLoader = new FilteredClassLoader(Endpoint.class)) {
             contextRunner
                     .withClassLoader(classLoader)
-                    .withPropertyValues("management.endpoint.connectSdkLogging.enabled=true", "spring.jmx.enabled=true",
+                    .withPropertyValues("management.endpoint.connectSdkLogging.access=UNRESTRICTED", "spring.jmx.enabled=true",
                             "management.endpoints.jmx.exposure.include=connectSdkLogging")
                     .run(context -> {
                         assertThat(context).doesNotHaveBean(LoggingEndpoint.class);
@@ -53,7 +53,7 @@ class ConnectSdkLoggingEndpointAutoConfigurationTest {
     void testNoAutoConfigurationWithExistingBean() {
         contextRunner
                 .withUserConfiguration(ExistingBeanProvider.class)
-                .withPropertyValues("management.endpoint.connectSdkLogging.enabled=true", "spring.jmx.enabled=true",
+                .withPropertyValues("management.endpoint.connectSdkLogging.access=UNRESTRICTED", "spring.jmx.enabled=true",
                         "management.endpoints.jmx.exposure.include=connectSdkLogging")
                 .run(context -> {
                     assertThat(context).doesNotHaveBean("connectSdkLoggingEndpoint");
@@ -74,7 +74,7 @@ class ConnectSdkLoggingEndpointAutoConfigurationTest {
     @Test
     void testAutoConfigurationWithEnabledEndpoint() {
         contextRunner
-                .withPropertyValues("management.endpoint.connectSdkLogging.enabled=true")
+                .withPropertyValues("management.endpoint.connectSdkLogging.access=UNRESTRICTED")
                 .run(context -> {
                     assertThat(context).doesNotHaveBean(LoggingEndpoint.class);
                 });
@@ -83,14 +83,14 @@ class ConnectSdkLoggingEndpointAutoConfigurationTest {
     @Test
     void testAutoConfigurationWithAvailableEndpoint() {
         contextRunner
-                .withPropertyValues("management.endpoint.connectSdkLogging.enabled=true", "spring.jmx.enabled=true",
+                .withPropertyValues("management.endpoint.connectSdkLogging.access=UNRESTRICTED", "spring.jmx.enabled=true",
                         "management.endpoints.jmx.exposure.include=connectSdkLogging")
                 .run(context -> {
                     assertThat(context).hasBean("connectSdkLoggingEndpoint");
                     assertThat(context).hasSingleBean(LoggingEndpoint.class);
                 });
         contextRunner
-                .withPropertyValues("management.endpoint.connectSdkLogging.enabled=true",
+                .withPropertyValues("management.endpoint.connectSdkLogging.access=UNRESTRICTED",
                         "management.endpoints.web.exposure.include=connectSdkLogging")
                 .run(context -> {
                     assertThat(context).hasBean("connectSdkLoggingEndpoint");

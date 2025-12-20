@@ -22,13 +22,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.jspecify.annotations.Nullable;
+import org.springframework.boot.actuate.endpoint.Access;
 import org.springframework.boot.actuate.endpoint.annotation.DeleteOperation;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.Selector;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.context.ApplicationContext;
-import org.springframework.lang.Nullable;
 import com.worldline.connect.sdk.java.Client;
 import com.worldline.connect.sdk.java.Communicator;
 import com.worldline.connect.sdk.java.communication.Connection;
@@ -41,7 +42,7 @@ import com.worldline.connect.sdk.java.logging.LoggingCapable;
  *
  * @author Rob Spoor
  */
-@Endpoint(id = "connectSdkLogging", enableByDefault = false)
+@Endpoint(id = "connectSdkLogging", defaultAccess = Access.NONE)
 @SuppressWarnings("javadoc")
 public class LoggingEndpoint {
 

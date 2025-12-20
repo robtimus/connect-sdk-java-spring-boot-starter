@@ -17,6 +17,7 @@
 
 package com.github.robtimus.connect.sdk.java.springboot.actuator;
 
+import org.springframework.boot.actuate.endpoint.Access;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import com.github.robtimus.connect.sdk.java.springboot.ConfigurableV1HMACAuthenticator;
@@ -27,7 +28,7 @@ import com.github.robtimus.connect.sdk.java.springboot.ConfigurableV1HMACAuthent
  * @author Rob Spoor
  * @since 3.8
  */
-@Endpoint(id = "connectSdkApiKey", enableByDefault = false)
+@Endpoint(id = "connectSdkApiKey", defaultAccess = Access.NONE)
 @SuppressWarnings("javadoc")
 public class ApiKeyEndpoint {
 

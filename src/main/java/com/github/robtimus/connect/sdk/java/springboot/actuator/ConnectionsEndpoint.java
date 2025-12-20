@@ -23,13 +23,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.BeansException;
+import org.springframework.boot.actuate.endpoint.Access;
 import org.springframework.boot.actuate.endpoint.annotation.DeleteOperation;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.Selector;
 import org.springframework.context.ApplicationContext;
-import org.springframework.lang.Nullable;
 import com.worldline.connect.sdk.java.Client;
 import com.worldline.connect.sdk.java.Communicator;
 import com.worldline.connect.sdk.java.communication.PooledConnection;
@@ -39,7 +40,7 @@ import com.worldline.connect.sdk.java.communication.PooledConnection;
  *
  * @author Rob Spoor
  */
-@Endpoint(id = "connectSdkConnections", enableByDefault = false)
+@Endpoint(id = "connectSdkConnections", defaultAccess = Access.NONE)
 @SuppressWarnings({ "nls", "javadoc" })
 public class ConnectionsEndpoint {
 
