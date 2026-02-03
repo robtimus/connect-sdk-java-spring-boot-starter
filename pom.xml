@@ -63,14 +63,14 @@
   <properties>
     <version.java>17</version.java>
 
-    <version.awaitility>4.2.2</version.awaitility>
+    <version.awaitility>4.3.0</version.awaitility>
     <version.commons-codec>1.17.1</version.commons-codec>
     <version.connect-sdk-java>7.2.0</version.connect-sdk-java>
     <version.gson>2.11.0</version.gson>
     <version.httpclient>4.5.14</version.httpclient>
     <version.httpmime>4.5.14</version.httpmime>
-    <version.snakeyaml>2.3</version.snakeyaml>
-    <version.spring-boot>3.3.5</version.spring-boot>
+    <version.junit>6.0.2</version.junit>
+    <version.spring-boot>3.5.10</version.spring-boot>
   </properties>
 
   <dependencies>
@@ -128,13 +128,6 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
       <version>${version.spring-boot}</version>
-    </dependency>
-
-    <!-- Override version provided by spring-boot-starter until it uses a more secure version itself -->
-    <dependency>
-      <groupId>org.yaml</groupId>
-      <artifactId>snakeyaml</artifactId>
-      <version>${version.snakeyaml}</version>
     </dependency>
 
     <dependency>
