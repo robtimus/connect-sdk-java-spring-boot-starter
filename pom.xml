@@ -64,13 +64,13 @@
     <version.java>17</version.java>
 
     <version.awaitility>4.3.0</version.awaitility>
-    <version.commons-codec>1.21.0</version.commons-codec>
+    <version.commons-codec>1.22.0</version.commons-codec>
     <version.connect-sdk-java>8.6.0</version.connect-sdk-java>
-    <version.gson>2.13.2</version.gson>
+    <version.gson>2.14.0</version.gson>
     <version.httpclient>4.5.14</version.httpclient>
     <version.httpmime>4.5.14</version.httpmime>
     <version.junit>6.0.3</version.junit>
-    <version.spring-boot>4.0.5</version.spring-boot>
+    <version.spring-boot>4.0.6</version.spring-boot>
   </properties>
 
   <dependencies>
