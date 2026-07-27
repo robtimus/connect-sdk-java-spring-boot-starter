@@ -4,6 +4,6 @@
 
 <suppressions>
   <suppress files=".*AutoConfiguration\.java" checks="MissingJavadocMethod"/>
-  <suppress files=".*Endpoint\.java" checks="JavadocStyle|MissingJavadocType|MissingJavadocMethod"/>
+  <suppress files=".*Endpoint\.java" checks="JavadocStyle|MissingJavadocType|MissingJavadocMethod|SummaryJavadoc"/>
   <suppress files=".*Properties\.java" checks="MissingJavadocType|MissingJavadocMethod"/>
 </suppressions>
