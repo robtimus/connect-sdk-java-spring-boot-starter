@@ -214,7 +214,7 @@
             <links>
               <link>https://docs.spring.io/spring-boot/api/java/</link>
               <link>https://docs.spring.io/spring-framework/docs/7.0.x/javadoc-api/</link>
-              <link>https://logback.qos.ch/apidocs/</link>
+              <link>https://javadoc.io/doc/ch.qos.logback/logback-classic/latest/</link>
               <link>https://worldline-global-collect.github.io/connect-sdk-java/apidocs/7.x</link>
             </links>
           </configuration>
