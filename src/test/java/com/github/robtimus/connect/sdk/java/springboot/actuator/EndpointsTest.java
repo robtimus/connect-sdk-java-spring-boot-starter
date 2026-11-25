@@ -51,14 +51,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClient;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.ConnectionsEndpoint.CloseableBeans;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.EndpointsTest.TestApplication;
 import com.github.robtimus.connect.sdk.java.springboot.actuator.LoggingEndpoint.LoggingCapableAndLoggerBeans;
@@ -85,7 +84,7 @@ import com.worldline.connect.sdk.java.v1.domain.TestConnection;
 class EndpointsTest {
 
     @Autowired
-    private RestTemplateBuilder restTemplateBuilder;
+    private RestClient.Builder restClientBuilder;
 
     @Value("${local.management.port}")
     private int managementPort;
@@ -124,14 +123,14 @@ class EndpointsTest {
 
             String requestBody = String.format("{\"apiKeyId\": \"%s\", \"secretApiKey\": \"%s\"}", apiKeyId, secretApiKey);
 
-            RequestEntity<String> request = RequestEntity
-                    .post(getActuatorURI())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(requestBody);
-
-            ResponseEntity<Void> response = restTemplateBuilder
+            ResponseEntity<Void> response = restClientBuilder
                     .build()
-                    .exchange(request, Void.class);
+                    .post()
+                    .uri(getActuatorURI())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(requestBody)
+                    .retrieve()
+                    .toBodilessEntity();
 
             assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
             assertNull(response.getBody());
@@ -142,14 +141,14 @@ class EndpointsTest {
         @ParameterizedTest
         @ValueSource(strings = "{\"apiKeyId\": \"myApiKeyId\", \"secretApiKey\": \"mySecretKeyId\"}")
         void testExample(String requestBody) {
-            RequestEntity<String> request = RequestEntity
-                    .post(getActuatorURI())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(requestBody);
-
-            ResponseEntity<Void> response = restTemplateBuilder
+            ResponseEntity<Void> response = restClientBuilder
                     .build()
-                    .exchange(request, Void.class);
+                    .post()
+                    .uri(getActuatorURI())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(requestBody)
+                    .retrieve()
+                    .toBodilessEntity();
 
             assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
             assertNull(response.getBody());
@@ -161,13 +160,12 @@ class EndpointsTest {
 
         @Test
         void testListCloseableBeans() {
-            RequestEntity<Void> request = RequestEntity
-                    .get(getActuatorBaseURI().resolve("connectSdkConnections"))
-                    .build();
-
-            ResponseEntity<CloseableBeans> response = restTemplateBuilder
+            ResponseEntity<CloseableBeans> response = restClientBuilder
                     .build()
-                    .exchange(request, CloseableBeans.class);
+                    .get()
+                    .uri(getActuatorBaseURI().resolve("connectSdkConnections"))
+                    .retrieve()
+                    .toEntity(CloseableBeans.class);
 
             assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -187,13 +185,12 @@ class EndpointsTest {
                 @Test
                 @SuppressWarnings("resource")
                 void testWithDefaultIdleTime() {
-                    RequestEntity<Void> request = RequestEntity
-                            .delete(getActuatorBaseURI().resolve("connectSdkConnections?state=idle"))
-                            .build();
-
-                    ResponseEntity<Void> response = restTemplateBuilder
+                    ResponseEntity<Void> response = restClientBuilder
                             .build()
-                            .exchange(request, Void.class);
+                            .delete()
+                            .uri(getActuatorBaseURI().resolve("connectSdkConnections?state=idle"))
+                            .retrieve()
+                            .toBodilessEntity();
 
                     assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -205,13 +202,12 @@ class EndpointsTest {
                 @Test
                 @SuppressWarnings("resource")
                 void testWithExplicitIdleTime() {
-                    RequestEntity<Void> request = RequestEntity
-                            .delete(getActuatorBaseURI().resolve("connectSdkConnections?state=idle&idleTime=10s"))
-                            .build();
-
-                    ResponseEntity<Void> response = restTemplateBuilder
+                    ResponseEntity<Void> response = restClientBuilder
                             .build()
-                            .exchange(request, Void.class);
+                            .delete()
+                            .uri(getActuatorBaseURI().resolve("connectSdkConnections?state=idle&idleTime=10s"))
+                            .retrieve()
+                            .toBodilessEntity();
 
                     assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -227,13 +223,12 @@ class EndpointsTest {
                 @Test
                 @SuppressWarnings("resource")
                 void testWithDefaultIdleTime() {
-                    RequestEntity<Void> request = RequestEntity
-                            .delete(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection?state=idle"))
-                            .build();
-
-                    ResponseEntity<Void> response = restTemplateBuilder
+                    ResponseEntity<Void> response = restClientBuilder
                             .build()
-                            .exchange(request, Void.class);
+                            .delete()
+                            .uri(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection?state=idle"))
+                            .retrieve()
+                            .toBodilessEntity();
 
                     assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -244,13 +239,12 @@ class EndpointsTest {
                 @Test
                 @SuppressWarnings("resource")
                 void testWithExplicitIdleTime() {
-                    RequestEntity<Void> request = RequestEntity
-                            .delete(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection?state=idle&idleTime=10s"))
-                            .build();
-
-                    ResponseEntity<Void> response = restTemplateBuilder
+                    ResponseEntity<Void> response = restClientBuilder
                             .build()
-                            .exchange(request, Void.class);
+                            .delete()
+                            .uri(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection?state=idle&idleTime=10s"))
+                            .retrieve()
+                            .toBodilessEntity();
 
                     assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -266,13 +260,12 @@ class EndpointsTest {
             @Test
             @SuppressWarnings("resource")
             void testForAllBeans() {
-                RequestEntity<Void> request = RequestEntity
-                        .delete(getActuatorBaseURI().resolve("connectSdkConnections?state=expired"))
-                        .build();
-
-                ResponseEntity<Void> response = restTemplateBuilder
+                ResponseEntity<Void> response = restClientBuilder
                         .build()
-                        .exchange(request, Void.class);
+                        .delete()
+                        .uri(getActuatorBaseURI().resolve("connectSdkConnections?state=expired"))
+                        .retrieve()
+                        .toBodilessEntity();
 
                 assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -284,13 +277,12 @@ class EndpointsTest {
             @Test
             @SuppressWarnings("resource")
             void testForSpecificBean() {
-                RequestEntity<Void> request = RequestEntity
-                        .delete(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection?state=expired"))
-                        .build();
-
-                ResponseEntity<Void> response = restTemplateBuilder
+                ResponseEntity<Void> response = restClientBuilder
                         .build()
-                        .exchange(request, Void.class);
+                        .delete()
+                        .uri(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection?state=expired"))
+                        .retrieve()
+                        .toBodilessEntity();
 
                 assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -308,13 +300,12 @@ class EndpointsTest {
                 @Test
                 @SuppressWarnings("resource")
                 void testWithDefaultIdleTime() {
-                    RequestEntity<Void> request = RequestEntity
-                            .delete(getActuatorBaseURI().resolve("connectSdkConnections"))
-                            .build();
-
-                    ResponseEntity<Void> response = restTemplateBuilder
+                    ResponseEntity<Void> response = restClientBuilder
                             .build()
-                            .exchange(request, Void.class);
+                            .delete()
+                            .uri(getActuatorBaseURI().resolve("connectSdkConnections"))
+                            .retrieve()
+                            .toBodilessEntity();
 
                     assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -327,13 +318,12 @@ class EndpointsTest {
                 @Test
                 @SuppressWarnings("resource")
                 void testWithExplicitIdleTime() {
-                    RequestEntity<Void> request = RequestEntity
-                            .delete(getActuatorBaseURI().resolve("connectSdkConnections?idleTime=10s"))
-                            .build();
-
-                    ResponseEntity<Void> response = restTemplateBuilder
+                    ResponseEntity<Void> response = restClientBuilder
                             .build()
-                            .exchange(request, Void.class);
+                            .delete()
+                            .uri(getActuatorBaseURI().resolve("connectSdkConnections?idleTime=10s"))
+                            .retrieve()
+                            .toBodilessEntity();
 
                     assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -350,13 +340,12 @@ class EndpointsTest {
                 @Test
                 @SuppressWarnings("resource")
                 void testWithDefaultIdleTime() {
-                    RequestEntity<Void> request = RequestEntity
-                            .delete(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection"))
-                            .build();
-
-                    ResponseEntity<Void> response = restTemplateBuilder
+                    ResponseEntity<Void> response = restClientBuilder
                             .build()
-                            .exchange(request, Void.class);
+                            .delete()
+                            .uri(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection"))
+                            .retrieve()
+                            .toBodilessEntity();
 
                     assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -368,13 +357,12 @@ class EndpointsTest {
                 @Test
                 @SuppressWarnings("resource")
                 void testWithExplicitIdleTime() {
-                    RequestEntity<Void> request = RequestEntity
-                            .delete(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection?idleTime=10s"))
-                            .build();
-
-                    ResponseEntity<Void> response = restTemplateBuilder
+                    ResponseEntity<Void> response = restClientBuilder
                             .build()
-                            .exchange(request, Void.class);
+                            .delete()
+                            .uri(getActuatorBaseURI().resolve("connectSdkConnections/mockConnection?idleTime=10s"))
+                            .retrieve()
+                            .toBodilessEntity();
 
                     assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -399,13 +387,12 @@ class EndpointsTest {
                 "connectSdkConnections/mockConnection?state=expired"
         })
         void testExample(String path) {
-            RequestEntity<Void> request = RequestEntity
-                    .delete(getActuatorBaseURI().resolve(path))
-                    .build();
-
-            ResponseEntity<Void> response = restTemplateBuilder
+            ResponseEntity<Void> response = restClientBuilder
                     .build()
-                    .exchange(request, Void.class);
+                    .delete()
+                    .uri(getActuatorBaseURI().resolve(path))
+                    .retrieve()
+                    .toBodilessEntity();
 
             assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         }
@@ -416,13 +403,12 @@ class EndpointsTest {
 
         @Test
         void testListLoggingCapableAndLoggerBeans() {
-            RequestEntity<Void> request = RequestEntity
-                    .get(getActuatorBaseURI().resolve("connectSdkLogging"))
-                    .build();
-
-            ResponseEntity<LoggingCapableAndLoggerBeans> response = restTemplateBuilder
+            ResponseEntity<LoggingCapableAndLoggerBeans> response = restClientBuilder
                     .build()
-                    .exchange(request, LoggingCapableAndLoggerBeans.class);
+                    .get()
+                    .uri(getActuatorBaseURI().resolve("connectSdkLogging"))
+                    .retrieve()
+                    .toEntity(LoggingCapableAndLoggerBeans.class);
 
             assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -440,14 +426,13 @@ class EndpointsTest {
             @Test
             @SuppressWarnings("resource")
             void testAllLoggersForAllBeans() {
-                RequestEntity<Void> request = RequestEntity
-                        .post(getActuatorBaseURI().resolve("connectSdkLogging"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .build();
-
-                ResponseEntity<Void> response = restTemplateBuilder
+                ResponseEntity<Void> response = restClientBuilder
                         .build()
-                        .exchange(request, Void.class);
+                        .post()
+                        .uri(getActuatorBaseURI().resolve("connectSdkLogging"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .retrieve()
+                        .toBodilessEntity();
 
                 assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -464,14 +449,14 @@ class EndpointsTest {
                 void testWithQueryParams() {
                     String requestBody = "{\"logger\": \"mockLogger\"}";
 
-                    RequestEntity<String> request = RequestEntity
-                            .post(getActuatorBaseURI().resolve("connectSdkLogging?logger=mockLogger"))
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .body(requestBody);
-
-                    ResponseEntity<Void> response = restTemplateBuilder
+                    ResponseEntity<Void> response = restClientBuilder
                             .build()
-                            .exchange(request, Void.class);
+                            .post()
+                            .uri(getActuatorBaseURI().resolve("connectSdkLogging?logger=mockLogger"))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body(requestBody)
+                            .retrieve()
+                            .toBodilessEntity();
 
                     assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -485,14 +470,14 @@ class EndpointsTest {
                 void testWithRequestBody() {
                     String requestBody = "{\"logger\": \"mockLogger\"}";
 
-                    RequestEntity<String> request = RequestEntity
-                            .post(getActuatorBaseURI().resolve("connectSdkLogging"))
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .body(requestBody);
-
-                    ResponseEntity<Void> response = restTemplateBuilder
+                    ResponseEntity<Void> response = restClientBuilder
                             .build()
-                            .exchange(request, Void.class);
+                            .post()
+                            .uri(getActuatorBaseURI().resolve("connectSdkLogging"))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body(requestBody)
+                            .retrieve()
+                            .toBodilessEntity();
 
                     assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -505,14 +490,13 @@ class EndpointsTest {
             @Test
             @SuppressWarnings("resource")
             void testAllLoggersForSpecificBean() {
-                RequestEntity<Void> request = RequestEntity
-                        .post(getActuatorBaseURI().resolve("connectSdkLogging/mockConnection"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .build();
-
-                ResponseEntity<Void> response = restTemplateBuilder
+                ResponseEntity<Void> response = restClientBuilder
                         .build()
-                        .exchange(request, Void.class);
+                        .post()
+                        .uri(getActuatorBaseURI().resolve("connectSdkLogging/mockConnection"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .retrieve()
+                        .toBodilessEntity();
 
                 assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -528,14 +512,13 @@ class EndpointsTest {
                 void testWithQueryParams() {
                     String requestBody = "{\"logger\": \"mockLogger\"}";
 
-                    RequestEntity<String> request = RequestEntity
-                            .post(getActuatorBaseURI().resolve("connectSdkLogging/mockConnection?logger=mockLogger"))
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .body(requestBody);
-
-                    ResponseEntity<Void> response = restTemplateBuilder
+                    ResponseEntity<Void> response = restClientBuilder
                             .build()
-                            .exchange(request, Void.class);
+                            .post()
+                            .uri(getActuatorBaseURI().resolve("connectSdkLogging/mockConnection?logger=mockLogger"))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body(requestBody)
+                            .retrieve().toBodilessEntity();
 
                     assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -548,14 +531,14 @@ class EndpointsTest {
                 void testWithRequestBody() {
                     String requestBody = "{\"logger\": \"mockLogger\"}";
 
-                    RequestEntity<String> request = RequestEntity
-                            .post(getActuatorBaseURI().resolve("connectSdkLogging/mockConnection"))
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .body(requestBody);
-
-                    ResponseEntity<Void> response = restTemplateBuilder
+                    ResponseEntity<Void> response = restClientBuilder
                             .build()
-                            .exchange(request, Void.class);
+                            .post()
+                            .uri(getActuatorBaseURI().resolve("connectSdkLogging/mockConnection"))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body(requestBody)
+                            .retrieve()
+                            .toBodilessEntity();
 
                     assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -566,22 +549,22 @@ class EndpointsTest {
 
             @ParameterizedTest
             @CsvSource({
-                    "connectSdkLogging,",
-                    "connectSdkLogging?logger=mockLogger,",
+                    "connectSdkLogging, ''",
+                    "connectSdkLogging?logger=mockLogger, ''",
                     "connectSdkLogging, {\"logger\": \"mockLogger\"}",
-                    "connectSdkLogging/mockConnection,",
-                    "connectSdkLogging/mockConnection?logger=mockLogger,",
+                    "connectSdkLogging/mockConnection, ''",
+                    "connectSdkLogging/mockConnection?logger=mockLogger, ''",
                     "connectSdkLogging/mockConnection, {\"logger\": \"mockLogger\"}"
             })
             void testExample(String path, String requestBody) {
-                RequestEntity<String> request = RequestEntity
-                        .post(getActuatorBaseURI().resolve(path))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(requestBody);
-
-                ResponseEntity<Void> response = restTemplateBuilder
+                ResponseEntity<Void> response = restClientBuilder
                         .build()
-                        .exchange(request, Void.class);
+                        .post()
+                        .uri(getActuatorBaseURI().resolve(path))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(requestBody)
+                        .retrieve()
+                        .toBodilessEntity();
 
                 assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
             }
@@ -593,13 +576,12 @@ class EndpointsTest {
             @Test
             @SuppressWarnings("resource")
             void testForAllBeans() {
-                RequestEntity<Void> request = RequestEntity
-                        .delete(getActuatorBaseURI().resolve("connectSdkLogging"))
-                        .build();
-
-                ResponseEntity<Void> response = restTemplateBuilder
+                ResponseEntity<Void> response = restClientBuilder
                         .build()
-                        .exchange(request, Void.class);
+                        .delete()
+                        .uri(getActuatorBaseURI().resolve("connectSdkLogging"))
+                        .retrieve()
+                        .toBodilessEntity();
 
                 assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -611,13 +593,12 @@ class EndpointsTest {
             @Test
             @SuppressWarnings("resource")
             void testForSpecificBean() {
-                RequestEntity<Void> request = RequestEntity
-                        .delete(getActuatorBaseURI().resolve("connectSdkLogging/mockConnection"))
-                        .build();
-
-                ResponseEntity<Void> response = restTemplateBuilder
+                ResponseEntity<Void> response = restClientBuilder
                         .build()
-                        .exchange(request, Void.class);
+                        .delete()
+                        .uri(getActuatorBaseURI().resolve("connectSdkLogging/mockConnection"))
+                        .retrieve()
+                        .toBodilessEntity();
 
                 assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -631,13 +612,12 @@ class EndpointsTest {
                     "connectSdkLogging/mockConnection"
             })
             void testExample(String path) {
-                RequestEntity<Void> request = RequestEntity
-                        .delete(getActuatorBaseURI().resolve(path))
-                        .build();
-
-                ResponseEntity<Void> response = restTemplateBuilder
+                ResponseEntity<Void> response = restClientBuilder
                         .build()
-                        .exchange(request, Void.class);
+                        .delete()
+                        .uri(getActuatorBaseURI().resolve(path))
+                        .retrieve()
+                        .toBodilessEntity();
 
                 assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
             }
@@ -654,14 +634,13 @@ class EndpointsTest {
             return handler.handleResponse(200, new ByteArrayInputStream(response.getBytes(StandardCharsets.UTF_8)), headers);
         });
 
-        RequestEntity<Void> request = RequestEntity
-                .get(getActuatorBaseURI().resolve("health"))
-                .build();
-
         @SuppressWarnings("rawtypes")
-        ResponseEntity<Map> response = restTemplateBuilder
+        ResponseEntity<Map> response = restClientBuilder
                 .build()
-                .exchange(request, Map.class);
+                .get()
+                .uri(getActuatorBaseURI().resolve("health"))
+                .retrieve()
+                .toEntity(Map.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
